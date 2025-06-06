@@ -1,5 +1,5 @@
 {
-  "name": "ecodev-cms",
+  "name": "strapi",
   "version": "0.1.0",
   "private": true,
   "description": "A Strapi application",
@@ -9,6 +9,7 @@
     "deploy": "strapi deploy",
     "dev": "strapi develop",
     "develop": "strapi develop",
+    "seed:example": "node ./scripts/seed.js",
     "start": "strapi start",
     "strapi": "strapi",
     "upgrade": "npx @strapi/upgrade latest",
@@ -19,6 +20,8 @@
     "@strapi/plugin-users-permissions": "5.15.0",
     "@strapi/strapi": "5.15.0",
     "better-sqlite3": "11.3.0",
+    "fs-extra": "^10.0.0",
+    "mime-types": "^2.1.27",
     "react": "^18.0.0",
     "react-dom": "^18.0.0",
     "react-router-dom": "^6.0.0",
@@ -35,7 +38,7 @@
     "npm": ">=6.0.0"
   },
   "strapi": {
-    "uuid": "fed26cb3-ffe8-4564-82d9-b452435b56e0",
-    "installId": "76c51e718383202050909fa3f635b27cb96d37180610d5028a45476145bc1fe7"
+    "uuid": "59fe1f71-9311-437f-998f-f8e7877ef184",
+    "installId": "386b2b1684832943f0cdd78879cd7ca98777322049f0aa91e14863df4221273b"
   }
 }
