@@ -2,7 +2,6 @@ import Nav from "@/components/Nav";
 import Footer from "@/components/Footer";
 import CourseAbout from "@/components/CourseAbout";
 import CourseTitle from "@/components/CourseTitle";
-import Instructor from "@/components/Instructor";
 
 export default function Home() {
     return (
