@@ -2,7 +2,7 @@ import Image from 'next/image';
 import Nav from '@/components/Nav';
 import Footer from '@/components/Footer';
 
-const API = process.env.NEXT_PUBLIC_STRAPI_URL!.replace(/\/$/, '');
+const API = (process.env.NEXT_PUBLIC_STRAPI_URL ?? 'http://localhost:1337').replace(/\/$/, '');
 
 interface StrapiFile {
     id: number;
