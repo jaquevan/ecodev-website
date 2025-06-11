@@ -1,5 +1,5 @@
 {
-  "kind": "singleType",
+  "kind": "collectionType",
   "collectionName": "courses",
   "info": {
     "singularName": "course",
@@ -11,7 +11,7 @@
   },
   "pluginOptions": {},
   "attributes": {
-    "Date": {
+    "date": {
       "type": "date"
     },
     "Image": {
@@ -24,11 +24,20 @@
         "audios"
       ]
     },
-    "Title": {
+    "title": {
       "type": "string"
     },
     "desc": {
       "type": "text"
+    },
+    "endDate": {
+      "type": "date"
+    },
+    "time": {
+      "type": "time"
+    },
+    "endTime": {
+      "type": "time"
     }
   }
 }
