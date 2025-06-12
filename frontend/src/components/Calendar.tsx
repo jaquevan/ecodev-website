@@ -178,7 +178,7 @@ export default function Calendar() {
 
             {/* INNER WHITE CARD */}
             <div className="relative z-0 bg-white rounded-2xl shadow-lg max-w-6xl mx-auto p-4 sm:p-6 md:p-8">
-                <h2 className="text-2xl font-bold text-gray-900 mb-4">Activities</h2>
+                <h3 className="text-2xl font-bold text-gray-900 mb-4">View EcoDev Activities</h3>
 
                 {/* Responsive layout - stack on small/medium screens, side-by-side on large */}
                 <div className="flex flex-col lg:flex-row lg:space-x-8 space-y-8 lg:space-y-0">
