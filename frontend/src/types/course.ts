@@ -7,6 +7,7 @@ export interface Course {
     time: string;
     endTime: string;
     Image: StrapiFile[];
+    slug: string;
 }
 
 export interface StrapiFile {

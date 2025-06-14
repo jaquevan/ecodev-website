@@ -20,3 +20,23 @@ export async function fetchCourses(): Promise<Course[]> {
     }
 }
 
+export async function fetchCourseBySlug(slug: string): Promise<Course | null> {
+    try {
+        const res = await fetch(
+            `${API}/api/courses?filters[slug][$eq]=${slug}&populate=Image`,
+            { cache: 'no-store' }
+        );
+
+        if (!res.ok) {
+            console.error('Strapi fetch failed', res.status, await res.text());
+            return null;
+        }
+
+        const json = await res.json();
+        return json.data && json.data.length > 0 ? json.data[0] : null;
+    } catch (err) {
+        console.error('fetchCourseBySlug error:', err);
+        return null;
+    }
+}
+

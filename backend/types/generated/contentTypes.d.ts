@@ -402,6 +402,7 @@ export interface ApiCourseCourse extends Struct.CollectionTypeSchema {
     > &
       Schema.Attribute.Private;
     publishedAt: Schema.Attribute.DateTime;
+    slug: Schema.Attribute.UID<'title'>;
     time: Schema.Attribute.Time;
     title: Schema.Attribute.String;
     updatedAt: Schema.Attribute.DateTime;

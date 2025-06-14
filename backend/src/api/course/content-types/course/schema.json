@@ -38,6 +38,10 @@
     },
     "endTime": {
       "type": "time"
+    },
+    "slug": {
+      "type": "uid",
+      "targetField": "title"
     }
   }
 }

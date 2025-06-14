@@ -4,6 +4,7 @@ import Footer from '@/components/Footer';
 import { fetchCourses, mediaUrl } from '@/lib/strapi';
 import { Course } from '@/types/course';
 import {formatTime} from '@/utils/format';
+import Link from 'next/link';
 
 const pickFirstImageUrl = (course: Course) => {
     const file = course.Image?.[0];
@@ -57,9 +58,11 @@ export default async function Home() {
                                     </div>
 
                                     <div className="flex gap-4 mt-4">
-                                        <button className="bg-orange-400 hover:bg-blue-500 text-white px-4 py-2 rounded shadow">
-                                            Register
-                                        </button>
+                                        <Link
+                                            href={`/course/${course.slug}`}
+                                            className="bg-orange-400 hover:bg-blue-500 text-white px-4 py-2 rounded shadow inline-block">
+                                            View Details
+                                        </Link>
 
                                     </div>
                                 </div>

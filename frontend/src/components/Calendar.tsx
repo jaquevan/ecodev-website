@@ -247,25 +247,34 @@ export default function Calendar() {
                                     return (
                                         <li
                                             key={course.id}
-                                            className={`${bg} rounded-xl p-3`}
+                                            className={`${bg} rounded-xl p-3 transition-all hover:shadow-md cursor-pointer`}
                                         >
-                                            <div className="font-semibold text-gray-900 text-lg mb-1">
-                                                {course.title}
-                                            </div>
-
-                                            {(course.time || course.endTime) && (
-                                                <div className="flex items-center text-sm text-gray-700 mb-2">
-                                                    {/*clock icon*/}
-                                                    <svg className="w-4 h-4 mr-1.5 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-                                                    </svg>
-                                                    <span className="text-xs text-gray-600">
-                                                {formatTime(course.time)}
-                                                        {course.time && course.endTime && ' – '}
-                                                        {formatTime(course.endTime)}
-                                            </span>
+                                            <Link
+                                                href={`/course/${course.slug}`}
+                                                className="block"
+                                            >
+                                                <div className="font-semibold text-gray-900 text-lg mb-1">
+                                                    {course.title}
                                                 </div>
-                                            )}
+
+                                                {(course.time || course.endTime) && (
+                                                    <div className="flex items-center text-sm text-gray-700 mb-2">
+                                                        {/*clock icon*/}
+                                                        <svg className="w-4 h-4 mr-1.5 text-gray-500" fill="none"
+                                                             stroke="currentColor" viewBox="0 0 24 24"
+                                                             xmlns="http://www.w3.org/2000/svg">
+                                                            <path strokeLinecap="round" strokeLinejoin="round"
+                                                                  strokeWidth={2}
+                                                                  d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                                                        </svg>
+                                                        <span className="text-xs text-gray-600">
+                            {formatTime(course.time)}
+                                                            {course.time && course.endTime && ' – '}
+                                                            {formatTime(course.endTime)}
+                        </span>
+                                                    </div>
+                                                )}
+                                            </Link>
                                         </li>
                                     );
                                 })}
