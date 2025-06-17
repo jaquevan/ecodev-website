@@ -5,9 +5,13 @@ const API = (process.env.NEXT_PUBLIC_STRAPI_URL ?? 'http://localhost:1340').repl
 export const mediaUrl = (path = '') =>
     path.startsWith('http') ? path : `${API}${path}`;
 
-export async function fetchCourses(): Promise<Course[]> {
+export async function fetchCourses(locale: string = 'en'): Promise<Course[]> {
     try {
-        const res = await fetch(`${API}/api/courses?populate=Image`, { cache: 'no-store' });
+        const res = await fetch(
+            `${API}/api/courses?locale=${locale}&populate=Image`,
+            { cache: 'no-store' }
+        );
+
         if (!res.ok) {
             console.error('Strapi fetch failed', res.status, await res.text());
             return [];
@@ -20,10 +24,10 @@ export async function fetchCourses(): Promise<Course[]> {
     }
 }
 
-export async function fetchCourseBySlug(slug: string): Promise<Course | null> {
+export async function fetchCourseBySlug(slug: string, locale: string = 'es'): Promise<Course | null> {
     try {
         const res = await fetch(
-            `${API}/api/courses?filters[slug][$eq]=${slug}&populate=Image`,
+            `${API}/api/courses?filters[slug][$eq]=${slug}&locale=${locale}&populate=Image&populate=instructorImage`,
             { cache: 'no-store' }
         );
 
@@ -39,4 +43,3 @@ export async function fetchCourseBySlug(slug: string): Promise<Course | null> {
         return null;
     }
 }
-

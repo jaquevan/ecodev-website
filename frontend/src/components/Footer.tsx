@@ -4,6 +4,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { Home, People, School, EventNote, Mail, LocationOn, Phone, Facebook, Instagram, LinkedIn, KeyboardArrowUp } from '@mui/icons-material';
 import { useState, useEffect } from 'react';
+import LanguageSwitcher from "@/components/LanguageSwitcher";
 
 export default function Footer() {
     const [showScrollTop, setShowScrollTop] = useState(false);
@@ -143,17 +144,10 @@ export default function Footer() {
                 {/* Copyright */}
                 <p className="text-gray-300">&copy; {new Date().getFullYear()} La Colaborativa. All rights reserved.</p>
 
-                {/* Language Switcher with flag-icons */}
-                <div className="mt-4 md:mt-0 flex gap-2">
-                    <button className="bg-white/10 hover:bg-white/20 transition-colors px-3 py-2 rounded-lg flex items-center gap-2 border border-white/20">
-                        <span className="fi fi-us"></span>
-                        <span>English</span>
-                    </button>
-                    <button className="bg-white/10 hover:bg-white/20 transition-colors px-3 py-2 rounded-lg flex items-center gap-2 border border-white/20">
-                        <span className="fi fi-es"></span>
-                        <span>Español</span>
-                    </button>
-                </div>
+                {/*/!* Language Switcher with flag-icons *!/*/}
+                {/*<div className="mt-4 md:mt-0 flex gap-2">*/}
+                {/*    <LanguageSwitcher/>*/}
+                {/*</div>*/}
             </div>
 
             {/* Scroll to Top Button */}
