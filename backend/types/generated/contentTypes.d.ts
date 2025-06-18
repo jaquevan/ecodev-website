@@ -432,7 +432,8 @@ export interface ApiCourseCourse extends Struct.CollectionTypeSchema {
         };
       }>;
     instructorImage: Schema.Attribute.Media<
-      'images' | 'files' | 'videos' | 'audios'
+      'images' | 'files' | 'videos' | 'audios',
+      true
     > &
       Schema.Attribute.SetPluginOptions<{
         i18n: {

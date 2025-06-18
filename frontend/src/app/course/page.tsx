@@ -1,7 +1,6 @@
 import Image from 'next/image';
 import Nav from '@/components/Nav';
 import Footer from '@/components/Footer';
-import LanguageSwitcher from "@/components/LanguageSwitcher";
 import { fetchCourses, mediaUrl } from '@/lib/strapi';
 import { Course } from '@/types/course';
 import {formatTime} from '@/utils/format';

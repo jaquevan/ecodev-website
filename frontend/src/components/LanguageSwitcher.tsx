@@ -2,7 +2,7 @@
 
 import { useLanguage } from '@/context/LanguageContext';
 import { usePathname, useRouter } from 'next/navigation';
-import { useTransition, ChangeEvent, useEffect, useRef, useCallback } from 'react';
+import { useTransition, useEffect, useRef, useCallback } from 'react';
 
 interface SlugPair {
     en: string;
@@ -106,43 +106,53 @@ export default function LanguageSwitcher() {
         if (target === locale) return;
 
         startTransition(() => {
-            if (pathname === '/courses') {
-                setLocale(target);
-                return;
-            }
-
             if (pathname.startsWith('/course/') && slugPairRef.current) {
                 const targetSlug = slugPairRef.current[target];
                 if (targetSlug) {
+                    // First update the locale
                     setLocale(target);
+                    // Then navigate to the correct slug for that locale
                     router.push(`/course/${targetSlug}`);
                     return;
                 }
             }
 
+            // For other pages, just update the locale
             setLocale(target);
             router.refresh();
         });
     };
 
-    const handleChange = (e: ChangeEvent<HTMLSelectElement>) =>
-        switchTo(e.target.value as 'en' | 'es');
-
     return (
-        <div className="relative">
-            <label htmlFor="locale-select" className="sr-only">
-                Select language
-            </label>
-            <select
-                id="locale-select"
-                value={locale}
-                onChange={handleChange}
-                disabled={isPending}
-                className="bg-[#00464D] text-white px-3 py-2 rounded-lg shadow focus:outline-none disabled:opacity-60 disabled:cursor-not-allowed"
-            >
-                <option value="en">English</option>
-                <option value="es">Español</option>
-            </select>
+        <div className="flex space-x-2 items-center">
+            <div className="bg-[#00464D]/80 backdrop-blur-sm rounded-full p-1 shadow-md">
+                <div className="flex items-center">
+                    <button
+                        onClick={() => switchTo('en')}
+                        disabled={isPending || locale === 'en'}
+                        className={`px-3 py-1 rounded-full text-sm font-medium transition-all ${
+                            locale === 'en'
+                                ? 'bg-white text-[#00464D] shadow-sm'
+                                : 'text-white hover:bg-white/20'
+                        } disabled:cursor-not-allowed disabled:opacity-70`}
+                        aria-label="Switch to English"
+                    >
+                        EN
+                    </button>
+                    <button
+                        onClick={() => switchTo('es')}
+                        disabled={isPending || locale === 'es'}
+                        className={`px-3 py-1 rounded-full text-sm font-medium transition-all ${
+                            locale === 'es'
+                                ? 'bg-white text-[#00464D] shadow-sm'
+                                : 'text-white hover:bg-white/20'
+                        } disabled:cursor-not-allowed disabled:opacity-70`}
+                        aria-label="Switch to Spanish"
+                    >
+                        ES
+                    </button>
+                </div>
+            </div>
         </div>
     );
 }

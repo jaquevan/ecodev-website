@@ -5,6 +5,7 @@ import { useLanguage } from '@/context/LanguageContext';
 import { fetchCourseBySlug, mediaUrl } from '@/lib/strapi';
 import Nav from "@/components/Nav";
 import Footer from "@/components/Footer";
+import LanguageSwitcher from "@/components/LanguageSwitcher";
 import Loading from '@/components/Loading';
 import Link from 'next/link';
 import Image from 'next/image';
@@ -22,43 +23,80 @@ import AddCircleIcon from '@mui/icons-material/AddCircle';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import CheckIcon from '@mui/icons-material/Check';
 
-import LanguageSwitcher from "@/components/LanguageSwitcher";
-
 export default function CoursePage({ params }: { params: Promise<{ slug: string }> }) {
     const { slug } = use(params);
-
-    const { locale} = useLanguage();
+    const { locale } = useLanguage();
     const [course, setCourse] = useState<Course | null>(null);
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
+        let mounted = true;
+
         async function loadCourse() {
-            console.log('Current locale:', locale);
-            console.log('Current slug:', slug);
+            if (!slug) return;
+
             setLoading(true);
             try {
+                // The slug from the URL should be the correct one for the current locale
                 const data = await fetchCourseBySlug(slug, locale);
-                console.log('API response data:', data);
-                if (data) {
+                console.log(`Fetching data for slug: ${slug} with locale: ${locale}`);
+
+                if (mounted && data) {
                     setCourse(data);
-                } else {
-                    console.error('Course not found for slug:', slug, 'and locale:', locale);
                 }
             } catch (error) {
                 console.error('Error loading course:', error);
             } finally {
-                setLoading(false);
+                if (mounted) {
+                    setLoading(false);
+                }
             }
         }
 
         loadCourse();
+
+        return () => {
+            mounted = false;
+        };
     }, [slug, locale]);
 
-    if (loading) return <div><Loading/></div>;
-    if (!course) return <div>Course not found for slug: {slug}</div>;
+    if (loading) {
+        return <LoadingView />;
+    }
 
-    const imageUrl = course.Image?.[0]?.formats?.medium?.url || course.Image?.[0]?.url;
-    const instructorImageUrl = course.instructorImage?.url || null;
+    if (!course) {
+        return <CourseNotFoundView />;
+    }
+
+    const imageUrl = (() => {
+        if (course.Image && 'data' in course.Image) {
+            // New Strapi v4 format
+            const imageData = Array.isArray(course.Image.data)
+                ? course.Image.data[0]?.attributes
+                : course.Image.data?.attributes;
+
+            return imageData?.formats?.medium?.url || imageData?.url || null;
+        } else if (Array.isArray(course.Image)) {
+            // Old format (StrapiFile[])
+            return course.Image[0]?.formats?.medium?.url || course.Image[0]?.url || null;
+        }
+        return null;
+    })();
+
+    const instructorImageUrl = (() => {
+        if (course.instructorImage && 'data' in course.instructorImage) {
+            // New Strapi v4 format
+            const imageData = Array.isArray(course.instructorImage.data)
+                ? course.instructorImage.data[0]?.attributes
+                : course.instructorImage.data?.attributes;
+
+            return imageData?.url || null;
+        } else if (Array.isArray(course.instructorImage)) {
+            // Old format (StrapiFile[])
+            return course.instructorImage[0]?.url || null;
+        }
+        return null;
+    })();
 
     const learningPoints = course.learnings
         ? course.learnings.split('\n').filter(line => line.trim() !== '')
@@ -66,7 +104,7 @@ export default function CoursePage({ params }: { params: Promise<{ slug: string 
 
     return (
         <>
-            <Nav/>
+            <Nav />
             <div className="relative w-full h-64 md:h-80 lg:h-96 overflow-hidden">
                 {imageUrl ? (
                     <>
@@ -88,9 +126,7 @@ export default function CoursePage({ params }: { params: Promise<{ slug: string 
                         <Link href="/course" className="inline-flex items-center text-[#FFFDF5] bg-[#FF7001]/90 hover:bg-[#FF7001] px-4 py-2 rounded-full transition-all shadow-md">
                             <ArrowBackIcon className="mr-1" fontSize="small" /> Back to Courses
                         </Link>
-
-                        <LanguageSwitcher/>
-
+                        <LanguageSwitcher />
                     </div>
                     <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold text-[#FFFDF5] drop-shadow-md">{course.title}</h1>
                 </div>
@@ -103,7 +139,6 @@ export default function CoursePage({ params }: { params: Promise<{ slug: string 
                             <div className="mb-6">
                                 <p className="text-lg leading-relaxed text-[#212020]">{course.desc}</p>
                             </div>
-
                             <div className="flex flex-wrap gap-3 mb-6">
                                 <button className="bg-[#00AF98] text-white px-6 py-3 rounded-lg hover:bg-[#00464D] transition-all shadow-md hover:shadow-lg flex items-center justify-center">
                                     <AddCircleIcon className="mr-2" fontSize="small" />
@@ -209,7 +244,42 @@ export default function CoursePage({ params }: { params: Promise<{ slug: string 
                 </div>
             </div>
 
-            <Footer/>
+            <Footer />
+        </>
+    );
+}
+
+function LoadingView() {
+    return (
+        <>
+            <Nav />
+            <div className="min-h-screen flex items-center justify-center">
+                <Loading />
+            </div>
+            <Footer />
+        </>
+    );
+}
+
+function CourseNotFoundView() {
+    return (
+        <>
+            <Nav />
+            <div className="min-h-screen flex flex-col items-center justify-center p-4">
+                <div className="text-center max-w-md bg-white rounded-xl shadow-md p-8 border border-[#FCD3B6]">
+                    <h1 className="text-2xl font-bold text-[#00464D] mb-4">Course Not Found</h1>
+                    <p className="mb-6 text-gray-600">
+                        The course you&apos;re looking for could not be found. Please check the URL or return to the course list.
+                    </p>
+                    <Link
+                        href="/course"
+                        className="inline-flex items-center text-[#FFFDF5] bg-[#FF7001] px-4 py-2 rounded-full transition-all shadow-md"
+                    >
+                        <ArrowBackIcon className="mr-1" fontSize="small" /> Back to Courses
+                    </Link>
+                </div>
+            </div>
+            <Footer />
         </>
     );
 }

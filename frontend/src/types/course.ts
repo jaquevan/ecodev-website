@@ -1,3 +1,35 @@
+// In types/course.ts
+export interface StrapiFile {
+    name: string;
+    alternativeText?: string;
+    caption?: string;
+    width?: number;
+    height?: number;
+    formats?: {
+        thumbnail?: { url: string };
+        small?: { url: string };
+        medium?: { url: string };
+        large?: { url: string };
+    };
+    hash: string;
+    ext: string;
+    mime: string;
+    size: number;
+    url: string;
+    previewUrl?: string;
+    provider: string;
+}
+
+export interface StrapiMedia {
+    data: Array<{
+        id: number;
+        attributes: StrapiFile;
+    }> | {
+        id: number;
+        attributes: StrapiFile;
+    } | null;
+}
+
 export interface Course {
     id: number;
     title: string;
@@ -6,50 +38,21 @@ export interface Course {
     endDate: string;
     time: string;
     endTime: string;
-    Image: StrapiFile[];
     slug: string;
     location: string;
+    language: string;
     instructorName: string;
     instructorDesc: string;
-    instructorImage: StrapiFile;
-    language: string;
-    learnings: string;
     preRequisites: string;
+    learnings: string;
 
-    localizations?: Localization[];
-}
+    // Updated to support both formats
+    Image?: StrapiFile[] | StrapiMedia;
+    instructorImage?: StrapiFile[] | StrapiMedia;
 
-export interface Localization {
-    id: number;
-    attributes: {
-        locale: string;
-        slug: string;
-        title: string;
-        desc: string;
-        date: string;
-        endDate: string;
-        time: string;
-        endTime: string;
-        Image: StrapiFile[];
-        location: string;
-        instructorName: string;
-        instructorDesc: string;
-        instructorImage: StrapiFile;
-        language: string;
-        learnings: string;
-        preRequisites: string;
-    };
-}
-
-export interface StrapiFile {
-    id: number;
-    name: string;
-    url: string;
-    alternativeText?: string;
-    formats?: {
-        thumbnail?: { url: string };
-        small?: { url: string };
-        medium?: { url: string };
-        large?: { url: string };
-    };
+    createdAt: string;
+    updatedAt: string;
+    publishedAt: string;
+    locale: string;
+    documentId?: string;
 }
