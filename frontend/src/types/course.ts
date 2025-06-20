@@ -45,6 +45,7 @@ export interface Course {
     instructorDesc: string;
     preRequisites: string;
     learnings: string;
+    registration?: boolean;
 
     // Updated to support both formats
     Image?: StrapiFile[] | StrapiMedia;

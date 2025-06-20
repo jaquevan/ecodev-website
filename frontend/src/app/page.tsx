@@ -1,6 +1,6 @@
 'use client';
 
-// import { TextField } from '@mui/material';
+import Link from 'next/link';
 import Nav from '@/components/Nav';
 import Footer from '@/components/Footer';
 import Calendar from '@/components/Calendar';
@@ -13,7 +13,6 @@ import HealthAndSafetyIcon from '@mui/icons-material/HealthAndSafety';
 import SolarPowerIcon from '@mui/icons-material/SolarPower';
 
 export default function Home() {
-
     return (
         <>
             <Nav/>
@@ -30,22 +29,20 @@ export default function Home() {
                             necessary tools and resources to succeed in the workforce.
                         </p>
                         <div className="mt-6">
-                            <a
+                            <Link
                                 href="/course"
                                 className="inline-block bg-teal-700 hover:bg-teal-800 text-white py-3 px-6 rounded-md font-medium transition-colors"
                             >
                                 Explore Our Programs
-                            </a>
+                            </Link>
                         </div>
                     </div>
 
                     {/* CALENDAR */}
                     <div className="w-full max-w-3xl mx-auto my-12 lg:mx-0">
-                        <Calendar/>
+                        <Calendar showWalkInOnly={true}/>
                     </div>
                 </section>
-
-                ;
 
                 <section>
                     <h3 className="text-3xl font-semibold text-center mb-12 text-slate-800">
@@ -54,7 +51,7 @@ export default function Home() {
 
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
                         {/* Adult Education */}
-                        <a href="/course?category=ae" className="block group">
+                        <Link href="/course?category=ae" className="block group">
                             <div
                                 className="bg-gradient-to-br from-blue-50 to-indigo-100 rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 p-6 border border-blue-100 hover:translate-y-[-8px] h-full">
                                 <h3 className="text-2xl font-bold text-indigo-800 mb-5 border-b-2 border-indigo-300 pb-2 font-['Libre_Franklin'] group-hover:border-indigo-500 transition-colors">
@@ -62,12 +59,12 @@ export default function Home() {
                                 </h3>
                                 <ul className="space-y-4 mt-6">
                                     {[
-                                        ['ESOL', <SchoolIcon fontSize="small" className="text-indigo-600"/>],
+                                        ['ESOL', <SchoolIcon key="esol-icon" fontSize="small" className="text-indigo-600"/>],
                                         ['Financial Literacy',
-                                            <BadgeIcon fontSize="small" className="text-indigo-600"/>],
+                                            <BadgeIcon key="financial-icon" fontSize="small" className="text-indigo-600"/>],
                                         ['Civic Engagement and Citizenship',
-                                            <BadgeIcon fontSize="small" className="text-indigo-600"/>],
-                                        ['Digital Equity', <SchoolIcon fontSize="small" className="text-indigo-600"/>],
+                                            <BadgeIcon key="civic-icon" fontSize="small" className="text-indigo-600"/>],
+                                        ['Digital Equity', <SchoolIcon key="digital-icon" fontSize="small" className="text-indigo-600"/>],
                                     ].map(([label, icon], i) => (
                                         <li key={i}
                                             className="flex items-center gap-3 text-slate-700 group-hover:text-indigo-900 transition-colors">
@@ -80,10 +77,10 @@ export default function Home() {
                                     ))}
                                 </ul>
                             </div>
-                        </a>
+                        </Link>
 
                         {/* Workforce Development */}
-                        <a href="/course?category=wd" className="block group">
+                        <Link href="/course?category=wd" className="block group">
                             <div
                                 className="bg-gradient-to-br from-teal-50 to-emerald-100 rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 p-6 border border-teal-100 hover:translate-y-[-8px] h-full">
                                 <h3 className="text-2xl font-bold text-teal-800 mb-5 border-b-2 border-teal-300 pb-2 font-['Libre_Franklin'] group-hover:border-teal-500 transition-colors">
@@ -112,10 +109,10 @@ export default function Home() {
                                     </li>
                                 </ul>
                             </div>
-                        </a>
+                        </Link>
 
                         {/* Job Readiness */}
-                        <a href="/course?category=jr" className="block group">
+                        <Link href="/course?category=jr" className="block group">
                             <div
                                 className="bg-gradient-to-br from-amber-50 to-orange-100 rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 p-6 border border-amber-100 hover:translate-y-[-8px] h-full">
                                 <h3 className="text-2xl font-bold text-amber-800 mb-5 border-b-2 border-amber-300 pb-2 font-['Libre_Franklin'] group-hover:border-amber-500 transition-colors">
@@ -123,9 +120,9 @@ export default function Home() {
                                 </h3>
                                 <ul className="space-y-4 mt-6">
                                     {[
-                                        ['Resume Writing', <WorkIcon fontSize="small" className="text-amber-600"/>],
-                                        ['Interview Skills', <WorkIcon fontSize="small" className="text-amber-600"/>],
-                                        ['Job Search Support', <WorkIcon fontSize="small" className="text-amber-600"/>],
+                                        ['Resume Writing', <WorkIcon key="resume-icon" fontSize="small" className="text-amber-600"/>],
+                                        ['Interview Skills', <WorkIcon key="interview-icon" fontSize="small" className="text-amber-600"/>],
+                                        ['Job Search Support', <WorkIcon key="job-search-icon" fontSize="small" className="text-amber-600"/>],
                                     ].map(([label, icon], i) => (
                                         <li key={i}
                                             className="flex items-center gap-3 text-slate-700 group-hover:text-amber-900 transition-colors">
@@ -138,7 +135,7 @@ export default function Home() {
                                     ))}
                                 </ul>
                             </div>
-                        </a>
+                        </Link>
                     </div>
                 </section>
 
@@ -150,7 +147,7 @@ export default function Home() {
                         Get in touch to learn more about our Job Search & Placement programs.
                     </p>
                     <button
-                        className="bg-white text-teal-800 font-semibold px-6 py-2 rounded shadow hover:bg-gray-100 transition ">
+                        className="bg-white text-teal-800 font-semibold px-6 py-2 rounded shadow hover:bg-gray-100 transition">
                         Connect Now
                     </button>
                 </section>
@@ -158,6 +155,5 @@ export default function Home() {
 
             <Footer/>
         </>
-    )
-        ;
+    );
 }

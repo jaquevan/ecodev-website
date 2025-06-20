@@ -37,16 +37,25 @@ export default function CoursePage({ params }: { params: Promise<{ slug: string 
 
             setLoading(true);
             try {
-                // The slug from the URL should be the correct one for the current locale
-                const data = await fetchCourseBySlug(slug, locale);
-                console.log(`Fetching data for slug: ${slug} with locale: ${locale}`);
+                // First try to fetch the course with the current slug and locale
+                let data = await fetchCourseBySlug(slug, locale);
 
-                if (mounted && data) {
-                    setCourse(data);
+                // If not found and trying Spanish, try to fetch the English version
+                if (!data && locale === 'es') {
+                    console.log("Spanish version not found, trying to fetch English version as fallback...");
+                    data = await fetchCourseBySlug(slug, 'en');
+                }
+
+                if (mounted) {
+                    if (data) {
+                        setCourse(data);
+                    } else {
+                        console.error(`Course not found with slug: ${slug} in any locale`);
+                    }
+                    setLoading(false);
                 }
             } catch (error) {
                 console.error('Error loading course:', error);
-            } finally {
                 if (mounted) {
                     setLoading(false);
                 }

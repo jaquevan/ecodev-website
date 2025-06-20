@@ -473,6 +473,13 @@ export interface ApiCourseCourse extends Struct.CollectionTypeSchema {
         };
       }>;
     publishedAt: Schema.Attribute.DateTime;
+    registration: Schema.Attribute.Boolean &
+      Schema.Attribute.Required &
+      Schema.Attribute.SetPluginOptions<{
+        i18n: {
+          localized: false;
+        };
+      }>;
     slug: Schema.Attribute.UID<'title'>;
     time: Schema.Attribute.Time &
       Schema.Attribute.SetPluginOptions<{

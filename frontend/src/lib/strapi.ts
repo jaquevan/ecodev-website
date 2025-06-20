@@ -8,11 +8,18 @@ const API = (process.env.NEXT_PUBLIC_STRAPI_URL ?? 'http://localhost:1340').repl
 export const mediaUrl = (path = '') =>
     path.startsWith('http') ? path : `${API}${path}`;
 
-export async function fetchCourses(locale: string = 'en'): Promise<Course[]> {
+export async function fetchCourses(locale: string = 'en', options: { cache?: RequestCache } = { cache: 'no-store' }): Promise<Course[]> {
     try {
+        const token = process.env.NEXT_PUBLIC_STRAPI_API_TOKEN;
         const res = await fetch(
             `${API}/api/courses?locale=${locale}&populate=Image`,
-            { cache: 'no-store' }
+            {
+                cache: options.cache,
+                headers: {
+                    'Authorization': `Bearer ${token}`,
+                    'Content-Type': 'application/json'
+                }
+            }
         );
 
         if (!res.ok) {

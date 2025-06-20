@@ -11,7 +11,6 @@ import Link from 'next/link';
 import { formatTime } from '@/utils/format';
 import {Course} from "@/types/course";
 
-
 import bubblesImage from '../../public/Bubbles.svg';
 
 type StrapiCourse = {
@@ -23,11 +22,16 @@ type StrapiCourse = {
         startTime?: string;
         endTime?: string;
         slug?: string;
+        registration?: boolean;
         [key: string]: unknown;
     };
 };
 
-export default function Calendar() {
+interface CalendarProps {
+    showWalkInOnly?: boolean;
+}
+
+export default function Calendar({ showWalkInOnly = false }: CalendarProps) {
     const [selectedDate, setSelectedDate] = useState<Date | null>(new Date());
     const [monthCourses, setMonthCourses] = useState<Course[]>([]);
     const [loading, setLoading] = useState(false);
@@ -131,7 +135,13 @@ export default function Calendar() {
                     : [];
 
                 console.log('Processed courses:', arr);
-                setMonthCourses(arr as Course[]);
+
+                // Filter for walk-in courses if showWalkInOnly is true
+                const filteredCourses = showWalkInOnly
+                    ? (arr as Course[]).filter(course => course.registration === false)
+                    : (arr as Course[]);
+
+                setMonthCourses(filteredCourses);
                 setLastFetchedMonth(selectedDate);
             } catch (error) {
                 console.error('Error fetching courses:', error);
@@ -142,7 +152,7 @@ export default function Calendar() {
         };
 
         fetchCourses();
-    }, [selectedDate, lastFetchedMonth]);
+    }, [selectedDate, lastFetchedMonth, showWalkInOnly]);
 
     // Filter the fetched month's courses down to the selected day
     const todayCourses = useMemo(() => {
