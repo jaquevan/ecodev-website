@@ -1,0 +1,14 @@
+{
+  "collectionName": "components_links_social_links",
+  "info": {
+    "displayName": "social link",
+    "icon": "attachment"
+  },
+  "options": {},
+  "attributes": {
+    "linkedin": {
+      "type": "string"
+    }
+  },
+  "config": {}
+}

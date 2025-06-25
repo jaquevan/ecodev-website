@@ -1,4 +1,3 @@
-// In types/course.ts
 export interface StrapiFile {
     name: string;
     alternativeText?: string;
@@ -47,7 +46,6 @@ export interface Course {
     learnings: string;
     registration?: boolean;
 
-    // Updated to support both formats
     Image?: StrapiFile[] | StrapiMedia;
     instructorImage?: StrapiFile[] | StrapiMedia;
 

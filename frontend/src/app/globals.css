@@ -2,6 +2,66 @@
 
 @import url('https://fonts.googleapis.com/css2?family=Gentium+Plus:wght@400;700&family=Libre+Franklin:wght@400;600;700&display=swap');
 
+
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.animate-fadeIn {
+  animation: fadeIn 0.8s ease-out forwards;
+}
+
+@keyframes float {
+  0% {
+    transform: translateY(0) scale(1);
+  }
+
+  50% {
+    transform: translateY(-30px) scale(1.1);
+  }
+
+  100% {
+    transform: translateY(0) scale(1);
+  }
+}
+
+/* For staggered animations */
+.stagger-item:nth-child(1) { --index: 0; }
+.stagger-item:nth-child(2) { --index: 1; }
+.stagger-item:nth-child(3) { --index: 2; }
+.stagger-item:nth-child(4) { --index: 3; }
+.stagger-item:nth-child(5) { --index: 4; }
+.stagger-item:nth-child(6) { --index: 5; }
+.stagger-item:nth-child(7) { --index: 6; }
+.stagger-item:nth-child(8) { --index: 7; }
+.stagger-item:nth-child(9) { --index: 8; }
+.stagger-item:nth-child(10) { --index: 9; }
+
+.stagger-item.animate-fadeIn {
+  animation-delay: calc(var(--index, 0) * 100ms);
+}
+
+@keyframes bubble {
+  0% {
+    transform: translateY(0) rotate(0deg);
+  }
+  50% {
+    transform: translateY(-12.5px) rotate(2deg);
+  }
+  75% {
+    transform: translateX(-1px) translateY(-8.5px) rotate(deg);
+  }
+  100% {
+    transform: translateY(0) rotate(0deg);
+  }
+}
+
+.animate-bubble {
+  animation: bubble 4s infinite ease-in-out;
+}
+
 /* Define font variables */
 :root {
   --font-heading: 'Gentium Plus', serif;

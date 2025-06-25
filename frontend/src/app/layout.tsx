@@ -19,8 +19,7 @@ export const metadata: Metadata = {
       "health and supports vulnerable community members",
   icons: {
     icon: [
-      { url: "/LC-Logo.jpg", type: "image/jpeg" }
-    ]
+        { url: "/logo.svg", type: "image/svg+xml" }    ]
   }
 };
 
