@@ -5,8 +5,12 @@ import Link from 'next/link';
 import { useEffect, useState } from 'react';
 import logo from '../../public/logo.svg';
 import MenuIcon from '@mui/icons-material/Menu';
+import LanguageSwitcher from "@/components/LanguageSwitcher";
+import { useLanguage } from '@/context/LanguageContext';
 
 export default function Nav() {
+    const { locale } = useLanguage();
+    const isSpanish = locale === 'es';
     const [scrolled, setScrolled] = useState(false);
     const [menuOpen, setMenuOpen] = useState(false);
 
@@ -37,12 +41,17 @@ export default function Nav() {
                         />
                     </Link>
 
+                    {/* Center-positioned Language Switcher */}
+                    <div className="absolute left-1/2 transform -translate-x-1/2">
+                        <LanguageSwitcher/>
+                    </div>
+
                     {/* Desktop Navigation */}
                     <div className="hidden md:flex gap-10 text-sm font-semibold text-white">
-                        <NavLink href="/">Home</NavLink>
-                        <NavLink href="/course">Courses</NavLink>
-                        <NavLink href="/team">Team</NavLink>
-                        <NavLink href="/chatbot">Resume Builder</NavLink>
+                        <NavLink href="/">{isSpanish ? 'Inicio' : 'Home'}</NavLink>
+                        <NavLink href="/course">{isSpanish ? 'Cursos' : 'Courses'}</NavLink>
+                        <NavLink href="/team">{isSpanish ? 'Equipo' : 'Team'}</NavLink>
+                        <NavLink href="/chatbot">{isSpanish ? 'Creador de CV' : 'Resume Builder'}</NavLink>
                     </div>
 
                     {/* Mobile Menu Icon */}
@@ -50,6 +59,7 @@ export default function Nav() {
                         <button
                             onClick={() => setMenuOpen(!menuOpen)}
                             className="text-white focus:outline-none"
+                            aria-label={isSpanish ? "Abrir menú" : "Open menu"}
                         >
                             <MenuIcon fontSize="large" />
                         </button>
@@ -59,10 +69,10 @@ export default function Nav() {
                 {/* Mobile Navigation */}
                 {menuOpen && (
                     <div className="md:hidden bg-[#006770] text-white py-4 px-6 flex flex-col">
-                        <NavLink href="/">Home</NavLink>
-                        <NavLink href="/course">Courses</NavLink>
-                        <NavLink href="/team">Team</NavLink>
-                        <NavLink href="/chatbot">Resume Builder</NavLink>
+                        <NavLink href="/">{isSpanish ? 'Inicio' : 'Home'}</NavLink>
+                        <NavLink href="/course">{isSpanish ? 'Cursos' : 'Courses'}</NavLink>
+                        <NavLink href="/team">{isSpanish ? 'Equipo' : 'Team'}</NavLink>
+                        <NavLink href="/chatbot">{isSpanish ? 'Creador de CV' : 'Resume Builder'}</NavLink>
                     </div>
                 )}
             </nav>
@@ -76,7 +86,7 @@ function NavLink({ href, children }: { href: string; children: React.ReactNode }
     return (
         <Link
             href={href}
-            className="hover:text-orange-400  text-l transition-colors duration-200"
+            className="hover:text-orange-400 text-l transition-colors duration-200"
         >
             {children}
         </Link>

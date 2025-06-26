@@ -3,6 +3,7 @@
 import { useLanguage } from '@/context/LanguageContext';
 import { usePathname, useRouter } from 'next/navigation';
 import { useTransition, useEffect, useRef, useCallback } from 'react';
+import { motion } from 'framer-motion';
 
 interface SlugPair {
     en: string;
@@ -18,6 +19,7 @@ export default function LanguageSwitcher() {
     const fetchTimeoutRef = useRef<NodeJS.Timeout | undefined>(undefined);
 
     const fetchSlugs = useCallback(async () => {
+        // Existing fetchSlugs implementation
         if (!pathname.startsWith('/course/')) return;
         const currentSlug = pathname.split('/course/')[1]?.split('?')[0] ?? '';
         if (!currentSlug) return;
@@ -77,7 +79,7 @@ export default function LanguageSwitcher() {
     }, [pathname, locale]);
 
     useEffect(() => {
-        // Clear any existing timeout
+        // Existing effect implementation
         if (fetchTimeoutRef.current) {
             clearTimeout(fetchTimeoutRef.current);
         }
@@ -125,31 +127,60 @@ export default function LanguageSwitcher() {
 
     return (
         <div className="flex space-x-2 items-center">
-            <div className="bg-[#00464D]/80 backdrop-blur-sm rounded-full p-1 shadow-md">
-                <div className="flex items-center">
+            <div className="bg-gradient-to-r from-teal-500 to-blue-500 backdrop-blur-sm rounded-full p-1 shadow-lg">
+                <div className="flex items-center relative px-1 py-0.5">
+                    {/* Animated background slider */}
+                    <motion.div
+                        className="absolute inset-0 bg-white rounded-full shadow-md z-0"
+                        initial={false}
+                        animate={{
+                            x: locale === 'en' ? 0 : '100%',
+                            width: '50%'
+                        }}
+                        transition={{
+                            type: "spring",
+                            stiffness: 300,
+                            damping: 30
+                        }}
+                    />
+
                     <button
                         onClick={() => switchTo('en')}
                         disabled={isPending || locale === 'en'}
-                        className={`px-3 py-1 rounded-full text-sm font-medium transition-all ${
+                        className={`px-4 py-1.5 rounded-full text-sm font-medium transition-all z-10 relative ${
                             locale === 'en'
-                                ? 'bg-white text-[#00464D] shadow-sm'
-                                : 'text-white hover:bg-white/20'
+                                ? 'text-teal-700'
+                                : 'text-white hover:text-teal-100 cursor-pointer'
                         } disabled:cursor-not-allowed disabled:opacity-70`}
                         aria-label="Switch to English"
                     >
-                        EN
+                        <motion.span
+                            animate={{
+                                scale: locale === 'en' ? 1.05 : 1
+                            }}
+                            transition={{ duration: 0.2 }}
+                        >
+                            English
+                        </motion.span>
                     </button>
                     <button
                         onClick={() => switchTo('es')}
                         disabled={isPending || locale === 'es'}
-                        className={`px-3 py-1 rounded-full text-sm font-medium transition-all ${
+                        className={`px-4 py-1.5 rounded-full text-sm font-medium transition-all z-10 relative ${
                             locale === 'es'
-                                ? 'bg-white text-[#00464D] shadow-sm'
-                                : 'text-white hover:bg-white/20'
+                                ? 'text-teal-700'
+                                : 'text-white hover:text-teal-100 cursor-pointer'
                         } disabled:cursor-not-allowed disabled:opacity-70`}
                         aria-label="Switch to Spanish"
                     >
-                        ES
+                        <motion.span
+                            animate={{
+                                scale: locale === 'es' ? 1.05 : 1
+                            }}
+                            transition={{ duration: 0.2 }}
+                        >
+                            Español
+                        </motion.span>
                     </button>
                 </div>
             </div>

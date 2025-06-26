@@ -7,9 +7,11 @@ import { StaticDatePicker } from '@mui/x-date-pickers/StaticDatePicker';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { format, startOfMonth, endOfMonth, isSameMonth } from 'date-fns';
+import { es } from 'date-fns/locale';
 import Link from 'next/link';
 import { formatTime } from '@/utils/format';
-import {Course} from "@/types/course";
+import { Course } from "@/types/course";
+import { useLanguage } from '@/context/LanguageContext';
 
 import bubblesImage from '../../public/Bubbles.svg';
 
@@ -32,6 +34,9 @@ interface CalendarProps {
 }
 
 export default function Calendar({ showWalkInOnly = false }: CalendarProps) {
+    const { locale } = useLanguage();
+    const isSpanish = locale === 'es';
+
     const [selectedDate, setSelectedDate] = useState<Date | null>(new Date());
     const [monthCourses, setMonthCourses] = useState<Course[]>([]);
     const [loading, setLoading] = useState(false);
@@ -96,7 +101,6 @@ export default function Calendar({ showWalkInOnly = false }: CalendarProps) {
         } as Components<Omit<Theme, "components">> & CustomComponents,
     });
 
-    // Fetch all courses in the current month once when the month changes
     useEffect(() => {
         if (!selectedDate) return;
         if (lastFetchedMonth && isSameMonth(selectedDate, lastFetchedMonth)) return;
@@ -107,10 +111,7 @@ export default function Calendar({ showWalkInOnly = false }: CalendarProps) {
                 const start = format(startOfMonth(selectedDate), 'yyyy-MM-dd');
                 const end = format(endOfMonth(selectedDate), 'yyyy-MM-dd');
 
-                console.log(`Fetching courses from ${start} to ${end}`);
-
-                const apiUrl = `${process.env.NEXT_PUBLIC_STRAPI_URL}/api/courses?filters[date][$gte]=${start}&filters[date][$lte]=${end}&populate=*`;
-                console.log('API URL:', apiUrl);
+                const apiUrl = `${process.env.NEXT_PUBLIC_STRAPI_URL}/api/courses?locale=${locale}&filters[date][$gte]=${start}&filters[date][$lte]=${end}&populate=*`;
 
                 const res = await fetch(apiUrl);
 
@@ -120,7 +121,6 @@ export default function Calendar({ showWalkInOnly = false }: CalendarProps) {
                 }
 
                 const json = await res.json();
-                console.log('Fetched data:', json);
 
                 const arr = Array.isArray(json.data)
                     ? json.data.map((c: StrapiCourse) => {
@@ -134,9 +134,6 @@ export default function Calendar({ showWalkInOnly = false }: CalendarProps) {
                     })
                     : [];
 
-                console.log('Processed courses:', arr);
-
-                // Filter for walk-in courses if showWalkInOnly is true
                 const filteredCourses = showWalkInOnly
                     ? (arr as Course[]).filter(course => course.registration === false)
                     : (arr as Course[]);
@@ -152,50 +149,47 @@ export default function Calendar({ showWalkInOnly = false }: CalendarProps) {
         };
 
         fetchCourses();
-    }, [selectedDate, lastFetchedMonth, showWalkInOnly]);
+    }, [selectedDate, lastFetchedMonth, showWalkInOnly, locale]);
 
-    // Filter the fetched month's courses down to the selected day
     const todayCourses = useMemo(() => {
         if (!selectedDate) return [];
 
         const dateStr = format(selectedDate, 'yyyy-MM-dd');
-        console.log('Looking for courses on date:', dateStr);
 
-        // Handle different date formats that might be coming from the API
         const filtered = monthCourses.filter(course => {
-            // Compare only the date part if the API returns a full ISO string
             const courseDate = course.date.includes('T')
                 ? course.date.split('T')[0]
                 : course.date;
 
-            console.log(`Comparing course date "${courseDate}" with "${dateStr}"`);
             return courseDate === dateStr;
         });
 
-        console.log('Filtered courses:', filtered);
         return filtered;
     }, [selectedDate, monthCourses]);
 
+    const formatDateWithLocale = (date: Date | null) => {
+        if (!date) return '';
+        return format(date, 'MMMM d, yyyy', { locale: isSpanish ? es : undefined });
+    };
+
     return (
-        // OUTER GRADIENT WRAPPER
         <div className="relative bg-gradient-to-r from-orange-300 via-orange-200 to-orange-50 p-4 sm:p-8 rounded-3xl overflow-visible">
             <Image
                 src={bubblesImage}
-                alt="Decorative bubbles"
+                alt={isSpanish ? "Burbujas decorativas" : "Decorative bubbles"}
                 className="absolute -top-30 -right-12 w-36 sm:w-48 h-auto opacity-70 z-10 pointer-events-none"
                 priority
             />
 
-            {/* INNER WHITE CARD */}
             <div className="relative z-0 bg-white rounded-2xl shadow-lg max-w-6xl mx-auto p-4 sm:p-6 md:p-8">
-                <h3 className="text-2xl font-bold text-gray-900 mb-4">View EcoDev Activities</h3>
+                <h3 className="text-2xl font-bold text-gray-900 mb-4">
+                    {isSpanish ? 'Ver Actividades de EcoDev' : 'View EcoDev Activities'}
+                </h3>
 
-                {/* Responsive layout - stack on small/medium screens, side-by-side on large */}
                 <div className="flex flex-col lg:flex-row lg:space-x-8 space-y-8 lg:space-y-0">
-                    {/* CALENDAR SECTION */}
                     <div className="flex justify-center lg:w-3/5 w-full">
                         <ThemeProvider theme={calendarTheme}>
-                            <LocalizationProvider dateAdapter={AdapterDateFns}>
+                            <LocalizationProvider dateAdapter={AdapterDateFns} adapterLocale={isSpanish ? es : undefined}>
                                 <StaticDatePicker
                                     displayStaticWrapperAs="desktop"
                                     value={selectedDate}
@@ -206,20 +200,17 @@ export default function Calendar({ showWalkInOnly = false }: CalendarProps) {
                         </ThemeProvider>
                     </div>
 
-                    {/* DIVIDER - vertical on large screens, horizontal on small/medium */}
                     <div className="hidden lg:block lg:w-px lg:h-auto bg-gray-200"></div>
                     <div className="block lg:hidden w-full h-px bg-gray-200"></div>
 
-                    {/* EVENTS SECTION */}
                     <div className="w-full lg:w-2/5">
                         <h3 className="text-xl sm:text-2xl font-bold text-gray-900 mb-2">
-                            {selectedDate ? format(selectedDate, 'MMMM d, yyyy') : ''}
+                            {formatDateWithLocale(selectedDate)}
                         </h3>
-                        <p className="text-xs text-gray-600 mb-4">
-                            Programs happening on this date:
+                        <p className="text-xs text-gray-600 mb-3">
+                            {isSpanish ? 'Programas para esta fecha:' : 'Programs happening on this date:'}
                         </p>
 
-                        {/* Loading state */}
                         {loading ? (
                             <div className="flex flex-1 justify-center items-center py-6 sm:py-12">
                                 <svg
@@ -244,33 +235,31 @@ export default function Calendar({ showWalkInOnly = false }: CalendarProps) {
                                 </svg>
                             </div>
                         ) : todayCourses.length === 0 ? (
-                            // No courses
                             <div className="flex flex-1 items-center justify-center text-gray-400 py-8">
-                                No courses scheduled for this date
+                                {isSpanish ? 'No hay cursos programados para esta fecha' : 'No courses scheduled for this date'}
                             </div>
                         ) : (
-                            // Event list
-                            <ul className="space-y-3 overflow-y-auto max-h-60 lg:max-h-96 pr-2">
+                            <ul className="space-y-2 overflow-y-auto max-h-72 lg:max-h-[450px] pr-2 pb-1">
                                 {todayCourses.map((course, idx) => {
-                                    const bg = idx % 2 === 0 ? 'bg-orange-100' : 'bg-blue-50';
+                                    const bg = idx % 2 === 0 ? 'bg-orange-50' : 'bg-blue-50';
+                                    const border = idx % 2 === 0 ? 'border-orange-200' : 'border-blue-200';
 
                                     return (
                                         <li
                                             key={course.id}
-                                            className={`${bg} rounded-xl p-3 transition-all hover:shadow-md cursor-pointer`}
+                                            className={`${bg} rounded-lg p-2 transition-all hover:shadow-md cursor-pointer border ${border}`}
                                         >
                                             <Link
                                                 href={`/course/${course.slug}`}
                                                 className="block"
                                             >
-                                                <div className="font-semibold text-gray-900 text-lg mb-1">
+                                                <div className="font-semibold text-gray-900 text-sm mb-1">
                                                     {course.title}
                                                 </div>
 
                                                 {(course.time || course.endTime) && (
-                                                    <div className="flex items-center text-sm text-gray-700 mb-2">
-                                                        {/*clock icon*/}
-                                                        <svg className="w-4 h-4 mr-1.5 text-gray-500" fill="none"
+                                                    <div className="flex items-center text-xs text-gray-700 mb-1">
+                                                        <svg className="w-3 h-3 mr-1 text-gray-500" fill="none"
                                                              stroke="currentColor" viewBox="0 0 24 24"
                                                              xmlns="http://www.w3.org/2000/svg">
                                                             <path strokeLinecap="round" strokeLinejoin="round"
@@ -278,10 +267,10 @@ export default function Calendar({ showWalkInOnly = false }: CalendarProps) {
                                                                   d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
                                                         </svg>
                                                         <span className="text-xs text-gray-600">
-                            {formatTime(course.time)}
+                                                            {formatTime(course.time)}
                                                             {course.time && course.endTime && ' – '}
                                                             {formatTime(course.endTime)}
-                        </span>
+                                                        </span>
                                                     </div>
                                                 )}
                                             </Link>
@@ -291,14 +280,12 @@ export default function Calendar({ showWalkInOnly = false }: CalendarProps) {
                             </ul>
                         )}
 
-                        {/* VIEW ALL COURSES CTA */}
-                        <div className="mt-6 flex flex-col sm:flex-row sm:items-center">
-
+                        <div className="mt-4 flex flex-col sm:flex-row sm:items-center">
                             <Link
                                 href="/course"
                                 className="inline-block bg-teal-700 hover:bg-teal-800 text-white text-sm font-medium py-2 px-4 rounded-md transition"
                             >
-                                Browse All Courses
+                                {isSpanish ? 'Ver Todos Los Cursos' : 'Browse All Courses'}
                             </Link>
                         </div>
                     </div>

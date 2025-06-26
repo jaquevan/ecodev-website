@@ -5,7 +5,6 @@ import { useLanguage } from '@/context/LanguageContext';
 import { fetchCourseBySlug, mediaUrl } from '@/lib/strapi';
 import Nav from "@/components/Nav";
 import Footer from "@/components/Footer";
-import LanguageSwitcher from "@/components/LanguageSwitcher";
 import Loading from '@/components/Loading';
 import Link from 'next/link';
 import Image from 'next/image';
@@ -135,9 +134,8 @@ export default function CoursePage({ params }: { params: Promise<{ slug: string 
                         <Link href="/course" className="inline-flex items-center text-[#FFFDF5] bg-[#FF7001]/90 hover:bg-[#FF7001] px-4 py-2 rounded-full transition-all shadow-md">
                             <ArrowBackIcon className="mr-1" fontSize="small" /> Back to Courses
                         </Link>
-                        <LanguageSwitcher />
                     </div>
-                    <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold text-[#FFFDF5] drop-shadow-md">{course.title}</h1>
+                    <h1 className="text-white text-3xl md:text-4xl lg:text-5xl font-bold drop-shadow-md">{course.title}</h1>
                 </div>
             </div>
 

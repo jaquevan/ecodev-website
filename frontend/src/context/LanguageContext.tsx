@@ -38,7 +38,7 @@ const LanguageContext = createContext<LanguageContextType>({
 /* ─── Provider ──────────────────────────────────────────────────────────────── */
 export function LanguageProvider({ children }: { children: ReactNode }) {
     const pathname = usePathname(); // works because this component is client-side
-    const [locale, _setLocale] = useState<Locale>('en');
+    const [locale, _setLocale] = useState<Locale>('es');
 
     /* ── First-run: pick locale from localStorage OR current URL ─────────────── */
     useEffect(() => {

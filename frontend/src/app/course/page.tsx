@@ -3,7 +3,6 @@
 import { useEffect, useState } from 'react'
 import { useLanguage } from '@/context/LanguageContext'
 import { fetchCourses, mediaUrl } from '@/lib/strapi'
-import LanguageSwitcher from '@/components/LanguageSwitcher'
 import Loading from '@/components/Loading'
 import Nav from '@/components/Nav'
 import Footer from '@/components/Footer'
@@ -77,7 +76,6 @@ export default function CoursesPage() {
                     {/* heading + language switcher */}
                     <header className='text-center mb-12'>
                         <div className="flex justify-end mb-4">
-                            <LanguageSwitcher />
                         </div>
                         <h1 className='text-4xl font-extrabold text-[#00464d] mb-2'>
                             {locale === 'en'

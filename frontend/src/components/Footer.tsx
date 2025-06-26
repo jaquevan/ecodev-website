@@ -5,8 +5,11 @@ import Image from 'next/image';
 import { Home, People, School, EventNote, Mail, LocationOn, Phone, Facebook, Instagram, LinkedIn, KeyboardArrowUp } from '@mui/icons-material';
 import { useState, useEffect } from 'react';
 import LanguageSwitcher from "@/components/LanguageSwitcher";
+import { useLanguage } from '@/context/LanguageContext';
 
 export default function Footer() {
+    const { locale } = useLanguage();
+    const isSpanish = locale === 'es';
     const [showScrollTop, setShowScrollTop] = useState(false);
 
     useEffect(() => {
@@ -36,7 +39,9 @@ export default function Footer() {
                         </div>
                         <span className="text-xl font-bold">La Colaborativa</span>
                     </div>
-                    <p className="font-semibold text-orange-100 mb-4">Economic Development</p>
+                    <p className="font-semibold text-orange-100 mb-4">
+                        {isSpanish ? 'Desarrollo Económico' : 'Economic Development'}
+                    </p>
                     <div className="space-y-3 text-sm">
                         <div className="flex items-start gap-3">
                             <LocationOn className="text-orange-300 flex-shrink-0 mt-1" fontSize="small" />
@@ -66,14 +71,18 @@ export default function Footer() {
 
                 {/* Column 2: Navigation */}
                 <div>
-                    <h3 className="text-xl font-heading text-orange-100 mb-5 pb-2 border-b border-orange-300/30">Navigation</h3>
+                    <h3 className="text-xl font-heading text-orange-100 mb-5 pb-2 border-b border-orange-300/30">
+                        {isSpanish ? 'Navegación' : 'Navigation'}
+                    </h3>
                     <ul className="space-y-3 font-body">
                         <li>
                             <Link href="/" className="flex items-center gap-3 group">
                                 <div className="w-8 h-8 rounded-full bg-[#3E666D] flex items-center justify-center group-hover:bg-orange-400 transition-colors">
                                     <Home fontSize="small" className="text-white" />
                                 </div>
-                                <span className="group-hover:text-orange-300 transition-colors">Home</span>
+                                <span className="group-hover:text-orange-300 transition-colors">
+                                    {isSpanish ? 'Inicio' : 'Home'}
+                                </span>
                             </Link>
                         </li>
                         <li>
@@ -81,7 +90,9 @@ export default function Footer() {
                                 <div className="w-8 h-8 rounded-full bg-[#3E666D] flex items-center justify-center group-hover:bg-orange-400 transition-colors">
                                     <People fontSize="small" className="text-white" />
                                 </div>
-                                <span className="group-hover:text-orange-300 transition-colors">Meet the Team</span>
+                                <span className="group-hover:text-orange-300 transition-colors">
+                                    {isSpanish ? 'Conoce al Equipo' : 'Meet the Team'}
+                                </span>
                             </Link>
                         </li>
                         <li>
@@ -89,7 +100,9 @@ export default function Footer() {
                                 <div className="w-8 h-8 rounded-full bg-[#3E666D] flex items-center justify-center group-hover:bg-orange-400 transition-colors">
                                     <School fontSize="small" className="text-white" />
                                 </div>
-                                <span className="group-hover:text-orange-300 transition-colors">Programs</span>
+                                <span className="group-hover:text-orange-300 transition-colors">
+                                    {isSpanish ? 'Programas' : 'Programs'}
+                                </span>
                             </Link>
                         </li>
                         <li>
@@ -97,7 +110,9 @@ export default function Footer() {
                                 <div className="w-8 h-8 rounded-full bg-[#3E666D] flex items-center justify-center group-hover:bg-orange-400 transition-colors">
                                     <EventNote fontSize="small" className="text-white" />
                                 </div>
-                                <span className="group-hover:text-orange-300 transition-colors">Calendar</span>
+                                <span className="group-hover:text-orange-300 transition-colors">
+                                    {isSpanish ? 'Calendario' : 'Calendar'}
+                                </span>
                             </Link>
                         </li>
                     </ul>
@@ -105,24 +120,32 @@ export default function Footer() {
 
                 {/* Column 3: Newsletter */}
                 <div className="bg-[#2A4448] p-6 rounded-lg shadow-lg border border-[#5A898F]/20">
-                    <h3 className="text-xl font-heading mb-3 text-orange-100">Subscribe to Our Newsletter</h3>
-                    <p className="text-sm mb-5 text-gray-200">Get updates on classes, events, and opportunities.</p>
+                    <h3 className="text-xl font-heading mb-3 text-orange-100">
+                        {isSpanish ? 'Suscríbete a Nuestro Boletín' : 'Subscribe to Our Newsletter'}
+                    </h3>
+                    <p className="text-sm mb-5 text-gray-200">
+                        {isSpanish ? 'Recibe actualizaciones sobre clases, eventos y oportunidades.' : 'Get updates on classes, events, and opportunities.'}
+                    </p>
                     <form className="space-y-3">
                         <div>
-                            <label htmlFor="name" className="sr-only">Your Name</label>
+                            <label htmlFor="name" className="sr-only">
+                                {isSpanish ? 'Tu Nombre' : 'Your Name'}
+                            </label>
                             <input
                                 id="name"
                                 type="text"
-                                placeholder="Your Name"
+                                placeholder={isSpanish ? 'Tu Nombre' : 'Your Name'}
                                 className="w-full px-4 py-3 rounded-lg bg-[#3E666D]/80 border border-[#5A898F] text-white placeholder-gray-300 focus:outline-none focus:ring-2 focus:ring-orange-400"
                             />
                         </div>
                         <div>
-                            <label htmlFor="email" className="sr-only">Email address</label>
+                            <label htmlFor="email" className="sr-only">
+                                {isSpanish ? 'Correo electrónico' : 'Email address'}
+                            </label>
                             <input
                                 id="email"
                                 type="email"
-                                placeholder="Email address"
+                                placeholder={isSpanish ? 'Correo electrónico' : 'Email address'}
                                 className="w-full px-4 py-3 rounded-lg bg-[#3E666D]/80 border border-[#5A898F] text-white placeholder-gray-300 focus:outline-none focus:ring-2 focus:ring-orange-400"
                             />
                         </div>
@@ -130,11 +153,19 @@ export default function Footer() {
                             type="submit"
                             className="w-full bg-orange-500 hover:bg-orange-600 transition-colors text-white font-medium px-4 py-3 rounded-lg shadow-md hover:shadow-lg"
                         >
-                            Subscribe
+                            {isSpanish ? 'Suscribirse' : 'Subscribe'}
                         </button>
                     </form>
                     <p className="text-xs text-gray-300 mt-4">
-                        By subscribing, you agree to our <a href="/privacy" className="text-orange-300 hover:underline">Privacy Policy</a> and consent to receive updates.
+                        {isSpanish
+                            ? 'Al suscribirte, aceptas nuestra '
+                            : 'By subscribing, you agree to our '}
+                        <a href="/privacy" className="text-orange-300 hover:underline">
+                            {isSpanish ? 'Política de Privacidad' : 'Privacy Policy'}
+                        </a>
+                        {isSpanish
+                            ? ' y consientes recibir actualizaciones.'
+                            : ' and consent to receive updates.'}
                     </p>
                 </div>
             </div>
@@ -142,12 +173,11 @@ export default function Footer() {
             {/* Bottom Row */}
             <div className="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center border-t border-gray-500/30 pt-6 text-sm">
                 {/* Copyright */}
-                <p className="text-gray-300">&copy; {new Date().getFullYear()} La Colaborativa. All rights reserved.</p>
+                <p className="text-gray-300">
+                    &copy; {new Date().getFullYear()} La Colaborativa.
+                    {isSpanish ? ' Todos los derechos reservados.' : ' All rights reserved.'}
+                </p>
 
-                {/*/!* Language Switcher with flag-icons *!/*/}
-                {/*<div className="mt-4 md:mt-0 flex gap-2">*/}
-                {/*    <LanguageSwitcher/>*/}
-                {/*</div>*/}
             </div>
 
             {/* Scroll to Top Button */}
@@ -156,7 +186,7 @@ export default function Footer() {
                 className={`fixed right-6 bottom-6 bg-orange-500 hover:bg-orange-600 text-white rounded-full w-12 h-12 flex items-center justify-center shadow-lg transition-all duration-300 ${
                     showScrollTop ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10 pointer-events-none'
                 }`}
-                aria-label="Scroll to top"
+                aria-label={isSpanish ? "Volver arriba" : "Scroll to top"}
             >
                 <KeyboardArrowUp fontSize="medium" />
             </button>

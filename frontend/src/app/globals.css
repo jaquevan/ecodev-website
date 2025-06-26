@@ -2,6 +2,37 @@
 
 @import url('https://fonts.googleapis.com/css2?family=Gentium+Plus:wght@400;700&family=Libre+Franklin:wght@400;600;700&display=swap');
 
+:root {
+  --color-off-white: #FFFDF5;
+  --color-black: #212020;
+  --color-dark-teal: #00464D;
+  --color-orange: #FCD3B6;
+  --color-bright-orange: #FF7001;
+  --color-yellow: #F7CA00;
+  --color-teal: #00AA93;
+
+  --font-heading: 'Gentium Plus', serif;
+  --font-body: 'Libre Franklin', sans-serif;
+
+  --background: white;
+  --foreground: black;
+}
+
+body {
+  background: var(--background);
+  color: var(--color-dark-teal);
+  font-family: var(--font-sans);
+}
+
+h1, h2 {
+  font-family: var(--font-heading);
+  font-weight: 700;
+}
+
+h3, h4, h5 {
+  font-family: var(--font-body);
+  font-weight: 550;
+}
 
 
 @keyframes fadeIn {
@@ -48,28 +79,19 @@
     transform: translateY(0) rotate(0deg);
   }
   50% {
-    transform: translateY(-12.5px) rotate(2deg);
-  }
-  75% {
-    transform: translateX(-1px) translateY(-8.5px) rotate(deg);
+    transform: translate(-2px, -8px) rotate(5deg);
   }
   100% {
     transform: translateY(0) rotate(0deg);
   }
 }
 
+
+
 .animate-bubble {
   animation: bubble 4s infinite ease-in-out;
 }
 
-/* Define font variables */
-:root {
-  --font-heading: 'Gentium Plus', serif;
-  --font-body: 'Libre Franklin', sans-serif;
-
-  --background: white;
-  --foreground: black;
-}
 
 /* Light mode fallback */
 @media (prefers-color-scheme: light) {
@@ -77,18 +99,4 @@
     --background: white;
     --foreground: black;
   }
-}
-
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: var(--font-sans);
-}
-
-h1, h2 {
-  font-family: var(--font-heading);
-}
-
-h3, h4, h5 {
-  font-family: var(--font-body);
 }

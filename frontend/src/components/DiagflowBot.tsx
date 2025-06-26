@@ -22,15 +22,15 @@ const DialogflowBot = () => {
                 href="https://www.gstatic.com/dialogflow-console/fast/df-messenger/prod/v1/themes/df-messenger-default.css"
             />
 
-            {/*<df-messenger*/}
-            {/*    location="us"*/}
-            {/*    project-id="la-colaborativa"*/}
-            {/*    agent-id="058c3c3a-ba98-4fb5-a4f8-cac0a97dbcb8"*/}
-            {/*    language-code="en"*/}
-            {/*    max-query-length="-1"*/}
-            {/*>*/}
-            {/*    <df-messenger-chat-bubble chat-title="Resume Planner Bot"></df-messenger-chat-bubble>*/}
-            {/*</df-messenger>*/}
+            <df-messenger
+                location="us"
+                project-id="la-colaborativa"
+                agent-id="058c3c3a-ba98-4fb5-a4f8-cac0a97dbcb8"
+                language-code="en"
+                max-query-length="-1"
+            >
+                <df-messenger-chat-bubble chat-title="Resume Planner Bot"></df-messenger-chat-bubble>
+            </df-messenger>
 
             <style jsx global>{`
         df-messenger {
