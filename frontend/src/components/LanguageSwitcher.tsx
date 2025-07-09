@@ -127,11 +127,11 @@ export default function LanguageSwitcher() {
 
     return (
         <div className="flex space-x-2 items-center">
-            <div className="bg-gradient-to-r from-teal-500 to-blue-500 backdrop-blur-sm rounded-full p-1 shadow-lg">
+            <div className="bg-white backdrop-blur-sm rounded-full p-1 shadow-lg">
                 <div className="flex items-center relative px-1 py-0.5">
                     {/* Animated background slider */}
                     <motion.div
-                        className="absolute inset-0 bg-white rounded-full shadow-md z-0"
+                        className="absolute inset-0 bg-teal-100 rounded-full shadow-md z-0 duration-50"
                         initial={false}
                         animate={{
                             x: locale === 'en' ? 0 : '100%',
@@ -150,7 +150,7 @@ export default function LanguageSwitcher() {
                         className={`px-4 py-1.5 rounded-full text-sm font-medium transition-all z-10 relative ${
                             locale === 'en'
                                 ? 'text-teal-700'
-                                : 'text-white hover:text-teal-100 cursor-pointer'
+                                : 'text-black hover:text-teal-700 cursor-pointer'
                         } disabled:cursor-not-allowed disabled:opacity-70`}
                         aria-label="Switch to English"
                     >
@@ -169,7 +169,7 @@ export default function LanguageSwitcher() {
                         className={`px-4 py-1.5 rounded-full text-sm font-medium transition-all z-10 relative ${
                             locale === 'es'
                                 ? 'text-teal-700'
-                                : 'text-white hover:text-teal-100 cursor-pointer'
+                                : 'text-black hover:text-teal-700 cursor-pointer'
                         } disabled:cursor-not-allowed disabled:opacity-70`}
                         aria-label="Switch to Spanish"
                     >

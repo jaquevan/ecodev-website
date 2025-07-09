@@ -1,10 +1,10 @@
 {
   "kind": "collectionType",
-  "collectionName": "team_members",
+  "collectionName": "programs",
   "info": {
-    "singularName": "team-member",
-    "pluralName": "team-members",
-    "displayName": "Team Member"
+    "singularName": "program",
+    "pluralName": "programs",
+    "displayName": "Program"
   },
   "options": {
     "draftAndPublish": true
@@ -15,7 +15,7 @@
     }
   },
   "attributes": {
-    "name": {
+    "title": {
       "type": "string",
       "pluginOptions": {
         "i18n": {
@@ -23,30 +23,11 @@
         }
       }
     },
-    "photo": {
-      "type": "media",
-      "pluginOptions": {
-        "i18n": {
-          "localized": true
-        }
-      },
-      "multiple": false,
-      "allowedTypes": [
-        "images",
-        "files",
-        "videos",
-        "audios"
-      ]
+    "slug": {
+      "type": "uid",
+      "targetField": "title"
     },
-    "role": {
-      "type": "string",
-      "pluginOptions": {
-        "i18n": {
-          "localized": true
-        }
-      }
-    },
-    "description": {
+    "heroDescription": {
       "type": "text",
       "pluginOptions": {
         "i18n": {
@@ -54,21 +35,46 @@
         }
       }
     },
-    "social": {
+    "heroImage": {
+      "type": "media",
+      "pluginOptions": {
+        "i18n": {
+          "localized": true
+        }
+      },
+      "multiple": true,
+      "allowedTypes": [
+        "images",
+        "files",
+        "videos",
+        "audios"
+      ]
+    },
+    "steps": {
       "type": "component",
       "pluginOptions": {
         "i18n": {
           "localized": true
         }
       },
-      "component": "links.social-link",
-      "repeatable": false
+      "component": "program.registration-steps",
+      "repeatable": true
+    },
+    "review": {
+      "type": "component",
+      "pluginOptions": {
+        "i18n": {
+          "localized": true
+        }
+      },
+      "component": "program.student-review",
+      "repeatable": true
     },
     "courses": {
       "type": "relation",
-      "relation": "manyToMany",
+      "relation": "oneToMany",
       "target": "api::course.course",
-      "inversedBy": "team_members"
+      "mappedBy": "program"
     }
   }
 }

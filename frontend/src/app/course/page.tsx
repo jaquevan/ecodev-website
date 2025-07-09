@@ -10,7 +10,6 @@ import Link from 'next/link'
 import Image from 'next/image'
 import { Course } from '@/types/course'
 
-// add category and registration to our Course type
 interface ExtendedCourse extends Course {
     category?: string;
     registration?: boolean;
@@ -19,14 +18,12 @@ interface ExtendedCourse extends Course {
 export default function CoursesPage() {
     const { locale } = useLanguage()
 
-    // local state
     const [courses, setCourses] = useState<ExtendedCourse[]>([])
     const [loading, setLoading] = useState(true)
     const [search, setSearch] = useState('')
     const [dateFilter, setDateFilter] = useState('')
     const [categoryValue, setCategoryValue] = useState('')
 
-    // load courses whenever locale changes
     useEffect(() => {
         let mounted = true
         ;(async () => {
@@ -45,7 +42,6 @@ export default function CoursesPage() {
         }
     }, [locale])
 
-    // quick client-side filtering
     const filtered = courses.filter(c => {
         const matchSearch =
             c.title.toLowerCase().includes(search.toLowerCase()) ||
@@ -54,7 +50,6 @@ export default function CoursesPage() {
         return matchSearch && matchDate
     })
 
-    // loading state
     if (loading) {
         return (
             <>
@@ -70,28 +65,25 @@ export default function CoursesPage() {
     return (
         <>
             <Nav />
+            <div className="bg-gradient-to-b from-[#00464D]/10 to-white">
+                <div className="container mx-auto px-4 py-16 text-center">
+                    <h1 className="text-4xl md:text-5xl font-bold mb-4 text-[#00464D]">
+                        {locale === 'en'
+                            ? 'Upcoming Courses & Programs'
+                            : 'Próximos Cursos y Programas'}
+                    </h1>
+                    <p className="text-lg max-w-2xl mx-auto text-gray-600 mb-8">
+                        {locale === 'en'
+                            ? 'All of our courses and workshops are completely free and open to everyone in the community. Join us to learn new skills, meet new people, and take the next step in your personal or professional journey.'
+                            : 'Todos nuestros cursos y talleres son completamente gratuitos y están abiertos a toda la comunidad. Únete para aprender nuevas habilidades, conocer gente nueva y dar el siguiente paso en tu desarrollo personal o profesional.'}
+                    </p>
+                    <div className="w-24 h-1 bg-gradient-to-r from-[#00464D] to-[#FF7001] rounded-full mx-auto"></div>
+                </div>
+            </div>
+
             <section className='bg-[#fffdf5]'>
                 <div className='max-w-6xl mx-auto px-4 py-16'>
-
-                    {/* heading + language switcher */}
-                    <header className='text-center mb-12'>
-                        <div className="flex justify-end mb-4">
-                        </div>
-                        <h1 className='text-4xl font-extrabold text-[#00464d] mb-2'>
-                            {locale === 'en'
-                                ? 'Upcoming Courses & Programs'
-                                : 'Próximos Cursos y Programas'}
-                        </h1>
-                        <p className='max-w-2xl mx-auto text-gray-700'>
-                            {locale === 'en'
-                                ? 'All of our courses and workshops are completely free and open to everyone in the community. Join us to learn new skills, meet new people, and take the next step in your personal or professional journey.'
-                                : 'Todos nuestros cursos y talleres son completamente gratuitos y están abiertos a toda la comunidad. Únete para aprender nuevas habilidades, conocer gente nueva y dar el siguiente paso en tu desarrollo personal o profesional.'}
-                        </p>
-                    </header>
-
-                    {/* filter row */}
                     <div className='grid grid-cols-1 sm:grid-cols-3 gap-4 mb-10'>
-                        {/* search input */}
                         <div className='relative'>
                             <input
                                 type='text'
@@ -100,7 +92,6 @@ export default function CoursesPage() {
                                 onChange={e => setSearch(e.target.value)}
                                 className='w-full border border-gray-300 rounded-md py-2 pl-10 pr-3 placeholder-gray-500 focus:border-[#00464d] focus:ring-0'
                             />
-                            {/* magnifier icon */}
                             <svg
                                 className='w-4 h-4 absolute top-1/2 left-3 -translate-y-1/2 text-gray-400'
                                 fill='none'
@@ -116,7 +107,6 @@ export default function CoursesPage() {
                             </svg>
                         </div>
 
-                        {/* date selector */}
                         <select
                             value={dateFilter}
                             onChange={e => setDateFilter(e.target.value)}
@@ -124,10 +114,8 @@ export default function CoursesPage() {
                         >
                             <option value=''>{locale === 'en' ? 'Date' : 'Fecha'}</option>
                             <option value='2025-06'>Jun 2025</option>
-                            {/* add more automatically later */}
                         </select>
 
-                        {/* category selector - kept but not used for filtering */}
                         <select
                             value={categoryValue}
                             onChange={e => setCategoryValue(e.target.value)}
@@ -140,7 +128,6 @@ export default function CoursesPage() {
                         </select>
                     </div>
 
-                    {/* course grid */}
                     {filtered.length ? (
                         <div className='grid gap-8 sm:grid-cols-2 lg:grid-cols-3'>
                             {filtered.map(c => (
@@ -155,7 +142,6 @@ export default function CoursesPage() {
                         </p>
                     )}
 
-                    {/* cta section */}
                     <div className='mt-20'>
                         <div className='rounded-xl bg-gradient-to-r from-[#0f6d73] to-[#4db08e] p-10 text-center text-white'>
                             <h2 className='text-2xl font-semibold mb-2'>
@@ -183,24 +169,22 @@ export default function CoursesPage() {
     )
 }
 
-/* course card component */
 function CourseCard({ course }: { course: ExtendedCourse }) {
     const { locale } = useLanguage()
 
-    // get the image url
     const imageUrl = (() => {
         if (course.Image && 'data' in course.Image) {
             const imageData = Array.isArray(course.Image.data)
                 ? course.Image.data[0]?.attributes
                 : course.Image.data?.attributes
-            return imageData?.formats?.medium?.url || imageData?.url || null
+
+            return imageData && (imageData.formats?.medium?.url || imageData.url) || null
         } else if (Array.isArray(course.Image)) {
             return course.Image[0]?.formats?.medium?.url || course.Image[0]?.url || null
         }
         return null
     })()
 
-    // registration badge
     const badge = course.registration
         ? {
             text: locale === 'en' ? 'Registration Required' : 'Requiere Registro',
@@ -214,8 +198,6 @@ function CourseCard({ course }: { course: ExtendedCourse }) {
     return (
         <Link href={`/course/${course.slug}`} className='block'>
             <article className='h-full flex flex-col border border-[#d5e9e2] rounded-2xl shadow-sm hover:shadow-md transition'>
-
-                {/* image */}
                 <div className='h-44 relative rounded-t-2xl overflow-hidden'>
                     {imageUrl ? (
                         <Image
@@ -226,21 +208,19 @@ function CourseCard({ course }: { course: ExtendedCourse }) {
                         />
                     ) : (
                         <div className='w-full h-full flex items-center justify-center bg-gradient-to-r from-[#00464d] to-[#ff7001]'>
-              <span className='text-white font-semibold'>
-                {locale === 'en' ? 'No Image' : 'Sin Imagen'}
-              </span>
+                          <span className='text-white font-semibold'>
+                            {locale === 'en' ? 'No Image' : 'Sin Imagen'}
+                          </span>
                         </div>
                     )}
                 </div>
 
-                {/* content */}
                 <div className='flex flex-col flex-grow p-4'>
                     <h3 className='text-lg font-bold text-[#00464d] mb-2 line-clamp-2'>
                         {course.title}
                     </h3>
                     <ul className='text-sm text-gray-700 space-y-1 mb-4'>
                         <li className='flex items-center'>
-                            {/* calendar icon */}
                             <svg
                                 className='w-4 h-4 mr-1 text-[#00464d]'
                                 fill='none'
@@ -257,7 +237,6 @@ function CourseCard({ course }: { course: ExtendedCourse }) {
                             {course.date}
                         </li>
                         <li className='flex items-center'>
-                            {/* globe icon */}
                             <svg
                                 className='w-4 h-4 mr-1 text-[#00464d]'
                                 fill='none'
@@ -279,7 +258,6 @@ function CourseCard({ course }: { course: ExtendedCourse }) {
                     </p>
                 </div>
 
-                {/* badge */}
                 <div className={`px-4 py-2 ${badge.color} text-white text-center text-sm font-medium rounded-b-2xl`}>
                     {badge.text}
                 </div>

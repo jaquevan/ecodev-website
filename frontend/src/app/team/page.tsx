@@ -16,18 +16,16 @@ import { TeamMember } from '@/types/member';
 
 /* static ui helpers */
 const bubbles = [
-    { color: '#9EDED5', size: 180, top: '2%',  left: '8%',  delay: '0s'   },
-    { color: '#FFD700', size: 100, top: '35%', left: '12%', delay: '1.5s' },
-    { color: '#98FB98', size: 320, top: '65%', left: '75%', delay: '2.1s' },
-    { color: '#7FD1AE', size: 250, top: '50%', left: '5%',  delay: '2.7s' },
-    { color: '#FFC8A2', size: 140, top: '28%', left: '48%', delay: '3.2s' },
+    { color: '#9EDED5', size: 230, top: '-10%',  left: '8%',  delay: '0s'   },
+    { color: '#7FD1AE', size: 400, top: '35%', left: '12%', delay: '1.5s' },
+    { color: '#7FD1AE', size: 320, top: '65%', left: '75%', delay: '2.1s' },
+    { color: '#FFB347', size: 140, top: '28%', left: '48%', delay: '3.2s' },
     { color: '#8EDFDF', size: 170, top: '42%', left: '80%', delay: '0.4s' },
     { color: '#FAE7A5', size: 130, top: '75%', left: '60%', delay: '1.9s' },
     { color: '#C1E1C1', size: 220, top: '58%', left: '30%', delay: '2.5s' },
     { color: '#FFB347', size: 110, top: '88%', left: '40%', delay: '3.0s' },
     { color: '#B5EAD7', size: 280, top: '10%', left: '70%', delay: '2.3s' },
-    { color: '#F47820', size: 160, top: '45%', left: '55%', delay: '1.0s' },
-]; // Removed 'as const'
+];
 
 export default function TeamPage() {
     const [team, setTeam] = useState<TeamMember[]>([]);
@@ -48,15 +46,15 @@ export default function TeamPage() {
 
                 <div className="container mx-auto pt-10 pb-4 px-4 text-center">
                     <h2
-                        className="mb-8 inline-block rotate-[-1.75deg] bg-amber-400 px-5 py-2 text-4xl font-extrabold text-emerald-900 shadow-md lg:text-5xl">
-                        Meet the Eco Dev Team
+                        className="mb-8 inline-block rotate-[1.7deg] bg-amber-300 px-6 py-4 text-4xl font-extrabold text-emerald-900 shadow-md lg:text-5xl">
+                        Meet the Economic Development Team
                     </h2>
                 </div>
 
                 <header className="relative isolate min-h-[50vh] flex items-center justify-center overflow-hidden mb-8">
                     <div
                         className="container mx-auto flex flex-col-reverse items-center justify-center gap-12 px-4 lg:flex-row lg:gap-25">
-                        <div className="max-w-xl text-center">
+                        <div className="max-w-xl text-center border-2 border-white px-5 py-15 rounded-xl shadow-lg ">
                             <p className="text-lg leading_relaxed text-slate-700">
                                 La Colaborativa offers contextualized support to empower our
                                 community toward financial independence. We provide holistic
@@ -76,9 +74,10 @@ export default function TeamPage() {
                                 priority
                                 width={600}
                                 height={400}
-                                className="relative rounded-[1rem] border-4 border-amber-500 shadow-xl w-full"
+                                className="relative rounded-[1rem] border-4 border-amber-500 shadow-xl w-full animate-fadeIn"
                                 sizes="(max-width: 1024px) 100vw, 50vw"
                             />
+
                         </figure>
                     </div>
                 </header>

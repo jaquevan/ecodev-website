@@ -55,7 +55,7 @@ export default function TeamMemberCard({ member }: { member: TeamMember }) {
                 <p className="mt-1 text-sm font-medium text-gray-800">{role}</p>
 
                 {description && (
-                    <button className="mt-3 text-sm text-emerald-600 hover:text-emerald-800 font-medium">
+                    <button className="mt-3 text-sm text-emerald-600 hover:text-emerald-800 font-medium rounded-md border-2 px-1.5 py-1 hover:cursor-pointer hover:bg-emerald-600">
                         View Bio
                     </button>
                 )}

@@ -29,29 +29,85 @@ export interface StrapiMedia {
     } | null;
 }
 
-export interface Course {
+export interface TeamMember {
     id: number;
+    attributes: {
+        name: string;
+        title: string;
+        bio: string;
+        image: StrapiMedia;
+        slug: string;
+        createdAt: string;
+        updatedAt: string;
+        publishedAt: string;
+    };
+}
+
+export interface Program {
+    id: number;
+    attributes: {
+        title: string;
+        slug: string;
+        description: string;
+        createdAt: string;
+        updatedAt: string;
+        publishedAt: string;
+    };
+}
+
+export interface Course {
+    id: string;
     title: string;
     desc: string;
+    slug: string;
     date: string;
     endDate: string;
     time: string;
     endTime: string;
-    slug: string;
     location: string;
     language: string;
-    instructorName: string;
-    instructorDesc: string;
-    preRequisites: string;
     learnings: string;
-    registration?: boolean;
+    preRequisites: string;
+    Image: StrapiFile[];
+    // New fields
+    WeekdaySelection?: {
+        id: number;
+        weekdays: string;
+    }[];
+    team_members?: {
+        id: number;
+        name: string;
+        role: string;
+        description: string;
+        photo?: {
+            data?: {
+                attributes: {
+                    url: string;
+                    formats?: {
+                        medium?: {
+                            url: string;
+                        };
+                    };
+                };
+            };
+        };
+    }[];
+    program?: {
+        data?: {
+            attributes: {
+                title: string;
+                description: string;
+            };
+        };
+    };
+    // Legacy fields (keep for backward compatibility)
+    instructorName?: string;
+    instructorDesc?: string;
+    instructorImage?: StrapiFile[];
+}
 
-    Image?: StrapiFile[] | StrapiMedia;
-    instructorImage?: StrapiFile[] | StrapiMedia;
+export type WeekdayType = 'Monday' | 'Tuesday' | 'Wednesday' | 'Thursday' | 'Friday' | 'Saturday' | 'Sunday';
 
-    createdAt: string;
-    updatedAt: string;
-    publishedAt: string;
-    locale: string;
-    documentId?: string;
+export interface StrapiRelation<T> {
+    data: T | T[] | null;
 }

@@ -1,13 +1,12 @@
 "use client";
 
+import { memo, useState, useEffect } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { Home, People, School, EventNote, Mail, LocationOn, Phone, Facebook, Instagram, LinkedIn, KeyboardArrowUp } from '@mui/icons-material';
-import { useState, useEffect } from 'react';
-import LanguageSwitcher from "@/components/LanguageSwitcher";
 import { useLanguage } from '@/context/LanguageContext';
 
-export default function Footer() {
+const Footer = memo(function Footer() {
     const { locale } = useLanguage();
     const isSpanish = locale === 'es';
     const [showScrollTop, setShowScrollTop] = useState(false);
@@ -192,4 +191,6 @@ export default function Footer() {
             </button>
         </footer>
     );
-}
+});
+
+export default Footer;

@@ -1,0 +1,23 @@
+{
+  "collectionName": "components_days_weekdays",
+  "info": {
+    "displayName": "Weekday",
+    "icon": "clock"
+  },
+  "options": {},
+  "attributes": {
+    "weekdays": {
+      "type": "enumeration",
+      "enum": [
+        "Monday",
+        "Tuesday",
+        "Wednesday",
+        "Thursday",
+        "Friday",
+        "Saturday",
+        "Sunday"
+      ]
+    }
+  },
+  "config": {}
+}

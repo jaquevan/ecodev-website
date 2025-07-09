@@ -7,10 +7,10 @@ import BubbleBackground from '@/components/Bubble';
 import FeatureCard from "@/components/FeatureCard";
 import ProgramCards from '@/components/ProgramCards';
 
-import { motion, Variants } from 'framer-motion';
+import { motion } from 'framer-motion';
 import { useInView } from 'react-intersection-observer';
 import type { StaticImageData } from 'next/image';
-import { useLanguage } from '@/context/LanguageContext'; // Fixed import and using the hook
+import { useLanguage } from '@/context/LanguageContext';
 
 import mural from '../../public/Mural.jpg';
 import classroom from '../../public/classroom.jpg';
@@ -27,30 +27,11 @@ type ProgramItem = {
     subItems?: string[];
 };
 
-// Animation variants for the Connect section
-const connectSectionVariants: Variants = {
-    initial: {
-        boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
-        y: 0
-    },
-    animate: {
-        boxShadow: "0 10px 15px rgba(0, 0, 0, 0.2)",
-        y: -5,
-        transition: {
-            duration: 3,
-            ease: "easeInOut",
-            repeat: Infinity,
-            repeatType: "reverse" as const
-        }
-    }
-};
-
 export default function Home() {
     const { ref: heroRef, inView: heroInView } = useInView({ triggerOnce: true });
     const { ref: connectRef, inView: connectInView } = useInView({ triggerOnce: true, threshold: 0.3 });
-    const { locale } = useLanguage(); // Using the correct hook and property name
+    const { locale } = useLanguage();
 
-    // Spanish translations - using ternary operators for content
     const isSpanish = locale === 'es';
 
     const adultEducationPrograms: ProgramItem[] = [
@@ -103,7 +84,6 @@ export default function Home() {
                 <BubbleBackground bubbles={bubbles} />
 
                 <main className="relative px-6 md:px-10 lg:px-16 py-20 space-y-32 max-w-screen-2xl mx-auto">
-                    {/* Hero Section */}
                     <section ref={heroRef} className="grid lg:grid-cols-2 gap-16 items-center">
                         <motion.div
                             initial={{ opacity: 0, y: 20 }}
@@ -130,7 +110,6 @@ export default function Home() {
                         </div>
                     </section>
 
-                    {/* Programs Section */}
                     <section>
                         <h1 className="text-5xl font-semibold text-center mb-6">
                             {isSpanish ? 'Explora Nuestros Programas' : 'Explore Our Programs'}
@@ -163,13 +142,9 @@ export default function Home() {
                         </div>
                     </section>
 
-                    {/* Connect Section with subtle animation */}
-                    <motion.section
+                    <section
                         ref={connectRef}
                         className="bg-gradient-to-r from-teal-700 to-orange-300 p-10 rounded-xl shadow-lg text-white text-center border-teal-600 border-2"
-                        variants={connectSectionVariants}
-                        initial="initial"
-                        animate={connectInView ? "animate" : "initial"}
                     >
                         <motion.div
                             initial={{ opacity: 0, y: 20 }}
@@ -196,7 +171,7 @@ export default function Home() {
                                 {isSpanish ? 'Conectar Ahora' : 'Connect Now'}
                             </button>
                         </div>
-                    </motion.section>
+                    </section>
                 </main>
             </div>
             <Footer />

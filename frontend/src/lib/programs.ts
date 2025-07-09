@@ -1,24 +1,24 @@
-// data fetching and caching for courses from Strapi
+import { Program } from "@/types/program";
 
-import { Course } from '@/types/course';
-
-const courseCache: Record<string, { data: Course; timestamp: number }> = {};
+const programCache: Record<string, { data: Program; timestamp: number }> = {};
 const CACHE_TTL = 5 * 60 * 1000;
 
 export const API = (process.env.NEXT_PUBLIC_STRAPI_URL ?? 'http://localhost:1340').replace(/\/$/, '');
 
 export const mediaUrl = (path = '') => (path.startsWith('http') ? path : `${API}${path}`);
 
-export async function fetchCourses(
+export async function fetchPrograms(
     locale: string = 'en',
     options: { cache?: RequestCache } = { cache: 'no-store' }
-): Promise<Course[]> {
+): Promise<Program[]> {
     try {
         const token = process.env.NEXT_PUBLIC_STRAPI_API_TOKEN;
-        const res = await fetch(`${API}/api/courses?locale=${locale}&populate=Image`, {
+        const url = `${API}/api/programs?locale=${locale}&populate=*`;
+
+        const res = await fetch(url, {
             cache: options.cache,
             headers: {
-                Authorization: `Bearer ${token}`,
+                ...(token ? { Authorization: `Bearer ${token}` } : {}),
                 'Content-Type': 'application/json',
             },
         });
@@ -27,27 +27,28 @@ export async function fetchCourses(
             console.error('Strapi fetch failed', res.status, await res.text());
             return [];
         }
+
         const json = await res.json();
-        return json.data as Course[];
+        return json.data as Program[];
     } catch (err) {
-        console.error('fetchCourses error:', err);
+        console.error('fetchPrograms error:', err);
         return [];
     }
 }
 
-export async function fetchCourseBySlug(
+export async function fetchProgramBySlug(
     slug: string,
     locale: string = 'en',
     options: { cache?: RequestCache } = { cache: 'no-store' }
-): Promise<Course | null> {
+): Promise<Program | null> {
     try {
         const token = process.env.NEXT_PUBLIC_STRAPI_API_TOKEN;
-        const url = `${API}/api/courses?locale=${locale}&filters[slug][$eq]=${slug}&populate[team_members][populate]=photo`;
+        const url = `${API}/api/programs?locale=${locale}&filters[slug][$eq]=${slug}&populate=*`;
 
         const res = await fetch(url, {
             cache: options.cache,
             headers: {
-                Authorization: `Bearer ${token}`,
+                ...(token ? { Authorization: `Bearer ${token}` } : {}),
                 'Content-Type': 'application/json',
             },
         });
@@ -60,26 +61,26 @@ export async function fetchCourseBySlug(
         const json = await res.json();
 
         if (!json.data || json.data.length === 0) {
-            console.log(`No course found for slug: ${slug}`);
+            console.log(`No program found for slug: ${slug}`);
             return null;
         }
 
-        return json.data[0];
+        return json.data[0] as Program;
     } catch (err) {
-        console.error('fetchCourseBySlug error:', err);
+        console.error('fetchProgramBySlug error:', err);
         return null;
     }
 }
 
-export async function fetchMultipleCourses(
+export async function fetchMultiplePrograms(
     slugs: string[],
     locale: string = 'en'
-): Promise<Record<string, Course | null>> {
-    const result: Record<string, Course | null> = {};
+): Promise<Record<string, Program | null>> {
+    const result: Record<string, Program | null> = {};
 
     const toFetch = slugs.filter((slug) => {
         const cacheKey = `${slug}:${locale}`;
-        const cached = courseCache[cacheKey];
+        const cached = programCache[cacheKey];
 
         if (cached && Date.now() - cached.timestamp < CACHE_TTL) {
             result[slug] = cached.data;
@@ -90,13 +91,15 @@ export async function fetchMultipleCourses(
 
     if (toFetch.length > 0) {
         const query = toFetch.map((slug) => `filters[slug][$in]=${slug}`).join('&');
-        const url = `${API}/api/courses?locale=${locale}&${query}&populate=*`;
+        const url = `${API}/api/programs?locale=${locale}&${query}&populate=*`;
 
         try {
+            const token = process.env.NEXT_PUBLIC_STRAPI_API_TOKEN;
+
             const res = await fetch(url, {
                 cache: 'no-store',
                 headers: {
-                    Authorization: `Bearer ${process.env.NEXT_PUBLIC_STRAPI_API_TOKEN}`,
+                    ...(token ? { Authorization: `Bearer ${token}` } : {}),
                     'Content-Type': 'application/json',
                 },
             });
@@ -104,15 +107,17 @@ export async function fetchMultipleCourses(
             if (res.ok) {
                 const json = await res.json();
                 if (json.data) {
-                    json.data.forEach((course: Course) => {
-                        const slug = course.slug;
-                        result[slug] = course;
-                        courseCache[`${slug}:${locale}`] = { data: course, timestamp: Date.now() };
+                    json.data.forEach((program: Program) => {
+                        const slug = program.slug ?? '';
+                        result[slug] = program;
+                        programCache[`${slug}:${locale}`] = { data: program, timestamp: Date.now() };
                     });
                 }
+            } else {
+                console.error('Strapi fetch failed', res.status, await res.text());
             }
         } catch (err) {
-            console.error('Error fetching multiple courses:', err);
+            console.error('Error fetching multiple programs:', err);
         }
     }
 

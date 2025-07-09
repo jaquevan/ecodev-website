@@ -1,0 +1,27 @@
+{
+  "collectionName": "components_program_registration_steps",
+  "info": {
+    "displayName": "Registration Steps",
+    "icon": "oneToOne"
+  },
+  "options": {},
+  "attributes": {
+    "title": {
+      "type": "string"
+    },
+    "icon": {
+      "type": "media",
+      "multiple": true,
+      "allowedTypes": [
+        "images",
+        "files",
+        "videos",
+        "audios"
+      ]
+    },
+    "description": {
+      "type": "text"
+    }
+  },
+  "config": {}
+}

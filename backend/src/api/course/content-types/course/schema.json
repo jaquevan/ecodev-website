@@ -98,22 +98,6 @@
         }
       }
     },
-    "instructorName": {
-      "type": "string",
-      "pluginOptions": {
-        "i18n": {
-          "localized": true
-        }
-      }
-    },
-    "instructorDesc": {
-      "type": "string",
-      "pluginOptions": {
-        "i18n": {
-          "localized": true
-        }
-      }
-    },
     "preRequisites": {
       "type": "string",
       "pluginOptions": {
@@ -130,21 +114,6 @@
         }
       }
     },
-    "instructorImage": {
-      "type": "media",
-      "pluginOptions": {
-        "i18n": {
-          "localized": true
-        }
-      },
-      "multiple": true,
-      "allowedTypes": [
-        "images",
-        "files",
-        "videos",
-        "audios"
-      ]
-    },
     "registration": {
       "type": "boolean",
       "pluginOptions": {
@@ -153,6 +122,28 @@
         }
       },
       "required": true
+    },
+    "program": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::program.program",
+      "inversedBy": "courses"
+    },
+    "team_members": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::team-member.team-member",
+      "mappedBy": "courses"
+    },
+    "WeekdaySelection": {
+      "type": "component",
+      "pluginOptions": {
+        "i18n": {
+          "localized": true
+        }
+      },
+      "component": "days.weekday",
+      "repeatable": true
     }
   }
 }

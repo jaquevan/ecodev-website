@@ -24,16 +24,28 @@ body {
   font-family: var(--font-sans);
 }
 
-h1, h2 {
+h1 {
   font-family: var(--font-heading);
   font-weight: 700;
 }
 
-h3, h4, h5 {
+h2, h3, h4, h5 {
   font-family: var(--font-body);
   font-weight: 550;
 }
 
+@keyframes scroll-x {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-33.33%);
+  }
+}
+
+.animate-scroll-x {
+  animation-name: scroll-x;
+}
 
 @keyframes fadeIn {
   from { opacity: 0; transform: translateY(20px); }
