@@ -69,6 +69,7 @@ export default function Home() {
 
     const bubbles = [
         { color: '#9EDED5', size: 100, top: '5%', left: '10%', delay: '0s' },
+        { color: '#98FB98', size: 220, top: '7%', left: '50%', delay: '2.2s' },
         { color: '#FFD700', size: 120, top: '25%', left: '25%', delay: '0.7s' },
         { color: '#98FB98', size: 300, top: '40%', left: '88%', delay: '1.2s' },
         { color: '#7FD1AE', size: 220, top: '60%', left: '5%', delay: '1.8s' },
@@ -83,44 +84,52 @@ export default function Home() {
             <div className="relative min-h-screen overflow-hidden">
                 <BubbleBackground bubbles={bubbles} />
 
-                <main className="relative px-6 md:px-10 lg:px-16 py-20 space-y-32 max-w-screen-2xl mx-auto">
-                    <section ref={heroRef} className="grid lg:grid-cols-2 gap-16 items-center">
-                        <motion.div
-                            initial={{ opacity: 0, y: 20 }}
-                            animate={heroInView ? { opacity: 1, y: 0 } : {}}
-                            transition={{ duration: 0.5, ease: 'easeOut' }}
-                            className="max-w-xl"
-                        >
-                            <h1 className="text-4xl md:text-5xl font-bold mb-6 text-slate-800 leading-tight">
-                                {isSpanish ? 'Desarrollo Económico' : 'Economic Development'}
-                            </h1>
+                <main className="relative px-2 sm:px-6 md:px-10 lg:px-16 py-12 sm:py-16 md:py-20 space-y-16 sm:space-y-24 md:space-y-32 max-w-screen-2xl mx-auto">
+                    <section ref={heroRef} className="px-2 sm:px-0">
+                        <div className="grid lg:grid-cols-2 gap-8 md:gap-12 lg:gap-16 items-center max-w-7xl mx-auto">
+                            <motion.div
+                                initial={{ opacity: 0, y: 20 }}
+                                animate={heroInView ? { opacity: 1, y: 0 } : {}}
+                                transition={{ duration: 0.5, ease: 'easeOut' }}
+                                className="max-w-xl mx-auto w-full px-0"
+                            >
+                                <div className="mb-8 relative">
+                                    <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold mb-6 sm:mb-8 text-center relative z-10">
+                                        <span className="bg-gradient-to-r from-teal-700 to-teal-500 bg-clip-text text-transparent">
+                                            {isSpanish ? 'Desarrollo Económico' : 'Economic Development'}
+                                        </span>
+                                    </h1>
+                                    <div className="h-1.5 w-24 bg-orange-300 mx-auto rounded-full mb-6"></div>
 
-                            <p className="text-gray-700 text-lg leading-relaxed">
-                                {isSpanish
-                                    ? 'La Colaborativa ofrece apoyo contextualizado para empoderar a nuestra comunidad hacia la independencia financiera. Proporcionamos vías holísticas de desarrollo de la fuerza laboral para personas entre las edades de 14 y 60 años, asegurando que tengan las herramientas y recursos necesarios para tener éxito en el mercado laboral.'
-                                    : 'La Colaborativa offers contextualized support to empower our community towards financial independence. We provide holistic workforce development pathways for individuals between the ages of 14–60, ensuring they have the necessary tools and resources to succeed in the workforce.'}
-                            </p>
-                            <div className="m-6">
-                                <FeatureCard />
+                                    <p className="text-gray-700 text-lg sm:text-xl leading-relaxed mb-6 text-center font-light">
+                                        {isSpanish
+                                            ? 'La Colaborativa ofrece apoyo contextualizado para empoderar a nuestra comunidad hacia la independencia financiera. Proporcionamos vías holísticas de desarrollo de la fuerza laboral para personas entre las edades de 14 y 60 años, asegurando que tengan las herramientas y recursos necesarios para tener éxito en el mercado laboral.'
+                                            : 'La Colaborativa offers contextualized support to empower our community towards financial independence. We provide holistic workforce development pathways for individuals between the ages of 14–60, ensuring they have the necessary tools and resources to succeed in the workforce.'}
+                                    </p>
+                                </div>
+
+                                <div className="mx-auto px-0 py-6">
+                                    <FeatureCard />
+                                </div>
+                            </motion.div>
+
+                            <div className="w-full max-w-xl mx-auto my-6 sm:my-8 md:my-12 px-0">
+                                <Calendar showWalkInOnly={true} />
                             </div>
-                        </motion.div>
-
-                        <div className="w-full max-w-3xl mx-auto my-12 lg:mx-0">
-                            <Calendar showWalkInOnly={true} />
                         </div>
                     </section>
 
                     <section>
-                        <h1 className="text-5xl font-semibold text-center mb-6">
+                        <h1 className="text-3xl sm:text-4xl md:text-5xl font-semibold text-center mb-4 sm:mb-6">
                             {isSpanish ? 'Explora Nuestros Programas' : 'Explore Our Programs'}
                         </h1>
-                        <h4 className="text-lg font-semibold text-center mb-12 text-slate-800">
+                        <h4 className="text-base sm:text-lg font-semibold text-center mb-8 sm:mb-12 text-slate-800 px-2">
                             {isSpanish
                                 ? 'Impulsamos cambios duraderos a través del desarrollo e implementación de nuestros programas integrales.'
                                 : 'We drive lasting change through the development and implementation of our comprehensive programs.'}
                         </h4>
 
-                        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+                        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 sm:gap-8 px-2 sm:px-0 max-w-7xl mx-auto">
                             <ProgramCards
                                 title={isSpanish ? 'Educación para Adultos' : 'Adult Education'}
                                 category="ae"
@@ -144,30 +153,30 @@ export default function Home() {
 
                     <section
                         ref={connectRef}
-                        className="bg-gradient-to-r from-teal-700 to-orange-300 p-10 rounded-xl shadow-lg text-white text-center border-teal-600 border-2"
+                        className="bg-gradient-to-r from-teal-700 to-orange-300 p-6 sm:p-8 md:p-10 rounded-xl shadow-lg text-white text-center border-teal-600 border-2 mx-auto max-w-5xl"
                     >
                         <motion.div
                             initial={{ opacity: 0, y: 20 }}
-                            animate={{ opacity: 1, y: 0 }}
+                            animate={connectInView ? { opacity: 1, y: 0 } : {}}
                             transition={{ duration: 0.5, ease: 'easeOut' }}
                         >
-                            <h3 className="text-3xl font-bold mb-4">
+                            <h3 className="text-2xl sm:text-3xl font-bold mb-3 sm:mb-4">
                                 {isSpanish ? 'Conecta con un Asesor' : 'Connect with an Advisor'}
                             </h3>
                         </motion.div>
                         <motion.div
                             initial={{ opacity: 0, y: 20 }}
-                            animate={{ opacity: 1, y: 0 }}
+                            animate={connectInView ? { opacity: 1, y: 0 } : {}}
                             transition={{ duration: 0.7, ease: 'easeOut' }}
                         >
-                            <p className="mb-6 text-lg">
+                            <p className="mb-4 sm:mb-6 text-base sm:text-lg">
                                 {isSpanish
                                     ? 'Contáctanos para obtener más información sobre nuestros programas de búsqueda y colocación laboral.'
                                     : 'Get in touch to learn more about our Job Search & Placement programs.'}
                             </p>
                         </motion.div>
                         <div>
-                            <button className="bg-teal-800 text-white font-semibold px-6 py-3 rounded-lg shadow-md hover:bg-teal-700 hover:shadow-lg transition">
+                            <button className="bg-teal-800 text-white font-semibold px-4 sm:px-6 py-2 sm:py-3 rounded-lg shadow-md hover:bg-teal-700 hover:shadow-lg transition">
                                 {isSpanish ? 'Conectar Ahora' : 'Connect Now'}
                             </button>
                         </div>

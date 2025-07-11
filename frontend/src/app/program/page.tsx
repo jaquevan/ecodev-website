@@ -1,4 +1,4 @@
-"use client"
+'use client'
 
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
@@ -20,7 +20,6 @@ export default function Programs() {
             try {
                 setLoading(true);
                 const data = await fetchPrograms(locale);
-                console.log('Fetched programs:', data);
                 setPrograms(data);
                 setError(null);
             } catch (err) {
@@ -38,9 +37,9 @@ export default function Programs() {
         <>
             <Nav />
 
-            <div className="bg-gradient-to-b from-[#00464D]/10 to-white">
+            <section className="bg-gradient-to-b from-[#f8f9fa] to-white">
                 <div className="container mx-auto px-4 py-16 text-center">
-                    <h1 className="text-4xl md:text-5xl font-bold mb-4 text-[#00464D]">
+                    <h1 className="text-4xl md:text-5xl font-extrabold mb-4 text-[#00464D]">
                         {isSpanish ? 'Nuestros Programas' : 'Our Programs'}
                     </h1>
                     <p className="text-lg max-w-2xl mx-auto text-gray-600 mb-8">
@@ -48,11 +47,11 @@ export default function Programs() {
                             ? 'Descubre oportunidades de aprendizaje diseñadas para inspirar y capacitar a nuestra comunidad.'
                             : 'Discover learning opportunities designed to inspire and empower our community.'}
                     </p>
-                    <div className="w-24 h-1 bg-gradient-to-r from-[#00464D] to-[#FF7001] rounded-full mx-auto mb-16"></div>
+                    <div className="w-24 h-1 bg-gradient-to-r from-[#00464D] to-[#FF7001] rounded-full mx-auto mb-12"></div>
                 </div>
-            </div>
+            </section>
 
-            <div className="container mx-auto px-4 py-8 max-w-6xl">
+            <div className="container mx-auto px-4 py-8 max-w-7xl">
                 {loading && (
                     <div className="flex justify-center items-center py-16">
                         <div className="animate-pulse flex flex-col items-center">
@@ -81,24 +80,30 @@ export default function Programs() {
                     </div>
                 )}
 
-                <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-                    {programs.map(program => (
-                        <Link
-                            href={`/program/${program.slug}`}
-                            key={program.id}
-                            className="bg-white rounded-xl border border-gray-200 overflow-hidden hover:shadow-lg hover:-translate-y-1 transition-all duration-300 flex flex-col h-full"
-                        >
-                            <div className="p-6 flex flex-col flex-grow">
-                                <h2 className="text-2xl font-semibold mb-3 text-[#00464D]">{program.title}</h2>
-                                <p className="text-gray-600 line-clamp-3 mb-4 flex-grow">{program.heroDescription}</p>
-                                <span className="inline-flex items-center text-[#FF7001] font-medium group">
-                                    {isSpanish ? 'Ver detalles' : 'View details'}
-                                    <span className="ml-2 group-hover:translate-x-1 transition-transform duration-300">→</span>
-                                </span>
-                            </div>
-                        </Link>
-                    ))}
-                </div>
+                {!loading && !error && programs.length > 0 && (
+                    <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
+                        {programs.map(program => (
+                            <Link
+                                href={`/program/${program.slug}`}
+                                key={program.id}
+                                className="group flex flex-col h-full rounded-2xl border border-gray-200 overflow-hidden shadow-sm hover:shadow-lg hover:-translate-y-1 transition-all bg-white"
+                            >
+                                <div className="flex-grow p-6 flex flex-col">
+                                    <h2 className="text-2xl font-bold text-[#00464D] mb-3 group-hover:text-[#FF7001] transition-colors">
+                                        {program.title}
+                                    </h2>
+                                    <p className="text-gray-600 line-clamp-4 mb-6 flex-grow">
+                                        {program.heroDescription}
+                                    </p>
+                                    <span className="inline-flex items-center text-[#FF7001] font-medium group-hover:underline">
+                    {isSpanish ? 'Ver detalles' : 'View details'}
+                                        <span className="ml-2 group-hover:translate-x-1 transition-transform duration-300">→</span>
+                  </span>
+                                </div>
+                            </Link>
+                        ))}
+                    </div>
+                )}
             </div>
 
             <Footer />

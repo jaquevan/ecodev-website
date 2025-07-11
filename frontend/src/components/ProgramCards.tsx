@@ -43,7 +43,8 @@ const bubbleVariants = {
 };
 
 export default function ProgramCards({ title, category, items, colorScheme }: ProgramCardProps) {
-    const { ref, inView } = useInView({ triggerOnce: false });
+    // Changed triggerOnce to true to prevent animations from restarting when scrolling back up
+    const { ref, inView } = useInView({ triggerOnce: true });
 
     const colors = {
         indigo: {
