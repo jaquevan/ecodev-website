@@ -86,35 +86,35 @@ export default function Home() {
 
                 <main className="relative px-2 sm:px-6 md:px-10 lg:px-16 py-12 sm:py-16 md:py-20 space-y-16 sm:space-y-24 md:space-y-32 max-w-screen-2xl mx-auto">
                     <section ref={heroRef} className="px-2 sm:px-0">
-                        <div className="grid lg:grid-cols-2 gap-8 md:gap-12 lg:gap-16 items-center max-w-7xl mx-auto">
+                        <div className="grid lg:grid-cols-2 gap-8 md:gap-12 lg:gap-16 items-start max-w-7xl mx-auto">
                             <motion.div
-                                initial={{ opacity: 0, y: 20 }}
-                                animate={heroInView ? { opacity: 1, y: 0 } : {}}
-                                transition={{ duration: 0.5, ease: 'easeOut' }}
-                                className="max-w-xl mx-auto w-full px-0"
+                                initial={{opacity: 0, y: 20}}
+                                animate={heroInView ? {opacity: 1, y: 0} : {}}
+                                transition={{duration: 0.5, ease: 'easeOut'}}
+                                className="max-w-xl mx-auto w-full px-0 -mt-6 sm:-mt-8 md:-mt-12"
                             >
-                                <div className="mb-8 relative">
-                                    <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold mb-6 sm:mb-8 text-center relative z-10">
-                                        <span className="bg-gradient-to-r from-teal-700 to-teal-500 bg-clip-text text-transparent">
-                                            {isSpanish ? 'Desarrollo Económico' : 'Economic Development'}
-                                        </span>
+                                <div className="mb-6 sm:mb-8 relative">
+                                    <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold mb-4 sm:mb-6 text-center relative z-10">
+          <span className="bg-gradient-to-r from-teal-700 to-teal-500 bg-clip-text text-transparent">
+            {isSpanish ? 'Desarrollo Económico' : 'Economic Development'}
+          </span>
                                     </h1>
-                                    <div className="h-1.5 w-24 bg-orange-300 mx-auto rounded-full mb-6"></div>
+                                    <div className="h-1.5 w-24 bg-orange-300 mx-auto rounded-full mb-4"></div>
 
-                                    <p className="text-gray-700 text-lg sm:text-xl leading-relaxed mb-6 text-center font-light">
+                                    <p className="text-gray-700 text-lg sm:text-xl leading-relaxed text-center font-light">
                                         {isSpanish
                                             ? 'La Colaborativa ofrece apoyo contextualizado para empoderar a nuestra comunidad hacia la independencia financiera. Proporcionamos vías holísticas de desarrollo de la fuerza laboral para personas entre las edades de 14 y 60 años, asegurando que tengan las herramientas y recursos necesarios para tener éxito en el mercado laboral.'
                                             : 'La Colaborativa offers contextualized support to empower our community towards financial independence. We provide holistic workforce development pathways for individuals between the ages of 14–60, ensuring they have the necessary tools and resources to succeed in the workforce.'}
                                     </p>
                                 </div>
 
-                                <div className="mx-auto px-0 py-6">
-                                    <FeatureCard />
+                                <div className="mx-auto p-0">
+                                    <FeatureCard/>
                                 </div>
                             </motion.div>
 
-                            <div className="w-full max-w-xl mx-auto my-6 sm:my-8 md:my-12 px-0">
-                                <Calendar showWalkInOnly={true} />
+                            <div className="w-full max-w-xl mx-auto mt-4 sm:mt-6 md:mt-8 px-0">
+                                <Calendar showWalkInOnly={true}/>
                             </div>
                         </div>
                     </section>

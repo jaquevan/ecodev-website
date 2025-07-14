@@ -70,7 +70,13 @@ export interface Program {
     updatedAt: string;
     publishedAt: string;
     locale: string;
-    heroImage: StrapiMedia[];
+    heroImage: {
+        original: string;
+        thumbnail: string;
+        medium: string;
+        small: string;
+    }[];
+
     steps: {
         id: number;
         title: string;

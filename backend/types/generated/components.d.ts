@@ -55,7 +55,6 @@ export interface ProgramStudentReview extends Struct.ComponentSchema {
     icon: 'emotionHappy';
   };
   attributes: {
-    avatar: Schema.Attribute.Media<'images' | 'files' | 'videos' | 'audios'>;
     date: Schema.Attribute.Date;
     name: Schema.Attribute.String;
     quote: Schema.Attribute.Text;

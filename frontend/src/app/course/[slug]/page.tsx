@@ -25,6 +25,43 @@ import CircleIcon from '@mui/icons-material/Circle';
 import EventIcon from '@mui/icons-material/Event';
 import SchoolIcon from '@mui/icons-material/School';
 
+function extractStrapiMediaUrl(media: unknown): string | undefined {
+    if (!media) return undefined;
+
+    if (typeof media === 'object' && media !== null) {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        const photoObj = media as Record<string, any>;
+
+        // Check for Strapi media pattern with data.attributes structure
+        if (photoObj.data) {
+            if (Array.isArray(photoObj.data) && photoObj.data[0]?.attributes?.url) {
+                return photoObj.data[0].attributes.url;
+            }
+
+            if (photoObj.data.attributes?.url) {
+                return photoObj.data.attributes.url;
+            }
+
+            // Check for formats (medium size is preferred)
+            if (photoObj.data.attributes?.formats?.medium?.url) {
+                return photoObj.data.attributes.formats.medium.url;
+            }
+        }
+
+        // Handle direct URL cases
+        if (photoObj.url) {
+            return photoObj.url;
+        }
+
+        // Handle array of files (for StrapiFile[])
+        if (Array.isArray(media) && media[0]?.url) {
+            return media[0].url;
+        }
+    }
+
+    return undefined;
+}
+
 export default function CoursePage({ params }: { params: { slug: string } }) {
     const { slug } = params;
     const { locale } = useLanguage();
@@ -90,7 +127,7 @@ export default function CoursePage({ params }: { params: { slug: string } }) {
                             href="/course"
                             className="inline-flex items-center text-[#FFFDF5] bg-[#FF7001]/90 hover:bg-[#FF7001] px-4 py-2 rounded-full transition-all shadow-md"
                         >
-                            <ArrowBackIcon className="mr-1" fontSize="small" /> Back to Courses
+                            <ArrowBackIcon className="mr-1 text-[#FFFDF5]" fontSize="small" /> Back to Courses
                         </Link>
                     </motion.div>
                     <motion.h1
@@ -121,8 +158,8 @@ export default function CoursePage({ params }: { params: { slug: string } }) {
                                         title: course.title || "",
                                         description: course.desc || "",
                                         location: course.location || "",
-                                        startDate: course.date || new Date(),
-                                        endDate: course.endDate || new Date(new Date().getTime() + 60 * 60 * 1000),
+                                        startDate: course.date ? new Date(course.date) : new Date(),
+                                        endDate: course.endDate ? new Date(course.endDate) : new Date(new Date().getTime() + 60 * 60 * 1000),
                                         time: course.time || "",
                                         endTime: course.endTime || "",
                                         weekdays: weekdays
@@ -132,13 +169,13 @@ export default function CoursePage({ params }: { params: { slug: string } }) {
                             </div>
 
                             <h3 className="text-lg font-bold mb-3 text-[#00464D] flex items-center">
-                                <LightbulbIcon className="mr-2 text-[#F7CA00]" />
+                                <LightbulbIcon fontSize="small" className="text-[#F7CA00] mr-2" />
                                 What You&apos;ll Learn
                             </h3>
                             <ul className="space-y-2 mb-6">
                                 {learningPoints.map((point, idx) => (
-                                    <li key={idx} className="flex items-start">
-                                        <CircleIcon className="text-[#FF7001] mr-2 mt-1.5" sx={{ fontSize: 8 }} />
+                                    <li key={idx} className="flex items-start p-1">
+                                        <CircleIcon fontSize="inherit" className="text-[#FF7001] mr-2 mt-1.5" />
                                         <span>{point}</span>
                                     </li>
                                 ))}
@@ -147,7 +184,7 @@ export default function CoursePage({ params }: { params: { slug: string } }) {
                             {course.program?.data && (
                                 <div className="mt-6">
                                     <h3 className="text-lg font-bold mb-3 text-[#00464D] flex items-center">
-                                        <SchoolIcon className="mr-2 text-[#F7CA00]" />
+                                        <SchoolIcon fontSize="small" className="text-[#F7CA00] mr-2" />
                                         Program
                                     </h3>
                                     <div className="bg-[#00464D]/5 p-4 rounded-lg border border-[#00464D]/10">
@@ -163,25 +200,25 @@ export default function CoursePage({ params }: { params: { slug: string } }) {
                         </div>
 
                         <div className="flex flex-col gap-5 bg-[#FCD3B6]/5 p-5 rounded-lg border border-[#FCD3B6]/20">
-                            <CourseDetailItem icon={<CalendarTodayIcon />} label="Date" value={`${course.date} – ${course.endDate}`} />
-                            <CourseDetailItem icon={<AccessTimeIcon />} label="Time" value={`${formatTime(course.time)} – ${formatTime(course.endTime)}`} />
+                            <CourseDetailItem icon={<CalendarTodayIcon fontSize="small" className="text-[#00AF98] mr-3 flex-shrink-0" />} label="Date" value={course.date && course.endDate ? `${course.date} – ${course.endDate}` : undefined} />
+                            <CourseDetailItem icon={<AccessTimeIcon fontSize="small" className="text-[#00AF98] mr-3 flex-shrink-0" />} label="Time" value={course.time && course.endTime ? `${formatTime(course.time)} – ${formatTime(course.endTime)}` : undefined} />
                             {weekdays.length > 0 && (
                                 <div className="flex items-start text-[#212020]">
-                                    <EventIcon className="text-[#00AF98] mr-3 flex-shrink-0 mt-1" fontSize="small" />
+                                    <EventIcon fontSize="small" className="text-[#00AF98] mr-3 flex-shrink-0 mt-1" />
                                     <div>
                                         <p className="text-sm text-[#00464D]">Days</p>
                                         <div className="flex flex-wrap gap-1 mt-1">
                                             {weekdays.map((day, idx) => (
                                                 <span key={idx} className="inline-block px-2 py-1 bg-[#00AF98]/10 text-[#00464D] rounded-full text-xs font-medium">
-                          {day.weekdays}
-                        </span>
+                                                    {day.weekdays}
+                                                </span>
                                             ))}
                                         </div>
                                     </div>
                                 </div>
                             )}
-                            <CourseDetailItem icon={<LocationOnIcon />} label="Location" value={course.location} />
-                            <CourseDetailItem icon={<LanguageIcon />} label="Language" value={course.language} />
+                            <CourseDetailItem icon={<LocationOnIcon fontSize="small" className="text-[#00AF98] mr-3 flex-shrink-0" />} label="Location" value={course.location} />
+                            <CourseDetailItem icon={<LanguageIcon fontSize="small" className="text-[#00AF98] mr-3 flex-shrink-0" />} label="Language" value={course.language} />
                         </div>
                     </div>
                 </motion.div>
@@ -197,7 +234,7 @@ function CourseDetailItem({ icon, label, value }: { icon: React.ReactNode, label
     if (!value) return null;
     return (
         <div className="flex items-center text-[#212020]">
-            {React.cloneElement(icon as React.ReactElement, { className: "text-[#00AF98] mr-3 flex-shrink-0", fontSize: "small" })}
+            {icon}
             <div>
                 <p className="text-sm text-[#00464D]">{label}</p>
                 <p className="font-medium">{value}</p>
@@ -217,18 +254,19 @@ function InstructorSection({ course }: { course: Course }) {
             >
                 <div className="bg-white rounded-xl shadow-sm p-6 border border-[#FCD3B6]/20 hover:shadow-md transition-shadow duration-300 h-full">
                     <h2 className="text-lg font-bold mb-4 text-[#00464D] flex items-center">
-                        <PersonIcon className="mr-2 text-[#FF7001]" />
+                        <PersonIcon fontSize="small" className="text-[#FF7001] mr-2" />
                         {instructors.length > 1 ? 'Meet The Instructors' : 'Meet The Instructor'}
                     </h2>
-                    {instructors.length > 0 ? (
-                        <div className="space-y-4">
-                            {instructors.map((instructor) => (
+                    <div className="space-y-4">
+                        {instructors.map((instructor) => {
+                            const photoUrl = extractStrapiMediaUrl(instructor.photo);
+                            return (
                                 <div key={instructor.id} className="flex flex-col">
                                     <div className="flex items-center mb-2">
-                                        {instructor.photo?.url ? (
+                                        {photoUrl ? (
                                             <div className="w-14 h-14 rounded-full mr-3 overflow-hidden">
                                                 <Image
-                                                    src={mediaUrl(instructor.photo.url)}
+                                                    src={mediaUrl(photoUrl)}
                                                     alt={instructor.name}
                                                     width={56}
                                                     height={56}
@@ -247,21 +285,9 @@ function InstructorSection({ course }: { course: Course }) {
                                     </div>
                                     <p className="text-[#212020] leading-relaxed text-sm mt-1">{instructor.description}</p>
                                 </div>
-                            ))}
-                        </div>
-                    ) : (
-                        <div className="flex flex-col">
-                            <div className="flex items-center mb-2">
-                                <div className="w-14 h-14 rounded-full bg-gradient-to-r from-[#00AF98] to-[#FF7001] flex items-center justify-center text-white font-bold text-lg mr-3">
-                                    {course.instructorName?.charAt(0) || "I"}
-                                </div>
-                                <div>
-                                    <h3 className="font-semibold text-lg text-[#00464D]">{course.instructorName}</h3>
-                                </div>
-                            </div>
-                            <p className="text-[#212020] leading-relaxed text-sm">{course.instructorDesc}</p>
-                        </div>
-                    )}
+                            );
+                        })}
+                    </div>
                 </div>
             </motion.div>
 
@@ -272,7 +298,7 @@ function InstructorSection({ course }: { course: Course }) {
             >
                 <div className="bg-white rounded-xl shadow-sm p-6 border border-[#FCD3B6]/20 hover:shadow-md transition-shadow duration-300 h-full">
                     <h2 className="text-lg font-bold mb-4 text-[#00464D] flex items-center">
-                        <CheckCircleIcon className="mr-2 text-[#FF7001]" />
+                        <CheckCircleIcon fontSize="small" className="text-[#FF7001] mr-2" />
                         Prerequisites
                     </h2>
                     <p className="text-[#212020] leading-relaxed text-sm">{course.preRequisites}</p>
@@ -302,13 +328,13 @@ function CourseNotFoundView() {
                 <div className="text-center max-w-md bg-white rounded-xl shadow-md p-8 border border-[#FCD3B6]/30">
                     <h1 className="text-2xl font-bold text-[#00464D] mb-4">Course Not Found</h1>
                     <p className="mb-6 text-gray-600">
-                        The course you&apos;re looking for could not be found. Please check the URL or return to the course list.
+                        The course youre looking for could not be found. Please check the URL or return to the course list.
                     </p>
                     <Link
                         href="/course"
                         className="inline-flex items-center text-[#FFFDF5] bg-[#FF7001] px-4 py-2 rounded-full transition-all shadow-md"
                     >
-                        <ArrowBackIcon className="mr-1" fontSize="small" /> Back to Courses
+                        <ArrowBackIcon fontSize="small" className="mr-1 text-[#FFFDF5]" /> Back to Courses
                     </Link>
                 </div>
             </div>

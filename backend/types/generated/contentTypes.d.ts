@@ -516,8 +516,7 @@ export interface ApiProgramProgram extends Struct.CollectionTypeSchema {
         };
       }>;
     heroImage: Schema.Attribute.Media<
-      'images' | 'files' | 'videos' | 'audios',
-      true
+      'images' | 'files' | 'videos' | 'audios'
     > &
       Schema.Attribute.SetPluginOptions<{
         i18n: {
