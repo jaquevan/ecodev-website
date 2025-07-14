@@ -13,6 +13,7 @@ import { formatTime } from '@/utils/format';
 import { motion } from 'framer-motion';
 import AddToCalendarButton from '@/components/calendarComponents/AddToCalendarButton';
 
+
 import CalendarTodayIcon from '@mui/icons-material/CalendarToday';
 import AccessTimeIcon from '@mui/icons-material/AccessTime';
 import LocationOnIcon from '@mui/icons-material/LocationOn';
@@ -62,10 +63,8 @@ function extractStrapiMediaUrl(media: unknown): string | undefined {
     return undefined;
 }
 
-import { Params } from 'next/dist/shared/lib/router/utils/route-matcher';
-
-export default function CoursePage({ params }: { params: Params }) {
-    const slug = params.slug as string;
+export default function CoursePage({ params }: { params: { slug: string } }) {
+    const { slug } = params;
     const { locale } = useLanguage();
     const [course, setCourse] = useState<Course | null>(null);
     const [loading, setLoading] = useState(true);
