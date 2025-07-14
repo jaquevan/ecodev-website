@@ -2,6 +2,7 @@
 
 import React, { useEffect, useState } from 'react';
 import { useLanguage } from '@/context/LanguageContext';
+import { useParams } from 'next/navigation';
 import { fetchCourseBySlug, mediaUrl } from '@/lib/strapi';
 import Nav from "@/components/Nav";
 import Footer from "@/components/Footer";
@@ -63,8 +64,8 @@ function extractStrapiMediaUrl(media: unknown): string | undefined {
     return undefined;
 }
 
-export default function CoursePage({ params }: { params: { slug: string } }) {
-    const { slug } = params;
+export default function CoursePage() {
+    const { slug } = useParams<{ slug: string }>();
     const { locale } = useLanguage();
     const [course, setCourse] = useState<Course | null>(null);
     const [loading, setLoading] = useState(true);
