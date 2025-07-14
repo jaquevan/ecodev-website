@@ -91,6 +91,7 @@ export interface Program {
         date: string;
         avatar: string | null;
     }[];
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     localizations?: any[];
 }
 

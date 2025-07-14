@@ -260,7 +260,6 @@ function CourseCard({ course }: { course: ExtendedCourse }) {
         return null;
     })();
 
-    const programTitle = course.program?.data?.attributes?.title ?? '';
 
     const badge = course.registration
         ? {
