@@ -62,8 +62,10 @@ function extractStrapiMediaUrl(media: unknown): string | undefined {
     return undefined;
 }
 
-export default function CoursePage({ params }: { params: { slug: string } }) {
-    const { slug } = params;
+import { Params } from 'next/dist/shared/lib/router/utils/route-matcher';
+
+export default function CoursePage({ params }: { params: Params }) {
+    const slug = params.slug as string;
     const { locale } = useLanguage();
     const [course, setCourse] = useState<Course | null>(null);
     const [loading, setLoading] = useState(true);
