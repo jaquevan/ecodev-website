@@ -86,7 +86,7 @@ export default function Home() {
 
                 <main className="relative px-2 sm:px-6 md:px-10 lg:px-16 py-12 sm:py-16 md:py-20 space-y-16 sm:space-y-24 md:space-y-32 max-w-screen-2xl mx-auto">
                     <section ref={heroRef} className="px-2 sm:px-0">
-                        <div className="grid lg:grid-cols-2 gap-8 md:gap-12 lg:gap-16 items-start max-w-7xl mx-auto">
+                        <div className="grid lg:grid-cols-2 gap-8 md:gap-12 lg:gap-16 items-start max-w-8xl mx-auto">
                             <motion.div
                                 initial={{opacity: 0, y: 20}}
                                 animate={heroInView ? {opacity: 1, y: 0} : {}}
@@ -113,7 +113,7 @@ export default function Home() {
                                 </div>
                             </motion.div>
 
-                            <div className="w-full max-w-xl mx-auto mt-4 sm:mt-6 md:mt-8 px-0">
+                            <div className="w-full max-w-xxl mx-auto mt-4 sm:mt-6 md:mt-8 px-2">
                                 <Calendar showWalkInOnly={true}/>
                             </div>
                         </div>

@@ -62,22 +62,6 @@
         }
       }
     },
-    "time": {
-      "type": "time",
-      "pluginOptions": {
-        "i18n": {
-          "localized": true
-        }
-      }
-    },
-    "endTime": {
-      "type": "time",
-      "pluginOptions": {
-        "i18n": {
-          "localized": true
-        }
-      }
-    },
     "slug": {
       "type": "uid",
       "targetField": "title"

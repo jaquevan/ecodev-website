@@ -8,6 +8,7 @@ export interface TeamMember {
         photo:  StrapiFile[] | StrapiMedia;
         social: {
             linkedin: string;
+            email: string;
         };
     };
 }

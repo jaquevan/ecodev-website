@@ -6,17 +6,17 @@ import { useParams } from 'next/navigation';
 import { fetchCourseBySlug, mediaUrl } from '@/lib/strapi';
 import Nav from "@/components/Nav";
 import Footer from "@/components/Footer";
+import GoogleForm from '@/components/calendarComponents/GoogleForm';
 import Loading from '@/components/Loading';
 import Link from 'next/link';
 import Image from 'next/image';
 import { Course } from '@/types/course';
 import { formatTime } from '@/utils/format';
 import { motion } from 'framer-motion';
-import AddToCalendarButton from '@/components/calendarComponents/AddToCalendarButton';
 
+/* import AddToCalendarButton from '@/components/calendarComponents/AddToCalendarButton'; */
 
 import CalendarTodayIcon from '@mui/icons-material/CalendarToday';
-import AccessTimeIcon from '@mui/icons-material/AccessTime';
 import LocationOnIcon from '@mui/icons-material/LocationOn';
 import LanguageIcon from '@mui/icons-material/Language';
 import LightbulbIcon from '@mui/icons-material/Lightbulb';
@@ -31,10 +31,9 @@ function extractStrapiMediaUrl(media: unknown): string | undefined {
     if (!media) return undefined;
 
     if (typeof media === 'object' && media !== null) {
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+
         const photoObj = media as Record<string, any>;
 
-        // Check for Strapi media pattern with data.attributes structure
         if (photoObj.data) {
             if (Array.isArray(photoObj.data) && photoObj.data[0]?.attributes?.url) {
                 return photoObj.data[0].attributes.url;
@@ -44,18 +43,15 @@ function extractStrapiMediaUrl(media: unknown): string | undefined {
                 return photoObj.data.attributes.url;
             }
 
-            // Check for formats (medium size is preferred)
             if (photoObj.data.attributes?.formats?.medium?.url) {
                 return photoObj.data.attributes.formats.medium.url;
             }
         }
 
-        // Handle direct URL cases
         if (photoObj.url) {
             return photoObj.url;
         }
 
-        // Handle array of files (for StrapiFile[])
         if (Array.isArray(media) && media[0]?.url) {
             return media[0].url;
         }
@@ -154,21 +150,25 @@ export default function CoursePage() {
                         <div className="md:col-span-2">
                             <p className="text-lg leading-relaxed text-[#212020] mb-6">{course.desc}</p>
 
-                            <div className="mb-6">
-                                <AddToCalendarButton
-                                    event={{
-                                        title: course.title || "",
-                                        description: course.desc || "",
-                                        location: course.location || "",
-                                        startDate: course.date ? new Date(course.date) : new Date(),
-                                        endDate: course.endDate ? new Date(course.endDate) : new Date(new Date().getTime() + 60 * 60 * 1000),
-                                        time: course.time || "",
-                                        endTime: course.endTime || "",
-                                        weekdays: weekdays
-                                    }}
-                                    className="inline-flex items-center gap-2 text-white bg-[#00AF98] hover:bg-[#009484] px-4 py-2 rounded-md font-medium transition-colors shadow-sm"
-                                />
-                            </div>
+                            {/* <AddToCalendarButton
+                                event={{
+                                    title: course.title || "",
+                                    description: course.desc || "",
+                                    location: course.location || "",
+                                    startDate: course.date ? new Date(course.date) : new Date(),
+                                    endDate: course.endDate ? new Date(course.endDate) : new Date(new Date().getTime() + 60 * 60 * 1000),
+                                    weekdays: weekdays
+                                }}
+                                className="inline-flex items-center gap-2 text-white bg-[#00AF98] hover:bg-[#009484] px-4 py-2 rounded-md font-medium transition-colors shadow-sm"
+                            /> */}
+
+                            <GoogleForm
+                                formUrl="https://docs.google.com/forms/d/e/YOUR_FORM_ID/viewform"
+                                course={course}
+                                buttonText="Register Now"
+                                variant="primary"
+                                className="mb-5"
+                            />
 
                             <h3 className="text-lg font-bold mb-3 text-[#00464D] flex items-center">
                                 <LightbulbIcon fontSize="small" className="text-[#F7CA00] mr-2" />
@@ -203,16 +203,15 @@ export default function CoursePage() {
 
                         <div className="flex flex-col gap-5 bg-[#FCD3B6]/5 p-5 rounded-lg border border-[#FCD3B6]/20">
                             <CourseDetailItem icon={<CalendarTodayIcon fontSize="small" className="text-[#00AF98] mr-3 flex-shrink-0" />} label="Date" value={course.date && course.endDate ? `${course.date} – ${course.endDate}` : undefined} />
-                            <CourseDetailItem icon={<AccessTimeIcon fontSize="small" className="text-[#00AF98] mr-3 flex-shrink-0" />} label="Time" value={course.time && course.endTime ? `${formatTime(course.time)} – ${formatTime(course.endTime)}` : undefined} />
                             {weekdays.length > 0 && (
                                 <div className="flex items-start text-[#212020]">
                                     <EventIcon fontSize="small" className="text-[#00AF98] mr-3 flex-shrink-0 mt-1" />
                                     <div>
-                                        <p className="text-sm text-[#00464D]">Days</p>
-                                        <div className="flex flex-wrap gap-1 mt-1">
+                                        <p className="text-sm text-[#00464D]">Schedule</p>
+                                        <div className="flex flex-col gap-1 mt-1">
                                             {weekdays.map((day, idx) => (
                                                 <span key={idx} className="inline-block px-2 py-1 bg-[#00AF98]/10 text-[#00464D] rounded-full text-xs font-medium">
-                                                    {day.weekdays}
+                                                    {`${day.weekdays} ${formatTime(day.startTime)} – ${formatTime(day.endTime)}`}
                                                 </span>
                                             ))}
                                         </div>
