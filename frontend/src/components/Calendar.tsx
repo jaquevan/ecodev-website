@@ -30,6 +30,18 @@ interface CalendarProps {
     showWalkInOnly?: boolean;
 }
 
+interface ApiCourseData {
+    id?: string | number;
+    attributes?: {
+        WeekdaySelection?: Array<{
+            id: number;
+            weekdays: string;
+        }>;
+        [key: string]: unknown;
+    };
+    [key: string]: unknown;
+}
+
 const weekdayMap: Record<number, string[]> = {
     0: ['sunday', 'domingo'],
     1: ['monday', 'lunes'],
@@ -110,8 +122,8 @@ export default function Calendar({showWalkInOnly = false}: CalendarProps) {
             },
         } as Components<Omit<Theme, "components">> & CustomComponents,
     });
-    // ESLint-disable-next-line typescript/no-explicit-any
-    const processCoursesData = (data: any[]): CourseWithWeekdays[] => {
+
+    const processCoursesData = (data: ApiCourseData[]): CourseWithWeekdays[] => {
         if (!Array.isArray(data)) return [];
 
         return data.map(course => {
