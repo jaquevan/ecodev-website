@@ -110,6 +110,37 @@ export default function Calendar({showWalkInOnly = false}: CalendarProps) {
             },
         } as Components<Omit<Theme, "components">> & CustomComponents,
     });
+    // ESLint-disable-next-line typescript/no-explicit-any
+    const processCoursesData = (data: any[]): CourseWithWeekdays[] => {
+        if (!Array.isArray(data)) return [];
+
+        return data.map(course => {
+            const properties = course.attributes || course;
+
+            const baseObject: Partial<CourseWithWeekdays> = {
+                id: typeof course.id === 'string' || typeof course.id === 'number' ?
+                    String(course.id) : undefined
+            };
+
+            let weekdaySelection: WeekdayData[] | undefined = undefined;
+            const rawWeekdays = properties.WeekdaySelection;
+
+            if (Array.isArray(rawWeekdays)) {
+                weekdaySelection = rawWeekdays
+                    .filter(item => item && typeof item === 'object' && 'id' in item && 'weekdays' in item)
+                    .map(item => ({
+                        id: Number(item.id),
+                        weekdays: String(item.weekdays)
+                    }));
+            }
+
+            return {
+                ...baseObject,
+                ...properties,
+                WeekdaySelection: weekdaySelection && weekdaySelection.length > 0 ? weekdaySelection : undefined
+            } as CourseWithWeekdays;
+        });
+    };
 
     useEffect(() => {
         if (!selectedDate) return;
@@ -129,6 +160,8 @@ export default function Calendar({showWalkInOnly = false}: CalendarProps) {
                 const dateSpecificUrl = `${process.env.NEXT_PUBLIC_STRAPI_URL}/api/courses?locale=${locale}&filters[date][$gte]=${start}&filters[date][$lte]=${end}&populate=*`;
                 const recurringUrl = `${process.env.NEXT_PUBLIC_STRAPI_URL}/api/courses?locale=${locale}&populate=*`;
 
+                console.log('API URLs:', { dateSpecificUrl, recurringUrl });
+
                 const [dateSpecificRes, recurringRes] = await Promise.all([
                     fetch(dateSpecificUrl),
                     fetch(recurringUrl)
@@ -147,13 +180,22 @@ export default function Calendar({showWalkInOnly = false}: CalendarProps) {
                     recurringRes.json()
                 ]);
 
+                console.log('API Response - Date Specific:', dateSpecificJson);
+                console.log('API Response - Recurring:', recurringJson);
+
                 const processedDateSpecific = processCoursesData(dateSpecificJson.data);
                 const allCourses = processCoursesData(recurringJson.data);
+
+                console.log('Processed - Date Specific:', processedDateSpecific);
+                console.log('Processed - All Courses:', allCourses);
+
                 const recurring = allCourses.filter(course =>
                     course.WeekdaySelection &&
                     Array.isArray(course.WeekdaySelection) &&
                     course.WeekdaySelection.length > 0
                 );
+
+                console.log('Filtered recurring courses:', recurring);
 
                 const filteredDateSpecific = showWalkInOnly
                     ? processedDateSpecific.filter(course => course.registration === false)
@@ -162,6 +204,11 @@ export default function Calendar({showWalkInOnly = false}: CalendarProps) {
                 const filteredRecurring = showWalkInOnly
                     ? recurring.filter(course => course.registration === false)
                     : recurring;
+
+                console.log('Final filtered courses:', {
+                    dateSpecific: filteredDateSpecific,
+                    recurring: filteredRecurring
+                });
 
                 setDateSpecificCourses(filteredDateSpecific);
                 setRecurringCourses(filteredRecurring);
@@ -180,42 +227,10 @@ export default function Calendar({showWalkInOnly = false}: CalendarProps) {
         fetchAllCourses();
     }, [selectedDate, lastFetchedMonth, lastFetchedLocale, showWalkInOnly, locale]);
 
-    const processCoursesData = (data: Record<string, unknown>[]): CourseWithWeekdays[] => {
-        if (!Array.isArray(data)) return [];
-
-        return data.map(course => {
-            const baseObject: Partial<CourseWithWeekdays> = {
-                id: typeof course.id === 'string' || typeof course.id === 'number' ?
-                    String(course.id) : undefined
-            };
-
-            // ff no attributes exist, return what we have with type assertion
-            if (!course.attributes) return baseObject as CourseWithWeekdays;
-
-            // Extract attributes and handle weekday selection
-            const attrs = course.attributes as Record<string, unknown>;
-
-            // Process WeekdaySelection specifically
-            let weekdaySelection: WeekdayData[] | undefined = undefined;
-            const rawWeekdays = attrs.WeekdaySelection;
-
-            if (Array.isArray(rawWeekdays)) {
-                weekdaySelection = rawWeekdays
-                    .filter(item => item && typeof item === 'object' && 'id' in item && 'weekdays' in item)
-                    .map(item => ({
-                        id: Number(item.id),
-                        weekdays: String(item.weekdays)
-                    }));
-            }
-
-            // Return the complete object with all attributes and properly typed WeekdaySelection
-            return {
-                ...baseObject,
-                ...attrs,
-                WeekdaySelection: weekdaySelection && weekdaySelection.length > 0 ? weekdaySelection : undefined
-            } as CourseWithWeekdays;
-        });
-    };
+    useEffect(() => {
+        console.log('Date specific courses:', dateSpecificCourses);
+        console.log('Recurring courses:', recurringCourses);
+    }, [dateSpecificCourses, recurringCourses]);
 
     const todayCourses = useMemo(() => {
         if (!selectedDate) return [];
