@@ -27,34 +27,46 @@ import CircleIcon from '@mui/icons-material/Circle';
 import EventIcon from '@mui/icons-material/Event';
 import SchoolIcon from '@mui/icons-material/School';
 
-function extractStrapiMediaUrl(media: unknown): string | undefined {
+type MediaAttributes = {
+    url?: string;
+    formats?: {
+        medium?: {
+            url?: string;
+        };
+    };
+};
+
+type MediaData = {
+    attributes?: MediaAttributes;
+};
+
+type Media = {
+    data?: MediaData | MediaData[];
+    url?: string;
+};
+
+function extractStrapiMediaUrl(media: Media): string | undefined {
     if (!media) return undefined;
 
-    if (typeof media === 'object' && media !== null) {
-
-        const photoObj = media as Record<string, any>;
-
-        if (photoObj.data) {
-            if (Array.isArray(photoObj.data) && photoObj.data[0]?.attributes?.url) {
-                return photoObj.data[0].attributes.url;
+    if (media.data) {
+        if (Array.isArray(media.data)) {
+            const firstItem = media.data[0];
+            if (firstItem?.attributes?.url) {
+                return firstItem.attributes.url;
             }
-
-            if (photoObj.data.attributes?.url) {
-                return photoObj.data.attributes.url;
+        } else if (media.data.attributes) {
+            const attributes = media.data.attributes;
+            if (attributes.url) {
+                return attributes.url;
             }
-
-            if (photoObj.data.attributes?.formats?.medium?.url) {
-                return photoObj.data.attributes.formats.medium.url;
+            if (attributes.formats?.medium?.url) {
+                return attributes.formats.medium.url;
             }
         }
+    }
 
-        if (photoObj.url) {
-            return photoObj.url;
-        }
-
-        if (Array.isArray(media) && media[0]?.url) {
-            return media[0].url;
-        }
+    if (media.url) {
+        return media.url;
     }
 
     return undefined;
@@ -260,8 +272,7 @@ function InstructorSection({ course }: { course: Course }) {
                     </h2>
                     <div className="space-y-4">
                         {instructors.map((instructor) => {
-                            const photoUrl = extractStrapiMediaUrl(instructor.photo);
-                            return (
+                            const photoUrl = extractStrapiMediaUrl(instructor.photo as Media);                            return (
                                 <div key={instructor.id} className="flex flex-col">
                                     <div className="flex items-center mb-2">
                                         {photoUrl ? (
