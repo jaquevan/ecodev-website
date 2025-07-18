@@ -1,13 +1,24 @@
 // data fetching and caching for courses from Strapi
-
 import { Course } from '@/types/course';
 
 const courseCache: Record<string, { data: Course; timestamp: number }> = {};
 const CACHE_TTL = 5 * 60 * 1000;
 
-export const API = (process.env.NEXT_PUBLIC_STRAPI_URL ?? 'http://localhost:1340').replace(/\/$/, '');
+export const API = (process.env.NEXT_PUBLIC_STRAPI_URL ?? '').replace(/\/$/, '');
 
-export const mediaUrl = (path = '') => (path.startsWith('http') ? path : `${API}${path}`);
+if (!API) {
+    console.error('NEXT_PUBLIC_STRAPI_URL is not set. Please configure it in your environment variables.');
+}
+
+export const mediaUrl = (path = '') => {
+    if (!path) {
+        console.warn('Invalid media path provided:', path);
+        return '';
+    }
+    const url = path.startsWith('http') ? path : `${API}${path}`;
+    console.log('Generated media URL:', url);
+    return url;
+};
 
 export async function fetchCourses(
     locale: string = 'en',
@@ -15,6 +26,11 @@ export async function fetchCourses(
 ): Promise<Course[]> {
     try {
         const token = process.env.NEXT_PUBLIC_STRAPI_API_TOKEN;
+        if (!token) {
+            console.error('NEXT_PUBLIC_STRAPI_API_TOKEN is not set. Please configure it in your environment variables.');
+            return [];
+        }
+
         const res = await fetch(`${API}/api/courses?locale=${locale}&populate=Image`, {
             cache: options.cache,
             headers: {
@@ -24,10 +40,21 @@ export async function fetchCourses(
         });
 
         if (!res.ok) {
-            console.error('Strapi fetch failed', res.status, await res.text());
+            try {
+                const errorText = await res.text();
+                console.error('Strapi fetch failed', res.status, errorText);
+            } catch {
+                console.error('Strapi fetch failed', res.status, res.statusText);
+            }
             return [];
         }
+
         const json = await res.json();
+        if (!Array.isArray(json.data)) {
+            console.error('Unexpected response format for fetchCourses:', json);
+            return [];
+        }
+
         return json.data as Course[];
     } catch (err) {
         console.error('fetchCourses error:', err);
@@ -42,6 +69,11 @@ export async function fetchCourseBySlug(
 ): Promise<Course | null> {
     try {
         const token = process.env.NEXT_PUBLIC_STRAPI_API_TOKEN;
+        if (!token) {
+            console.error('NEXT_PUBLIC_STRAPI_API_TOKEN is not set. Please configure it in your environment variables.');
+            return null;
+        }
+
         const url = `${API}/api/courses?locale=${locale}&filters[slug][$eq]=${slug}&populate[team_members][populate]=photo&populate=WeekdaySelection`;
 
         const res = await fetch(url, {
@@ -109,7 +141,11 @@ export async function fetchMultipleCourses(
                         result[slug] = course;
                         courseCache[`${slug}:${locale}`] = { data: course, timestamp: Date.now() };
                     });
+                } else {
+                    console.error('Unexpected response format for fetchMultipleCourses:', json);
                 }
+            } else {
+                console.error('Strapi fetch failed for fetchMultipleCourses:', res.status, res.statusText);
             }
         } catch (err) {
             console.error('Error fetching multiple courses:', err);
