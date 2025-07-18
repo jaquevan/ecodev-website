@@ -8,6 +8,9 @@
   "attributes": {
     "linkedin": {
       "type": "string"
+    },
+    "email": {
+      "type": "string"
     }
   },
   "config": {}

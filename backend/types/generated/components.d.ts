@@ -7,6 +7,8 @@ export interface DaysWeekday extends Struct.ComponentSchema {
     icon: 'clock';
   };
   attributes: {
+    endTime: Schema.Attribute.Time;
+    startTime: Schema.Attribute.Time;
     weekdays: Schema.Attribute.Enumeration<
       [
         'Monday',
@@ -28,6 +30,7 @@ export interface LinksSocialLink extends Struct.ComponentSchema {
     icon: 'attachment';
   };
   attributes: {
+    email: Schema.Attribute.String;
     linkedin: Schema.Attribute.String;
   };
 }

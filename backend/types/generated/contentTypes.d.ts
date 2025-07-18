@@ -410,12 +410,6 @@ export interface ApiCourseCourse extends Struct.CollectionTypeSchema {
           localized: true;
         };
       }>;
-    endTime: Schema.Attribute.Time &
-      Schema.Attribute.SetPluginOptions<{
-        i18n: {
-          localized: true;
-        };
-      }>;
     Image: Schema.Attribute.Media<
       'images' | 'files' | 'videos' | 'audios',
       true
@@ -445,7 +439,7 @@ export interface ApiCourseCourse extends Struct.CollectionTypeSchema {
           localized: true;
         };
       }>;
-    preRequisites: Schema.Attribute.String &
+    preRequisites: Schema.Attribute.Text &
       Schema.Attribute.SetPluginOptions<{
         i18n: {
           localized: true;
@@ -465,12 +459,6 @@ export interface ApiCourseCourse extends Struct.CollectionTypeSchema {
       'manyToMany',
       'api::team-member.team-member'
     >;
-    time: Schema.Attribute.Time &
-      Schema.Attribute.SetPluginOptions<{
-        i18n: {
-          localized: true;
-        };
-      }>;
     title: Schema.Attribute.String &
       Schema.Attribute.SetPluginOptions<{
         i18n: {

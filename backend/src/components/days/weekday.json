@@ -17,6 +17,12 @@
         "Saturday",
         "Sunday"
       ]
+    },
+    "startTime": {
+      "type": "time"
+    },
+    "endTime": {
+      "type": "time"
     }
   },
   "config": {}
