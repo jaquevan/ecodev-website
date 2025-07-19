@@ -1,84 +1,85 @@
 'use client';
 
-import { useEffect, useRef } from 'react';
+import { useEffect } from 'react';
 import { useLanguage } from '@/context/LanguageContext';
 
-const DialogflowBot = () => {
-    const { locale } = useLanguage();
-    const language = locale === 'es' ? 'es' : 'en';
-    const scriptLoaded = useRef(false);
+export default function DialogflowBot({
+  userId,
+  onSessionEnd,
+}: {
+  userId: string;
+  onSessionEnd: () => void;
+}) {  
+  const { locale } = useLanguage();
+  const isSpanish = locale === 'es';
 
-    useEffect(() => {
-        if (scriptLoaded.current) return;
+  useEffect(() => {
+    const script = document.createElement('script');
+    script.src =
+      'https://www.gstatic.com/dialogflow-console/fast/df-messenger/prod/v1/df-messenger.js';
+    script.async = true;
+    document.head.appendChild(script);
 
-        const script = document.createElement('script');
-        script.src = 'https://www.gstatic.com/dialogflow-console/fast/df-messenger/prod/v1/df-messenger.js';
-        script.async = true;
-        document.body.appendChild(script);
+    script.onload = () => {
+      const interval = setInterval(() => {
+        const dfMessenger = document.querySelector('df-messenger');
 
-        scriptLoaded.current = true;
+        if (dfMessenger) {
+          clearInterval(interval);
 
-        return () => {
-            // Cleanup handled by React
-        };
-    }, []);
+          dfMessenger.setQueryParameters({
+            parameters: {
+              userID: userId,
+            },
+          });
 
-    return (
-        <div id="df-messenger-container">
-            <link
-                rel="stylesheet"
-                href="https://www.gstatic.com/dialogflow-console/fast/df-messenger/prod/v1/themes/df-messenger-default.css"
-            />
+          dfMessenger.sendQuery('Hi');
 
-            <div dangerouslySetInnerHTML={{
-                __html: `
-                    <df-messenger
-                        location="us"
-                        project-id="la-colaborativa"
-                        agent-id="058c3c3a-ba98-4fb5-a4f8-cac0a97dbcb8"
-                        language-code="${language}"
-                        max-query-length="-1"
-                        chat-title="${locale === 'es' ? 'Asistente de Currículum' : 'Resume Assistant'}"
-                        intent="WELCOME">
-                    </df-messenger>
-                `
-            }} />
+          dfMessenger.addEventListener('df-session-ended', () => {
+            if (onSessionEnd) {
+              onSessionEnd();
+            }
+          });
+        }
+      }, 200);
+    };
 
-            <style jsx global>{`
-                df-messenger {
-                    z-index: 999;
-                    position: fixed;
-                    bottom: 0;
-                    right: 0;
-                    top: auto;
-                    width: 350px;
+    return () => {
+      script.remove();
+    };
+  }, [userId, onSessionEnd]);
 
-                    --df-messenger-primary-color: #00464D;
-                    --df-messenger-focus-color: #FF7001;
-                    --df-messenger-button-color: #FF7001;
-
-                    /* Text colors */
-                    --df-messenger-font-color: #333333;
-                    --df-messenger-font-family: system-ui, sans-serif;
-
-                    /* Background colors */
-                    --df-messenger-chat-background: #f3f6fc;
-                    --df-messenger-message-user-background: #d3e3fd;
-                    --df-messenger-message-bot-background: #fff;
-
-                    /* Input field */
-                    --df-messenger-input-box-color: #00464D;
-                    --df-messenger-input-padding: 12px;
-                    --df-messenger-input-height: 50px;
-                    --df-messenger-input-border-radius: 8px;
-
-                    /* Chat button */
-                    --df-messenger-chat-bubble-background: #FF7001;
-                    --df-messenger-chat-bubble-active-background: #FF7001;
-                }
-            `}</style>
-        </div>
-    );
-};
-
-export default DialogflowBot;
+  return (
+    <div style={{ width: '100%', height: '500px', margin: '0 auto' }}>
+      <df-messenger
+            location="us"
+            project-id="la-colaborativa"
+            agent-id="058c3c3a-ba98-4fb5-a4f8-cac0a97dbcb8"
+            language-code="en"
+            max-query-length="-1"
+            storage-option="none"
+            chat-title="ResumeBot"
+            style={{
+                '--df-messenger-primary-color': '#01666F',
+                '--df-messenger-focus-color': '#F37920',
+                '--df-messenger-font-color': '#333333',
+                '--df-messenger-font-family': 'system-ui, sans-serif',
+                '--df-messenger-chat-background': '#eff4f4ff',
+                '--df-messenger-chat-border-radius': '8px',
+                '--df-messenger-message-user-background': '#A3D3D4',
+                '--df-messenger-message-bot-background': '#fff',
+                '--df-messenger-input-box-border': '1px solid #E0E0E0',
+                '--df-messenger-input-box-border-radius': '16px',
+                '--df-messenger-input-box-padding': '14px 14px',
+                '--df-messenger-send-icon-offset-x': '15px',
+                '--df-messenger-message-stack-spacing': '20px'
+                } as React.CSSProperties}
+        >
+        <df-messenger-chat 
+            chat-title={isSpanish ? 'Asistente de Currículum' : 'Resume Assistant'}
+            >
+        </df-messenger-chat>
+    </df-messenger>
+    </div>
+  );
+}

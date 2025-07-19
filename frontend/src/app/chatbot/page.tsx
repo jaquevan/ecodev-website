@@ -1,26 +1,75 @@
 "use client"
 
-import { useState } from 'react';
+import { useState, useRef } from 'react';
+
 import Nav from '@/components/Nav';
 import Footer from '@/components/Footer';
 import { useLanguage } from '@/context/LanguageContext';
-import dynamic from 'next/dynamic';
-
-// Use Next.js dynamic import with SSR disabled for the chatbot
-const DialogflowBot = dynamic(() => import('@/components/DiagflowBot'), {
-    ssr: false,
-    loading: () => (
-        <div className="fixed bottom-4 right-4 p-4 bg-white rounded-lg shadow-lg animate-pulse">
-            Loading chat...
-        </div>
-    )
-});
+import InputField from '@/components/InputField';
 
 export default function ChatPage() {
+    const formRef = useRef<HTMLFormElement>(null);
+    const scrollToForm = () => {
+        formRef.current?.scrollIntoView({ behavior: 'smooth' });
+    };
+    
     const { locale } = useLanguage();
     const isSpanish = locale === 'es';
-    const [isChatOpen, setIsChatOpen] = useState(false);
 
+    const [name, setName] = useState('');
+    const [email, setEmail] = useState('');
+    const [phone, setPhone] = useState('');
+    const [location, setLocation] = useState('');
+
+    const [validName, setValidName] = useState(false);
+    const [validEmail, setValidEmail] = useState(false);
+    const [validPhone, setValidPhone] = useState(false);
+    const [validLocation, setValidLocation] = useState(false);
+
+    const handleNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const val = e.target.value;
+        setName(val);
+        setValidName(val.trim().length > 1);
+    };
+
+    const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const val = e.target.value;
+        setEmail(val);
+        setValidEmail(e.target.validity.valid);
+    };
+
+    const handlePhoneChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const val = e.target.value;
+        setPhone(val);
+        // Simple phone validation (digits and +, -, spaces)
+        setValidPhone(/^[\d+\-\s()]{7,}$/.test(val));
+    };
+
+    const handleLocationChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const val = e.target.value;
+        setLocation(val);
+        setValidLocation(val.trim().length > 1);
+    };
+
+    const allValid = validName && validEmail && validPhone && validLocation;
+
+    const handleSubmit = async (e: React.FormEvent) => {
+        e.preventDefault();
+        if (!allValid) return; // just in case
+
+        const userId = crypto.randomUUID();
+        const payload = { userId, data: { name, email, phone, location } };
+
+        await fetch('https://resume-bot-896334112971.europe-west1.run.app/api/savePersonalInfo', {
+            method: 'POST',
+            mode: 'cors',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload),
+        });
+
+        window.location.href = `/chatbot/bot?userId=${userId}`;
+    };
+    
     return (
         <>
             <Nav />
@@ -28,12 +77,12 @@ export default function ChatPage() {
             <div className="bg-gradient-to-b from-[#00464D]/10 to-white">
                 <div className="container mx-auto px-4 py-16 text-center">
                     <h1 className="text-4xl md:text-5xl font-bold mb-4 text-[#00464D]">
-                        {isSpanish ? 'Asistente de Currículum' : 'Resume Assistant'}
+                        {isSpanish ? 'Creador de Currículum' : 'Resume Builder'}
                     </h1>
                     <p className="text-lg max-w-2xl mx-auto text-gray-600 mb-8">
                         {isSpanish
-                            ? 'Nuestro asistente virtual te ayudará a mejorar tu currículum y responder preguntas sobre búsqueda de empleo.'
-                            : 'Our virtual assistant will help you improve your resume and answer your job search questions.'}
+                            ? 'Cree un Currículum Vitae Destacado en Minutos.'
+                            : 'Build a standout resume in minutes.'}
                     </p>
                     <div className="w-24 h-1 bg-gradient-to-r from-[#00464D] to-[#FF7001] rounded-full mx-auto"></div>
                 </div>
@@ -44,42 +93,92 @@ export default function ChatPage() {
                     <div className="bg-gray-200 rounded-xl overflow-hidden aspect-video relative">
                         <div className="absolute inset-0 flex items-center justify-center">
                             <span className="text-gray-500">
-                                {isSpanish ? 'Video instructivo' : 'Instructional Video'}
+                                {isSpanish ? 'Video Instructivo' : 'Instructional Video'}
                             </span>
                         </div>
                     </div>
 
                     <div className="space-y-6">
                         <h2 className="text-3xl font-semibold text-[#00464D]">
-                            {isSpanish ? '¿Cómo puede ayudarte?' : 'How can it help you?'}
+                            {isSpanish ? 'Tu Asesor Personal de CV, Impulsado por AI' : 'Your Personal Resume Coach, Powered by AI'}
                         </h2>
                         <p className="text-gray-600">
                             {isSpanish
-                                ? 'Nuestro asistente de IA puede ayudarte a redactar un currículum efectivo.'
-                                : 'Our AI assistant can help you craft an effective resume.'}
+                                ? 'Nuestro asistente inteligente te guía a través de una conversación amigable para recabar tu experiencia, fortalezas y objetivos. Luego, crea un currículum limpio y profesional, listo para descargar en minutos.'
+                                : 'Our smart assistant guides you through a friendly conversation to gather your experience, strengths, and goals. It then builds a clean, professional resume ready to download in minutes.'}
                         </p>
                         <button
-                            onClick={() => setIsChatOpen(true)}
+                            onClick={scrollToForm}
                             className="bg-[#FF7001] hover:bg-[#FF8C33] hover:pointer text-white font-medium py-3 px-6 rounded-lg transition-all duration-300 shadow-md hover:shadow-lg"
                         >
-                            {isSpanish ? 'Iniciar Chat' : 'Start Chat'}
+                            {isSpanish ? 'Empezar 👇' : 'Get Started 👇'}
                         </button>
                     </div>
                 </div>
 
-                <div className="mt-16 text-center">
-                    <h3 className="text-2xl font-semibold text-[#00464D] mb-4">
-                        {isSpanish ? '¿Listo para empezar?' : 'Ready to get started?'}
+                <form
+                    ref={formRef}
+                    onSubmit={handleSubmit}
+                    className="mt-28 max-w-2xl mx-auto bg-white border border-gray-200 p-8 rounded-xl shadow-sm grid gap-6"
+                    style={{ scrollMarginTop: '130px' }}
+                    noValidate
+                >
+                    <h3 className="text-2xl font-semibold text-[#00464D] mb-6 text-center">
+                        {isSpanish ? 'Comience ingresando sus datos' : 'Start by entering your details'}
                     </h3>
-                    <p className="text-gray-600 max-w-2xl mx-auto">
-                        {isSpanish
-                            ? 'Haz clic en el botón de chat para comenzar una conversación con nuestro asistente.'
-                            : 'Click the chat button to start a conversation with our assistant.'}
-                    </p>
-                </div>
-            </div>
 
-            {isChatOpen && <DialogflowBot />}
+                    <InputField
+                        id="name"
+                        type="text"
+                        value={name}
+                        onChange={handleNameChange}
+                        placeholder={isSpanish ? 'Nombre completo' : 'Full Name'}
+                        valid={validName}
+                    />
+                    <InputField
+                        id="email"
+                        type="email"
+                        value={email}
+                        onChange={handleEmailChange}
+                        placeholder={isSpanish ? 'Correo electrónico' : 'Email'}
+                        valid={validEmail}
+                    />
+                    <InputField
+                        id="phone"
+                        type="tel"
+                        value={phone}
+                        onChange={handlePhoneChange}
+                        placeholder={isSpanish ? 'Teléfono' : 'Phone'}
+                        valid={validPhone}
+                    />
+                    <InputField
+                        id="location"
+                        type="text"
+                        value={location}
+                        onChange={handleLocationChange}
+                        placeholder={isSpanish ? 'Ubicación' : 'Location'}
+                        valid={validLocation}
+                    />
+
+                    <button
+                        type="submit"
+                        disabled={!allValid}
+                        className={`${
+                        allValid ? 'bg-[#FF7001] hover:bg-[#FF8C33] cursor-pointer' : 'bg-gray-300 cursor-not-allowed'
+                        } text-white font-semibold py-3 px-6 rounded-lg transition-all`}
+                    >
+                        {isSpanish ? 'Continuar al Chat' : 'Continue to Chatbot'}
+                    </button>
+
+                    <p className="text-sm text-gray-500 mt-2 flex items-center gap-1 justify-center">
+                        <span aria-label="Lock" role="img">
+                        🔒
+                        </span>{' '}
+                        {isSpanish ? 'Tu información es privada y segura.' : 'Your information is private and secure.'}
+                    </p>
+                </form>
+
+            </div>
 
             <Footer />
         </>
