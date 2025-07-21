@@ -104,6 +104,21 @@ h2, h3, h4, h5 {
   animation: bubble 4s infinite ease-in-out;
 }
 
+@keyframes slideFadeUp {
+  0% {
+    opacity: 0;
+    transform: translateY(40px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-slideFadeUp {
+  animation: slideFadeUp 0.6s ease-out forwards;
+}
+
 
 /* Light mode fallback */
 @media (prefers-color-scheme: light) {

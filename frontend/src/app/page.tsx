@@ -103,8 +103,19 @@ export default function Home() {
 
                                     <p className="text-gray-700 text-lg sm:text-xl leading-relaxed text-center font-light">
                                         {isSpanish
-                                            ? 'La Colaborativa ofrece apoyo contextualizado para empoderar a nuestra comunidad hacia la independencia financiera. Proporcionamos vías holísticas de desarrollo de la fuerza laboral para personas entre las edades de 14 y 60 años, asegurando que tengan las herramientas y recursos necesarios para tener éxito en el mercado laboral.'
-                                            : 'La Colaborativa offers contextualized support to empower our community towards financial independence. We provide holistic workforce development pathways for individuals between the ages of 14–60, ensuring they have the necessary tools and resources to succeed in the workforce.'}
+                                            ? 'En el Departamento de Movilidad y Sostenibilidad Económica, estamos comprometidos\n' +
+                                            'con apoyar a nuestra comunidad a través de programas diseñados para fortalecer sus\n' +
+                                            'habilidades, abrir puertas a nuevas oportunidades y construir un futuro mejor. Te\n' +
+                                            'invitamos a conocer nuestros programas de educación, preparación para el empleo y\n' +
+                                            'desarrollo laboral, creados pensando en tus necesidades y sueños. ¡Explora cómo\n' +
+                                            'juntos podemos avanzar hacia tu éxito personal y profesional!'
+
+                                            : 'At the Economic Sustainability and Mobility Department, we are dedicated to supporting\n' +
+                                            'our community through programs designed to strengthen skills, open doors to new\n' +
+                                            'opportunities, and build a better future. We invite you to explore our education, job\n' +
+                                            'readiness, and workforce development programs, all created with your needs and\n' +
+                                            'dreams in mind. Discover how, together, we can move forward toward your personal\n' +
+                                            'and professional success!'}
                                     </p>
                                 </div>
 
