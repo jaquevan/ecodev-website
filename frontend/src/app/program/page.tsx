@@ -9,6 +9,7 @@ import { fetchPrograms } from '@/lib/programs';
 import { Program } from '@/types/program';
 import { motion } from 'framer-motion';
 import { useInView } from 'react-intersection-observer';
+import Loading from '@/components/Loading';
 
 export default function Programs() {
     const { locale } = useLanguage();
@@ -79,12 +80,7 @@ export default function Programs() {
             <div className="container mx-auto px-4 py-8 max-w-7xl">
                 {loading && (
                     <div className="flex justify-center items-center py-16">
-                        <div className="animate-pulse flex flex-col items-center">
-                            <div className="rounded-full bg-slate-200 h-12 w-12 mb-4"></div>
-                            <div className="text-gray-500">
-                                {isSpanish ? 'Cargando programas...' : 'Loading programs...'}
-                            </div>
-                        </div>
+                        <Loading/>
                     </div>
                 )}
 
