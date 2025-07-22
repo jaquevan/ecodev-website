@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { useLanguage } from '@/context/LanguageContext';
-import { fetchCourses, mediaUrl } from '@/lib/strapi';
+import { fetchCachedCourses, mediaUrl } from '@/lib/strapi';
 import Loading from '@/components/Loading';
 import Nav from '@/components/Nav';
 import Footer from '@/components/Footer';
@@ -11,40 +11,36 @@ import Image from 'next/image';
 import { Course } from '@/types/course';
 import { motion } from 'framer-motion';
 import { useInView } from 'react-intersection-observer';
+import { useSearchParams } from 'next/navigation';
 
-// Define the embedded program relationship
 interface ProgramAttributes {
+    id: number;
     title: string;
-    description?: string;
     slug?: string;
+    [key: string]: any;
 }
 
-interface EmbeddedProgram {
-    data?: {
-        id: number;
-        attributes: ProgramAttributes;
-    };
-}
-
-// Make our course type by *composition*, not extends
 type ExtendedCourse = Course & {
     category?: string;
     registration?: boolean;
-    program?: EmbeddedProgram | null;
+    program?: ProgramAttributes | null;
 };
 
 export default function CoursesPage() {
     const { locale } = useLanguage();
     const isSpanish = locale === 'es';
+    const searchParams = useSearchParams();
+    const programQuery = searchParams.get('program') || '';
+
     const [courses, setCourses] = useState<ExtendedCourse[]>([]);
     const [loading, setLoading] = useState(true);
     const [search, setSearch] = useState('');
     const [dateFilter, setDateFilter] = useState('');
-    const [categoryValue, setCategoryValue] = useState('');
+    const [programValue, setProgramValue] = useState(decodeURIComponent(programQuery));
 
     const [heroRef, heroInView] = useInView({
         triggerOnce: true,
-        threshold: 0.1
+        threshold: 0.1,
     });
 
     useEffect(() => {
@@ -52,7 +48,7 @@ export default function CoursesPage() {
         (async () => {
             setLoading(true);
             try {
-                const data = await fetchCourses(locale);
+                const data = await fetchCachedCourses(locale);
                 if (mounted) setCourses(data as ExtendedCourse[]);
             } catch (err) {
                 console.error('error loading courses', err);
@@ -65,42 +61,32 @@ export default function CoursesPage() {
         };
     }, [locale]);
 
-    // Get all unique program titles for filter dropdown
-    const programCategories = Array.from(
-        new Set(
-            courses
-                .map(c => c.program?.data?.attributes?.title)
-                .filter((t): t is string => Boolean(t))
-        )
-    ).sort();
+    const fixedPrograms = ['Adult Education', 'Workforce Development', 'Job Readiness'];
 
-    // Format date for readable display
     const formatMonthYear = (dateStr: string) => {
         if (!dateStr) return '';
         const [year, month] = dateStr.split('-');
         const date = new Date(parseInt(year), parseInt(month) - 1);
         return date.toLocaleDateString(locale === 'en' ? 'en-US' : 'es-ES', {
             month: 'long',
-            year: 'numeric'
+            year: 'numeric',
         });
     };
 
-    // Get sorted unique months for date filter
     const uniqueMonths = Array.from(
-        new Set(courses.map(c => c.date?.slice(0, 7)).filter(Boolean))
+        new Set(courses.map((c) => c.date?.slice(0, 7)).filter(Boolean))
     ).sort();
 
-    // Filter and sort
     const filtered = courses
-        .filter(c => {
+        .filter((c) => {
             const matchSearch =
                 c.title?.toLowerCase().includes(search.toLowerCase()) ||
                 c.desc?.toLowerCase().includes(search.toLowerCase());
             const matchDate = dateFilter ? (c.date || '').includes(dateFilter) : true;
-            const matchCategory = categoryValue
-                ? c.program?.data?.attributes?.title === categoryValue
+            const matchProgram = programValue
+                ? c.program?.title === programValue
                 : true;
-            return matchSearch && matchDate && matchCategory;
+            return matchSearch && matchDate && matchProgram;
         })
         .sort((a, b) => (a.date || '').localeCompare(b.date || ''));
 
@@ -149,7 +135,7 @@ export default function CoursesPage() {
                                 type="text"
                                 placeholder={isSpanish ? 'Buscar' : 'Search'}
                                 value={search}
-                                onChange={e => setSearch(e.target.value)}
+                                onChange={(e) => setSearch(e.target.value)}
                                 className="w-full border border-gray-300 rounded-md py-2 pl-10 pr-3 placeholder-gray-500 focus:border-teal-600 focus:ring-1 focus:ring-teal-600"
                             />
                             <svg
@@ -169,11 +155,11 @@ export default function CoursesPage() {
 
                         <select
                             value={dateFilter}
-                            onChange={e => setDateFilter(e.target.value)}
+                            onChange={(e) => setDateFilter(e.target.value)}
                             className="w-full border border-gray-300 rounded-md py-2 px-3 text-gray-700 focus:border-teal-600 focus:ring-1 focus:ring-teal-600"
                         >
                             <option value="">{isSpanish ? 'Todos los meses' : 'All months'}</option>
-                            {uniqueMonths.map(month => (
+                            {uniqueMonths.map((month) => (
                                 <option key={month} value={month}>
                                     {formatMonthYear(month)}
                                 </option>
@@ -181,14 +167,14 @@ export default function CoursesPage() {
                         </select>
 
                         <select
-                            value={categoryValue}
-                            onChange={e => setCategoryValue(e.target.value)}
+                            value={programValue}
+                            onChange={(e) => setProgramValue(e.target.value)}
                             className="w-full border border-gray-300 rounded-md py-2 px-3 text-gray-700 focus:border-teal-600 focus:ring-1 focus:ring-teal-600"
                         >
                             <option value="">{isSpanish ? 'Todos los programas' : 'All programs'}</option>
-                            {programCategories.map((cat, idx) => (
-                                <option key={idx} value={cat}>
-                                    {cat}
+                            {fixedPrograms.map((prog) => (
+                                <option key={prog} value={prog}>
+                                    {prog}
                                 </option>
                             ))}
                         </select>
@@ -219,27 +205,6 @@ export default function CoursesPage() {
                                 : 'No courses match your filters.'}
                         </p>
                     )}
-
-                    <div className="mt-20">
-                        <div className="rounded-xl bg-gradient-to-r from-[#0f6d73] to-[#4db08e] p-10 text-center text-white">
-                            <h2 className="text-2xl font-semibold mb-2">
-                                {isSpanish
-                                    ? "¿No encuentras lo que buscas?"
-                                    : "Can't find what you're looking for?"}
-                            </h2>
-                            <p className="mb-6">
-                                {isSpanish
-                                    ? 'Mira todos los cursos para ver todo lo que ofrecemos.'
-                                    : 'Browse all courses to see everything we offer.'}
-                            </p>
-                            <Link
-                                href="/courses"
-                                className="inline-block bg-white text-[#00464d] font-semibold rounded-md px-6 py-2 shadow-sm hover:bg-gray-100 transition"
-                            >
-                                {isSpanish ? 'Ver Más Cursos' : 'See More Courses'}
-                            </Link>
-                        </div>
-                    </div>
                 </div>
             </section>
             <Footer />
@@ -250,16 +215,8 @@ export default function CoursesPage() {
 function CourseCard({ course }: { course: ExtendedCourse }) {
     const { locale } = useLanguage();
 
-    const imageUrl = (() => {
-        if (course.Image && 'data' in course.Image && Array.isArray(course.Image.data)) {
-            const imageData = course.Image.data[0]?.attributes;
-            return imageData && (imageData.formats?.medium?.url || imageData.url) || null;
-        } else if (Array.isArray(course.Image)) {
-            return course.Image[0]?.formats?.medium?.url || course.Image[0]?.url || null;
-        }
-        return null;
-    })();
-
+    const imageUrl = course.Image?.[0]?.formats?.medium?.url || course.Image?.[0]?.url;
+    console.log(imageUrl)
 
     const badge = course.registration
         ? {
@@ -273,9 +230,7 @@ function CourseCard({ course }: { course: ExtendedCourse }) {
 
     return (
         <Link href={`/course/${course.slug}`} className="block h-full group">
-            <article className="h-full flex flex-col border border-[#d5e9e2] rounded-2xl shadow-sm
-                      hover:shadow-lg hover:-translate-y-2 hover:border-teal-400
-                      transition-all duration-300 bg-white relative overflow-hidden">
+            <article className="h-full flex flex-col border border-[#d5e9e2] rounded-2xl shadow-sm hover:shadow-lg hover:-translate-y-2 hover:border-teal-400 transition-all duration-300 bg-white relative overflow-hidden">
                 <div className="h-44 relative rounded-t-2xl overflow-hidden">
                     {imageUrl ? (
                         <Image
@@ -286,9 +241,9 @@ function CourseCard({ course }: { course: ExtendedCourse }) {
                         />
                     ) : (
                         <div className="w-full h-full flex items-center justify-center bg-gradient-to-r from-[#00464d] to-[#ff7001]">
-                    <span className="text-white font-semibold">
-                        {locale === 'en' ? 'No Image' : 'Sin Imagen'}
-                    </span>
+                            <span className="text-white font-semibold">
+                                {locale === 'en' ? 'No Image' : 'Sin Imagen'}
+                            </span>
                         </div>
                     )}
                 </div>
@@ -315,25 +270,22 @@ function CourseCard({ course }: { course: ExtendedCourse }) {
                             </svg>
                             {course.date}
                         </li>
-                        {/* Other list items remain the same */}
                     </ul>
                     <p className="text-sm text-gray-600 line-clamp-3 flex-grow">{course.desc}</p>
                 </div>
 
-                <div
-                    className={`px-4 py-2 ${badge.color} text-white text-center text-sm font-medium rounded-b-2xl relative`}
-                >
-            <span className="relative z-10 flex justify-center items-center">
-                {badge.text}
-                <svg
-                    className="w-0 h-4 ml-0 group-hover:w-4 group-hover:ml-2 transition-all duration-300"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                >
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
-                </svg>
-            </span>
+                <div className={`px-4 py-2 ${badge.color} text-white text-center text-sm font-medium rounded-b-2xl relative`}>
+                    <span className="relative z-10 flex justify-center items-center">
+                        {badge.text}
+                        <svg
+                            className="w-0 h-4 ml-0 group-hover:w-4 group-hover:ml-2 transition-all duration-300"
+                            fill="none"
+                            stroke="currentColor"
+                            viewBox="0 0 24 24"
+                        >
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
+                        </svg>
+                    </span>
                     <div className="absolute inset-0 bg-black opacity-0 group-hover:opacity-10 transition-opacity duration-300 rounded-b-2xl"></div>
                 </div>
             </article>

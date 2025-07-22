@@ -60,8 +60,18 @@ export default function Programs() {
 
                     <p className="text-gray-700 text-lg sm:text-xl leading-relaxed mb-8 text-center font-light max-w-2xl mx-auto">
                         {isSpanish
-                            ? 'Descubre oportunidades de aprendizaje diseñadas para inspirar y capacitar a nuestra comunidad.'
-                            : 'Discover learning opportunities designed to inspire and empower our community.'}
+                            ? 'En el Departamento de Movilidad y Sostenibilidad Económica, estamos comprometidos\n' +
+                            'con apoyar a nuestra comunidad a través de programas diseñados para fortalecer sus\n' +
+                            'habilidades, abrir puertas a nuevas oportunidades y construir un futuro mejor. Te\n' +
+                            'invitamos a conocer nuestros programas de educación, preparación para el empleo y\n' +
+                            'desarrollo laboral, creados pensando en tus necesidades y sueños. ¡Explora cómo\n' +
+                            'juntos podemos avanzar hacia tu éxito personal y profesional!'
+                            : 'At the Economic Sustainability and Mobility Department, we are dedicated to supporting\n' +
+                            'our community through programs designed to strengthen skills, open doors to new\n' +
+                            'opportunities, and build a better future. We invite you to explore our education, job\n' +
+                            'readiness, and workforce development programs, all created with your needs and\n' +
+                            'dreams in mind. Discover how, together, we can move forward toward your personal\n' +
+                            'and professional success!'}
                     </p>
                 </motion.div>
             </section>

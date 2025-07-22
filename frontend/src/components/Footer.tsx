@@ -99,49 +99,60 @@ const Footer = memo(function Footer() {
                     <ul className="space-y-3 font-body">
                         <li>
                             <Link href="/" className="flex items-center gap-3 group">
-                                <div className="w-8 h-8 rounded-full bg-[#3E666D] flex items-center justify-center group-hover:bg-orange-400 transition-colors">
-                                    <Home fontSize="small" className="text-white" />
+                                <div
+                                    className="w-8 h-8 rounded-full bg-[#3E666D] flex items-center justify-center group-hover:bg-orange-400 transition-colors">
+                                    <Home fontSize="small" className="text-white"/>
                                 </div>
-                                <span className="group-hover:text-orange-300 transition-colors">{isSpanish ? 'Inicio' : 'Home'}</span>
-                            </Link>
-                        </li>
-                        <li>
-                            <Link href="/team" className="flex items-center gap-3 group">
-                                <div className="w-8 h-8 rounded-full bg-[#3E666D] flex items-center justify-center group-hover:bg-orange-400 transition-colors">
-                                    <People fontSize="small" className="text-white" />
-                                </div>
-                                <span className="group-hover:text-orange-300 transition-colors">{isSpanish ? 'Conoce al Equipo' : 'Meet the Team'}</span>
-                            </Link>
-                        </li>
-                        <li>
-                            <Link href="/contact" className="flex items-center gap-3 group">
-                                <div className="w-8 h-8 rounded-full bg-[#3E666D] flex items-center justify-center group-hover:bg-orange-400 transition-colors">
-                                    <ContactSupport fontSize="small" className="text-white" />
-                                </div>
-                                <span className="group-hover:text-orange-300 transition-colors">{isSpanish ? 'Contacto' : 'Contact'}</span>
+                                <span
+                                    className="group-hover:text-orange-300 transition-colors">{isSpanish ? 'Inicio' : 'Home'}</span>
                             </Link>
                         </li>
                         <li>
                             <Link href="/programs" className="flex items-center gap-3 group">
-                                <div className="w-8 h-8 rounded-full bg-[#3E666D] flex items-center justify-center group-hover:bg-orange-400 transition-colors">
-                                    <School fontSize="small" className="text-white" />
+                                <div
+                                    className="w-8 h-8 rounded-full bg-[#3E666D] flex items-center justify-center group-hover:bg-orange-400 transition-colors">
+                                    <School fontSize="small" className="text-white"/>
                                 </div>
-                                <span className="group-hover:text-orange-300 transition-colors">{isSpanish ? 'Programas' : 'Programs'}</span>
+                                <span
+                                    className="group-hover:text-orange-300 transition-colors">{isSpanish ? 'Programas' : 'Programs'}</span>
                             </Link>
                         </li>
                         <li>
-                            <Link href="/calendar" className="flex items-center gap-3 group">
-                                <div className="w-8 h-8 rounded-full bg-[#3E666D] flex items-center justify-center group-hover:bg-orange-400 transition-colors">
-                                    <EventNote fontSize="small" className="text-white" />
+                            <Link href="/course" className="flex items-center gap-3 group">
+                                <div
+                                    className="w-8 h-8 rounded-full bg-[#3E666D] flex items-center justify-center group-hover:bg-orange-400 transition-colors">
+                                    <EventNote fontSize="small" className="text-white"/>
                                 </div>
-                                <span className="group-hover:text-orange-300 transition-colors">{isSpanish ? 'Calendario' : 'Calendar'}</span>
+                                <span
+                                    className="group-hover:text-orange-300 transition-colors">{isSpanish ? 'Cursos' : 'Courses'}</span>
+                            </Link>
+                        </li>
+                        <li>
+                            <Link href="/team" className="flex items-center gap-3 group">
+                                <div
+                                    className="w-8 h-8 rounded-full bg-[#3E666D] flex items-center justify-center group-hover:bg-orange-400 transition-colors">
+                                    <People fontSize="small" className="text-white"/>
+                                </div>
+                                <span
+                                    className="group-hover:text-orange-300 transition-colors">{isSpanish ? 'Conoce al Equipo' : 'Meet the Team'}</span>
+                            </Link>
+                        </li>
+                        <li>
+                            <Link href="/contact" className="flex items-center gap-3 group">
+                                <div
+                                    className="w-8 h-8 rounded-full bg-[#3E666D] flex items-center justify-center group-hover:bg-orange-400 transition-colors">
+                                    <ContactSupport fontSize="small" className="text-white"/>
+                                </div>
+                                <span
+                                    className="group-hover:text-orange-300 transition-colors">{isSpanish ? 'Contacto' : 'Contact'}</span>
                             </Link>
                         </li>
                     </ul>
                 </div>
             </div>
 
-            <div className="relative z-10 max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center border-t border-gray-500/30 pt-6 text-sm">
+            <div
+                className="relative z-10 max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center border-t border-gray-500/30 pt-6 text-sm">
                 <p className="text-gray-300">
                     &copy; {new Date().getFullYear()} La Colaborativa.
                     {isSpanish ? ' Todos los derechos reservados.' : ' All rights reserved.'}
@@ -155,7 +166,7 @@ const Footer = memo(function Footer() {
                 }`}
                 aria-label={isSpanish ? "Volver arriba" : "Scroll to top"}
             >
-                <KeyboardArrowUp fontSize="medium" />
+                <KeyboardArrowUp fontSize="medium"/>
             </button>
         </footer>
     );
