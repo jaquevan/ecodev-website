@@ -1,22 +1,21 @@
-import type { NextConfig } from "next";
+/** @type {import('next').NextConfig} */
 
-const nextConfig: NextConfig = {
-    i18n: {
-        locales: ['en', 'es'],
-        defaultLocale: 'en',
-        localeDetection: false,
-    },
-
+module.exports = {
     images: {
         remotePatterns: [
             {
-                protocol: 'http',
-                hostname: 'localhost',
-                port: '1340',
+                protocol: 'https',
+                hostname: 'fabulous-memory-086b6eebd8.media.strapiapp.com',
                 pathname: '/**',
             },
+
+            // {
+            //     protocol: 'http',
+            //     hostname: 'localhost',
+            //     port: '1340',
+            //     pathname: '/**',
+            // },
         ],
-    }
+    },
 };
 
-export default nextConfig;

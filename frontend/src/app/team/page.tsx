@@ -9,9 +9,8 @@ import TeamMemberCard from '@/components/TeamMemberCard';
 import BubbleBackground from '@/components/Bubble';
 
 import groupPhoto from '../../../public/team-photo.png';
-import carlosPhoto from '../../../public/carlos.png';
 
-import { fetchTeamMembers } from '@/lib/team';
+import {fetchCachedTeamMembers} from '@/lib/team';
 import { TeamMember as OriginalTeamMember } from '@/types/member';
 
 const bubbles = [
@@ -64,7 +63,7 @@ export default function TeamPage() {
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        fetchTeamMembers()
+        fetchCachedTeamMembers()
             .then((members) =>
                 members.map((member): TeamMember => ({
                     ...member,
@@ -113,39 +112,6 @@ export default function TeamPage() {
                     </div>
                 </header>
 
-                <section className="container mx-auto py-12 px-4">
-                    <article className="mx-auto flex max-w-4xl flex-col items-center gap-8 rounded-2xl border-4 border-amber-400 bg-gradient-to-tr from-[#99DED6] to-[#FFDBC2] p-8 shadow-lg md:flex-row">
-                        <div className="shrink-0 flex justify-center">
-                            <Image
-                                src={carlosPhoto}
-                                alt="Picture of Carlos R. Gálvez"
-                                width={220}
-                                height={220}
-                                className="rounded-full shadow-md border-4 border-emerald-500 object-cover"
-                                priority
-                            />
-                        </div>
-                        <div className="text-center md:text-left">
-                            <h2 className="text-2xl md:text-3xl font-bold text-emerald-800 mb-2">
-                                Carlos R. Gálvez
-                            </h2>
-                            <p className="text-lg font-medium text-gray-800 mb-4">
-                                Director of Economic Sustainability & Mobility
-                            </p>
-                            <p className="text-base leading-relaxed text-gray-700 mb-4">
-                                Economist from Hermosillo, Sonora, now based in Massachusetts, with multi-sector experience across academia, government, NGOs, and business. Carlos partners with nonprofits serving Latinx immigrants and vulnerable youth, applying strategic planning and project-development expertise to foster long-term community wellbeing.
-                            </p>
-                            <a
-                                href="https://la-colaborativa.org/program-contact/?advisor-email=carlosg@la-colaborativa.org&program-service=Economic-Development"
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                className="inline-flex items-center gap-2 rounded-md bg-emerald-600 px-5 py-2.5 text-sm font-medium text-white transition hover:bg-emerald-700"
-                            >
-                                Connect with Carlos
-                            </a>
-                        </div>
-                    </article>
-                </section>
 
                 <main className="container mx-auto pb-24 px-4">
                     <h2 className="text-2xl md:text-3xl font-bold text-emerald-800 text-center mb-10">
