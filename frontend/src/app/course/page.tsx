@@ -17,7 +17,7 @@ interface ProgramAttributes {
     id: number;
     title: string;
     slug?: string;
-    [key: string]: any;
+    [key: string]: string | number | boolean | undefined;
 }
 
 type ExtendedCourse = Course & {
