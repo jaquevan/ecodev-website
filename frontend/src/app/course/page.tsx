@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, Suspense } from 'react';
 import { useLanguage } from '@/context/LanguageContext';
 import { fetchCachedCourses, mediaUrl } from '@/lib/strapi';
 import Loading from '@/components/Loading';
@@ -103,7 +103,7 @@ export default function CoursesPage() {
     }
 
     return (
-        <>
+        <Suspense fallback={<Loading />}>
             <Nav />
             <section ref={heroRef} className="px-2 sm:px-0 pt-10 pb-8">
                 <motion.div
@@ -208,7 +208,7 @@ export default function CoursesPage() {
                 </div>
             </section>
             <Footer />
-        </>
+        </Suspense>
     );
 }
 
@@ -216,7 +216,6 @@ function CourseCard({ course }: { course: ExtendedCourse }) {
     const { locale } = useLanguage();
 
     const imageUrl = course.Image?.[0]?.formats?.medium?.url || course.Image?.[0]?.url;
-    console.log(imageUrl)
 
     const badge = course.registration
         ? {
