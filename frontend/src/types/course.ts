@@ -62,8 +62,8 @@ export interface Course {
     slug: string;
     date: string;
     endDate: string;
-    time: string;
-    endTime: string;
+    // time: string;
+    // endTime: string;
     location: string;
     language: string;
     learnings: string;
@@ -73,6 +73,8 @@ export interface Course {
     WeekdaySelection?: {
         id: number;
         weekdays: string;
+        startTime: string;
+        endTime: string;
     }[];
     team_members?: {
         id: number;

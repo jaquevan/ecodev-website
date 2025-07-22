@@ -42,7 +42,7 @@ export async function fetchCourseBySlug(
 ): Promise<Course | null> {
     try {
         const token = process.env.NEXT_PUBLIC_STRAPI_API_TOKEN;
-        const url = `${API}/api/courses?locale=${locale}&filters[slug][$eq]=${slug}&populate[team_members][populate]=photo`;
+        const url = `${API}/api/courses?locale=${locale}&filters[slug][$eq]=${slug}&populate[team_members][populate]=photo&populate=WeekdaySelection`;
 
         const res = await fetch(url, {
             cache: options.cache,
