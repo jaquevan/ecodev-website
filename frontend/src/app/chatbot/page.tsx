@@ -6,8 +6,15 @@ import Nav from '@/components/Nav';
 import Footer from '@/components/Footer';
 import { useLanguage } from '@/context/LanguageContext';
 import InputField from '@/components/InputField';
+import { motion } from 'framer-motion';
+import { useInView } from 'react-intersection-observer';
 
 export default function ChatPage() {
+    const [heroRef, heroInView] = useInView({
+        triggerOnce: true,
+        threshold: 0.1
+    });
+
     const formRef = useRef<HTMLFormElement>(null);
     const scrollToForm = () => {
         formRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -74,19 +81,27 @@ export default function ChatPage() {
         <>
             <Nav />
 
-            <div className="bg-gradient-to-b from-[#00464D]/10 to-white">
-                <div className="container mx-auto px-4 py-16 text-center">
-                    <h1 className="text-4xl md:text-5xl font-bold mb-4 text-[#00464D]">
-                        {isSpanish ? 'Creador de Currículum' : 'Resume Builder'}
-                    </h1>
-                    <p className="text-lg max-w-2xl mx-auto text-gray-600 mb-8">
-                        {isSpanish
-                            ? 'Cree un Currículum Vitae Destacado en Minutos.'
-                            : 'Build a standout resume in minutes.'}
-                    </p>
-                    <div className="w-24 h-1 bg-gradient-to-r from-[#00464D] to-[#FF7001] rounded-full mx-auto"></div>
-                </div>
-            </div>
+            <section ref={heroRef} className="px-2 sm:px-0 pt-10 pb-8">
+                <motion.div
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={heroInView ? { opacity: 1, y: 0 } : {}}
+                    transition={{ duration: 0.5, ease: 'easeOut' }}
+                    className="container mx-auto px-4 text-center"
+                >
+                        <div className="container mx-auto px-4 py-8 text-center">
+                            <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold mb-6 text-center relative z-10">
+                                <span className="bg-gradient-to-r from-teal-700 to-teal-500 bg-clip-text text-transparent">
+                                    {isSpanish ? 'Creador de Currículum' : 'Resume Builder'}
+                                </span>
+                            </h1>
+                            <div className="h-1.5 w-24 bg-orange-300 mx-auto rounded-full mb-6"></div>
+
+                            <p className="text-gray-700 text-lg sm:text-xl leading-relaxed mb-8 text-center font-light max-w-2xl mx-auto">
+                                {isSpanish
+                                    ? 'Cree un Currículum Vitae Destacado en Minutos.'
+                                    : 'Build a standout resume in minutes.'}
+                            </p>
+                        </div>
 
             <div className="container mx-auto px-4 py-12 max-w-6xl">
                 <div className="grid md:grid-cols-2 gap-12 items-center">
@@ -98,7 +113,7 @@ export default function ChatPage() {
                         </div>
                     </div>
 
-                    <div className="space-y-6">
+                    <div className="space-y-6 text-left">
                         <h2 className="text-3xl font-semibold text-[#00464D]">
                             {isSpanish ? 'Tu Asesor Personal de CV, Impulsado por AI' : 'Your Personal Resume Coach, Powered by AI'}
                         </h2>
@@ -109,7 +124,7 @@ export default function ChatPage() {
                         </p>
                         <button
                             onClick={scrollToForm}
-                            className="bg-[#FF7001] hover:bg-[#FF8C33] hover:pointer text-white font-medium py-3 px-6 rounded-lg transition-all duration-300 shadow-md hover:shadow-lg"
+                            className="bg-[#FF7001] hover:bg-[#FF8C33] cursor-pointer text-white font-medium py-3 px-6 rounded-lg transition-all duration-300 shadow-md hover:shadow-lg"
                         >
                             {isSpanish ? 'Empezar 👇' : 'Get Started 👇'}
                         </button>
@@ -179,6 +194,9 @@ export default function ChatPage() {
                 </form>
 
             </div>
+
+            </motion.div>
+            </section>
 
             <Footer />
         </>

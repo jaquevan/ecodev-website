@@ -9,131 +9,122 @@ import TeamMemberCard from '@/components/TeamMemberCard';
 import BubbleBackground from '@/components/Bubble';
 
 import groupPhoto from '../../../public/team-photo.png';
-import carlosPhoto from '../../../public/carlos.png';
 
-import { fetchTeamMembers } from '@/lib/team';
-import { TeamMember } from '@/types/member';
+import {fetchCachedTeamMembers} from '@/lib/team';
+import { TeamMember as OriginalTeamMember } from '@/types/member';
 
-/* static ui helpers */
 const bubbles = [
-    { color: '#9EDED5', size: 230, top: '-10%',  left: '8%',  delay: '0s'   },
-    { color: '#7FD1AE', size: 400, top: '35%', left: '12%', delay: '1.5s' },
-    { color: '#7FD1AE', size: 320, top: '65%', left: '75%', delay: '2.1s' },
-    { color: '#FFB347', size: 140, top: '28%', left: '48%', delay: '3.2s' },
-    { color: '#8EDFDF', size: 170, top: '42%', left: '80%', delay: '0.4s' },
-    { color: '#FAE7A5', size: 130, top: '75%', left: '60%', delay: '1.9s' },
-    { color: '#C1E1C1', size: 220, top: '58%', left: '30%', delay: '2.5s' },
-    { color: '#FFB347', size: 110, top: '88%', left: '40%', delay: '3.0s' },
-    { color: '#B5EAD7', size: 280, top: '10%', left: '70%', delay: '2.3s' },
+    { color: '#9EDED5', size: 200, top: '18%',  left: '10%', delay: '0s' },
+    { color: '#FFB347', size: 180, top: '10%',  left: '45%', delay: '0s' },
+    { color: '#53e9b5', size: 220, top: '18%', left: '70%', delay: '2.3s' },
+    { color: '#f7a538', size: 300, top: '30%', left: '5%', delay: '1.5s' },
+    { color: '#7FD1AE', size: 250, top: '60%', left: '75%', delay: '2.1s' },
+    { color: '#FFB347', size: 100, top: '25%', left: '50%', delay: '3.2s' },
+    { color: '#8EDFDF', size: 140, top: '40%', left: '80%', delay: '0.4s' },
+    { color: '#FAE7A5', size: 110, top: '70%', left: '60%', delay: '1.9s' },
+    { color: '#C1E1C1', size: 180, top: '55%', left: '30%', delay: '2.5s' },
+    { color: '#b4a7ed', size: 190, top: '85%', left: '40%', delay: '3.0s' },
 ];
+
+interface NormalizedPhoto {
+    data?: {
+        attributes?: {
+            url: string;
+        };
+    };
+}
+
+interface TeamMember extends Omit<OriginalTeamMember, 'attributes'> {
+    attributes: Omit<OriginalTeamMember['attributes'], 'photo'> & { photo: NormalizedPhoto };
+}
+
+function normalizePhoto(photo: unknown): NormalizedPhoto {
+    if (Array.isArray(photo)) {
+        return {
+            data: photo[0] ? { attributes: { url: photo[0].url } } : undefined,
+        };
+    }
+
+    if (typeof photo === 'object' && photo !== null) {
+        const photoObj = photo as Record<string, unknown>;
+        if ('url' in photoObj) {
+            return { data: { attributes: { url: photoObj.url as string } } };
+        }
+        if (photoObj.data && typeof photoObj.data === 'object' && 'attributes' in photoObj.data) {
+            return photoObj as NormalizedPhoto;
+        }
+    }
+
+    return { data: undefined };
+}
 
 export default function TeamPage() {
     const [team, setTeam] = useState<TeamMember[]>([]);
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        fetchTeamMembers()
+        fetchCachedTeamMembers()
+            .then((members) =>
+                members.map((member): TeamMember => ({
+                    ...member,
+                    attributes: {
+                        ...member.attributes,
+                        photo: normalizePhoto(member.attributes.photo),
+                    },
+                }))
+            )
             .then(setTeam)
+            .catch(console.error)
             .finally(() => setLoading(false));
     }, []);
 
     return (
-        <>
+        <div className="relative min-h-screen overflow-x-hidden">
+            <div className="inset-0 pointer-events-none">
+                <BubbleBackground bubbles={bubbles} />
+            </div>
+
             <Nav />
 
-            <div className="relative min-h-screen overflow-hidden">
-                <BubbleBackground bubbles={bubbles}/>
-
-                <div className="container mx-auto pt-10 pb-4 px-4 text-center">
-                    <h2
-                        className="mb-8 inline-block rotate-[1.7deg] bg-amber-300 px-6 py-4 text-4xl font-extrabold text-emerald-900 shadow-md lg:text-5xl">
-                        Meet the Economic Development Team
-                    </h2>
-                </div>
-
-                <header className="relative isolate min-h-[50vh] flex items-center justify-center overflow-hidden mb-8">
-                    <div
-                        className="container mx-auto flex flex-col-reverse items-center justify-center gap-12 px-4 lg:flex-row lg:gap-25">
-                        <div className="max-w-xl text-center border-2 border-white px-5 py-15 rounded-xl shadow-lg ">
-                            <p className="text-lg leading_relaxed text-slate-700">
-                                La Colaborativa offers contextualized support to empower our
-                                community toward financial independence. We provide holistic
-                                workforce-development pathways for individuals aged 14 – 60,
-                                ensuring they have the tools and resources needed to succeed.
-                            </p>
+            <div className="relative">
+                <header className="relative flex items-center justify-center overflow-hidden py-12 md:py-20 lg:py-28">
+                    <div className="container mx-auto flex flex-col-reverse items-center justify-center gap-10 px-4 md:flex-row md:gap-16">
+                        <div className="max-w-xl w-full md:order-2">
+                            <figure className="relative w-full rounded-2xl overflow-hidden border-4 border-amber-400 shadow-xl">
+                                <Image
+                                    src={groupPhoto}
+                                    alt="La Colaborativa team standing outside the headquarters"
+                                    priority
+                                    className="w-full h-auto object-cover rounded-2xl"
+                                    sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 600px"
+                                />
+                            </figure>
                         </div>
 
-                        <figure className="relative w-full max-w-xl">
-                            <span
-                                className="absolute inset-0 -translate-x-2 translate-y-2 rounded-[2rem] f "
-                                aria-hidden
-                            />
-                            <Image
-                                src={groupPhoto}
-                                alt="La Colaborativa team standing outside the headquarters"
-                                priority
-                                width={600}
-                                height={400}
-                                className="relative rounded-[1rem] border-4 border-amber-500 shadow-xl w-full animate-fadeIn"
-                                sizes="(max-width: 1024px) 100vw, 50vw"
-                            />
-
-                        </figure>
+                        <div className="max-w-2xl w-full text-center md:text-left bg-white/80 backdrop-blur-sm border border-amber-200 rounded-2xl shadow-lg p-6 md:p-8">
+                            <h1 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-emerald-800 mb-4 leading-tight">
+                                Meet the Economic Development Team
+                            </h1>
+                            <p className="text-base sm:text-lg leading-relaxed text-slate-700">
+                                La Colaborativa offers contextualized support to empower our community toward financial independence. We provide holistic workforce-development pathways for individuals aged 14 – 60, ensuring they have the tools and resources needed to succeed.
+                            </p>
+                        </div>
                     </div>
                 </header>
 
-                <section className="container mx-auto py-8 px-4">
-                    <article
-                        className="mx-auto flex max-w-4xl flex-col items-center gap-8 rounded-2xl border-4 border-amber-500 bg-gradient-to-tr from-[#99DED6] to-[#FFDBC2] p-8 shadow-lg md:flex-row">
-                        <div className="shrink-0">
-                            <Image
-                                src={carlosPhoto}
-                                alt="Picture of Carlos R. Gálvez"
-                                width={200}
-                                height={200}
-                                className="rounded-full shadow-md"
-                                priority
-                            />
-                        </div>
-
-                        <div>
-                            <h2 className="text-2xl font-bold text-emerald-800">
-                                Carlos R. Gálvez
-                            </h2>
-                            <p className="mt-1 text-lg font-medium text-gray-800">
-                                Director of Economic Sustainability&nbsp;&amp;&nbsp;Mobility
-                            </p>
-                            <p className="mt-4 text-base leading-relaxed text-gray-700">
-                                Economist from Hermosillo, Sonora, now based in Massachusetts, with multi-sector
-                                experience across academia, government, NGOs, and business. Carlos partners with
-                                nonprofits serving Latinx immigrants and vulnerable youth, applying strategic
-                                planning and project-development expertise to foster long-term community wellbeing.
-                            </p>
-
-                            <a
-                                href="https://la-colaborativa.org/program-contact/?advisor-email=carlosg@la-colaborativa.org&program-service=Economic-Development"
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                className="mt-6 inline-flex items-center gap-2 rounded-md bg-emerald-600 px-5 py-2.5 text-sm font-medium text-white transition-colors hover:bg-emerald-700"
-                            >
-                                Connect with Carlos
-                            </a>
-                        </div>
-                    </article>
-                </section>
 
                 <main className="container mx-auto pb-24 px-4">
-                    <h2 className="text-2xl font-bold text-emerald-800 text-center mb-10">
+                    <h2 className="text-2xl md:text-3xl font-bold text-emerald-800 text-center mb-10">
                         Our Program Team
                     </h2>
-
                     {loading ? (
-                        <p className="text-center text-gray-700">Loading team&nbsp;…</p>
+                        <div className="flex justify-center">
+                            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-emerald-700"></div>
+                        </div>
                     ) : team.length ? (
-                        <div
-                            className="grid grid-cols-1 gap-10 transition-opacity sm:grid-cols-2 lg:grid-cols-3 xl:gap-14">
+                        <div className="grid grid-cols-1 gap-10 sm:grid-cols-2 lg:grid-cols-3 xl:gap-14">
                             {team.map((member) => (
-                                <TeamMemberCard key={member.id} member={member as any}/>
+                                <TeamMemberCard key={member.id} member={member} />
                             ))}
                         </div>
                     ) : (
@@ -142,7 +133,7 @@ export default function TeamPage() {
                 </main>
             </div>
 
-            <Footer/>
-        </>
+            <Footer />
+        </div>
     );
 }

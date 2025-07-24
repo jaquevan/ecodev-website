@@ -1,3 +1,5 @@
+'use client';
+
 import Link from 'next/link';
 import Image from 'next/image';
 import { ReactNode } from 'react';
@@ -5,144 +7,133 @@ import { motion } from 'framer-motion';
 import { useInView } from 'react-intersection-observer';
 import type { StaticImageData } from 'next/image';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
+import { useLanguage } from '@/context/LanguageContext'; // Assuming you have a LanguageContext
 
 type ProgramItem = {
     label: string;
+    slug: string;
     icon: ReactNode;
     image?: string | StaticImageData;
     subItems?: string[];
+    description?: string;
 };
 
 type ProgramCardProps = {
     title: string;
-    category: string;
+    program: string;
     items: ProgramItem[];
     colorScheme: 'indigo' | 'teal' | 'amber';
 };
 
-const staggerVariants = {
-    hidden: { opacity: 0, y: 20 },
-    visible: {
-        opacity: 1,
-        y: 0,
-        transition: {
-            staggerChildren: 0.2,
-        },
-    },
-};
-
-const bubbleVariants = {
-    hidden: { opacity: 0, scale: 0.8 },
-    visible: {
-        opacity: 1,
-        scale: 1,
-        transition: {
-            duration: 0.5,
-        },
-    },
-};
-
-export default function ProgramCards({ title, category, items, colorScheme }: ProgramCardProps) {
-    const { ref, inView } = useInView({ triggerOnce: false });
+export default function ProgramCards({ title, program, items, colorScheme }: ProgramCardProps) {
+    const { ref, inView } = useInView({ triggerOnce: true });
+    const { locale } = useLanguage(); // Get the current locale
 
     const colors = {
         indigo: {
-            bg: 'bg-white',
-            border: 'border-indigo-200',
-            iconBg: 'bg-indigo-400',
-            iconColor: 'text-white',
+            ring: 'ring-indigo-500',
+            iconBg: 'bg-indigo-600',
+            text: 'text-indigo-800',
             hoverBg: 'hover:bg-indigo-100',
-            itemText: 'text-indigo-800',
-            itemBorder: 'border-indigo-200',
             button: 'bg-indigo-600 hover:bg-indigo-700',
         },
         teal: {
-            bg: 'bg-white',
-            border: 'border-indigo-200',
-            iconBg: 'bg-teal-400',
-            iconColor: 'text-white',
+            ring: 'ring-teal-500',
+            iconBg: 'bg-teal-600',
+            text: 'text-teal-800',
             hoverBg: 'hover:bg-teal-100',
-            itemText: 'text-teal-800',
-            itemBorder: 'border-teal-200',
             button: 'bg-teal-600 hover:bg-teal-700',
         },
         amber: {
-            bg: 'bg-white',
-            border: 'border-indigo-200',
+            ring: 'ring-amber-400',
             iconBg: 'bg-amber-400',
-            iconColor: 'text-white',
+            text: 'text-amber-800',
             hoverBg: 'hover:bg-amber-100',
-            itemText: 'text-amber-800',
-            itemBorder: 'border-amber-200',
-            button: 'bg-amber-600 hover:bg-amber-700',
+            button: 'bg-amber-500 hover:bg-amber-600',
         },
     };
 
     const color = colors[colorScheme];
+    const item = items[0];
 
     return (
         <motion.div
             ref={ref}
-            variants={staggerVariants}
-            initial="hidden"
-            animate={inView ? "visible" : "hidden"}
-            className={`flex flex-col items-center text-center rounded-xl shadow-md p-6 space-y-5 max-w-sm mx-auto
-                        ${color.bg} border ${color.border} transition-all duration-300`}
+            initial={{ opacity: 0, y: 20 }}
+            animate={inView ? { opacity: 1, y: 0 } : {}}
+            transition={{ duration: 0.6, ease: 'easeOut' }}
+            className={`flex flex-col items-center text-center rounded-3xl border shadow-lg bg-white px-8 py-10 transition-all duration-300 ring-1 ${color.ring} max-w-md w-full h-full`}
         >
-            {/* Icon and Title */}
-            <motion.div variants={bubbleVariants} className="flex items-center justify-center space-x-3">
-                <div className={`w-10 h-10 flex items-center justify-center rounded-md ${color.iconBg} shadow-sm`}>
-                    <span className={`text-lg ${color.iconColor}`}>{items[0].icon}</span>
+            <div className="flex flex-col items-center gap-2 mb-5">
+                <div className={`w-14 h-14 rounded-full ${color.iconBg} flex items-center justify-center shadow`}>
+                    <span className="text-white text-2xl">{item.icon}</span>
                 </div>
-                <h3 className="text-xl font-semibold text-slate-800">{title}</h3>
-            </motion.div>
+                <h3 className="text-xl font-bold text-slate-800 leading-tight">{title}</h3>
+            </div>
 
-            <motion.div variants={bubbleVariants}>
-                <p className="text-sm text-slate-600 mt-1">Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
-            </motion.div>
+            {item.description && (
+                <p className="text-sm text-slate-600 mb-6 leading-relaxed min-h-[120px] max-w-sm mx-auto">
+                    {item.description}
+                </p>
+            )}
 
-            {/* Image */}
-            {items[0]?.image && (
+            {item.image && (
                 <motion.div
-                    variants={bubbleVariants}
-                    className="w-44 h-44 rounded-full overflow-hidden border-4 border-white shadow-md flex justify-center hover:scale-101 transition-transform duration-300 animate-bubble"
+                    initial={{ scale: 0.9 }}
+                    animate={{ scale: 1 }}
+                    transition={{ duration: 0.5, ease: 'easeOut' }}
+                    className="w-44 h-44 rounded-xl overflow-hidden shadow mb-6 ring-2 ring-gray-200"
                 >
                     <Image
-                        src={items[0].image}
+                        src={item.image}
                         alt={`${title} image`}
                         width={176}
                         height={176}
-                        className="object-cover"
+                        className="object-cover w-full h-full"
                     />
                 </motion.div>
             )}
 
-            {/* Sub Items */}
-            <motion.div variants={bubbleVariants} className="w-full space-y-2 font-medium text-slate-700">
-                {items[0]?.subItems?.map((item, idx) => (
-                    <Link href={`/course?category=${category}`} key={idx} className="block">
-                        <div className={`rounded-lg border ${color.itemBorder} p-3 text-left ${color.hoverBg} transition-all duration-200
-                                        flex items-center justify-between cursor-pointer group`}>
-                            <span className={`group-hover:${color.itemText}`}>{item}</span>
+            <div className="w-full flex flex-col gap-3 mb-6">
+                {item.subItems?.map((sub, idx) => (
+                    <Link href={`/program/${encodeURIComponent(sub.toLowerCase().replace(/\s+/g, '-'))}`} key={idx}>
+                        <motion.div
+                            whileHover={{ scale: 1.02 }}
+                            className={`flex justify-between items-center py-3 px-4 rounded-lg border border-gray-200 ${color.hoverBg} transition group cursor-pointer`}
+                        >
+                            <span className={`font-medium ${color.text}`}>{sub}</span>
                             <ArrowForwardIosIcon
                                 fontSize="small"
-                                className={`opacity-60 group-hover:opacity-100 ${color.itemText}`}
+                                className={`opacity-50 group-hover:opacity-100 ${color.text}`}
                             />
-                        </div>
+                        </motion.div>
                     </Link>
                 ))}
-            </motion.div>
+            </div>
 
-            {/* Button */}
-            <motion.div variants={bubbleVariants} className="w-full mt-auto pt-4">
-                <Link href={`/course?category=${category}`} className="block">
-                    <button
-                        className={`${color.button} text-white py-3 px-5 rounded-lg font-semibold shadow-sm hover:shadow transition w-full`}
+            <div className="w-full flex flex-col gap-3 mt-auto">
+                <Link href={`/course?program=${encodeURIComponent(program)}`}>
+                    <motion.button
+                        whileHover={{ scale: 1.05 }}
+                        className={`${color.button} text-white font-semibold py-3 px-6 rounded-lg shadow-sm hover:shadow-md transition cursor-pointer`}
                     >
-                        Learn More
-                    </button>
+                        {locale === 'es' ? 'Aprender Más' : 'Learn More'}
+                    </motion.button>
                 </Link>
-            </motion.div>
+
+                <a
+                    href={`mailto:info@la-colaborativa.org?subject=${encodeURIComponent(program)} Program Inquiry`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                >
+                    <motion.button
+                        whileHover={{ scale: 1.05 }}
+                        className="bg-white border border-gray-300 text-gray-700 py-3 px-6 rounded-lg font-semibold hover:bg-gray-100 transition cursor-pointer"
+                    >
+                        {locale === 'es' ? 'Contactar' : 'Contact'}
+                    </motion.button>
+                </a>
+            </div>
         </motion.div>
     );
 }

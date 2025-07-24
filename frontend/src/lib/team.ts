@@ -38,7 +38,8 @@ interface StrapiRawTeamMember {
     updatedAt: string;
     publishedAt: string;
     social?: {
-        linkedin: string;
+        linkedin?: string;
+        email?: string;
     };
 }
 
@@ -56,7 +57,7 @@ export async function fetchTeamMembers(
 ): Promise<TeamMember[]> {
     try {
         const token = process.env.NEXT_PUBLIC_STRAPI_API_TOKEN;
-        const res = await fetch(`${API}/api/team-members?locale=${locale}&populate=photo`, {
+        const res = await fetch(`${API}/api/team-members?locale=${locale}&populate=*`, {
             cache: options.cache,
             headers: {
                 Authorization: `Bearer ${token}`,
@@ -103,7 +104,10 @@ export async function fetchTeamMembers(
                         }
                     } : null
                 },
-                social: item.social || { linkedin: '' }
+                social: {
+                    linkedin: item.social?.linkedin || '',
+                    email: item.social?.email || '',
+                }
             }
         }));
     } catch (err) {

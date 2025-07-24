@@ -5,8 +5,6 @@ import Link from 'next/link';
 import { useEffect, useState } from 'react';
 import logo from '../../public/logo.svg';
 import MenuIcon from '@mui/icons-material/Menu';
-import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
-import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 import LanguageSwitcher from "@/components/LanguageSwitcher";
 import { useLanguage } from '@/context/LanguageContext';
 
@@ -18,7 +16,6 @@ export default function Nav() {
     const isSpanish = locale === 'es';
     const [scrolled, setScrolled] = useState(false);
     const [menuOpen, setMenuOpen] = useState(false);
-    const [programsOpen, setProgramsOpen] = useState(false);
     const [programs, setPrograms] = useState<Program[]>([]);
 
     useEffect(() => {
@@ -45,33 +42,34 @@ export default function Nav() {
     return (
         <>
             <nav
-                className={`fixed top-0 left-0 w-full z-50 transition-all duration-300 ease-in-out ${
-                    scrolled ? 'bg-[#099a9c] shadow-md py-2' : 'bg-[#006770] py-4'
+                className={`fixed top-0 left-0 w-full z-1000 transition-all duration-300 ease-in-out ${
+                    scrolled ? 'bg-[#099a9c] shadow-md py-2' : 'bg-[#034b52] py-4'
                 }`}
             >
                 <div className="container mx-auto px-4 flex items-center justify-between transition-all duration-300">
-                    <Link href="/" className="flex items-center gap-3 group">
+                    {/* Logo - reduced size on mobile */}
+                    <Link href="/" className="flex items-center group">
                         <Image
                             src={logo}
                             alt="Logo"
-                            width={150}
-                            height={45}
+                            width={120}
+                            height={36}
                             className="transition-transform duration-100 group-hover:scale-102 md:w-[180px] lg:w-[200px]"
                         />
                     </Link>
 
-                    {/* Language Switcher - Always visible */}
-                    <div className="flex items-center gap-4">
+                    {/* Mobile Actions */}
+                    <div className="flex items-center gap-3">
                         <LanguageSwitcher />
 
                         {/* Mobile Menu Icon */}
                         <div className="lg:hidden">
                             <button
                                 onClick={() => setMenuOpen(!menuOpen)}
-                                className="text-white focus:outline-none"
+                                className="text-white focus:outline-none p-1"
                                 aria-label={isSpanish ? "Abrir menú" : "Open menu"}
                             >
-                                <MenuIcon fontSize="large"/>
+                                <MenuIcon fontSize="medium"/>
                             </button>
                         </div>
                     </div>
@@ -80,68 +78,41 @@ export default function Nav() {
                     <div className="hidden lg:flex items-center space-x-3 xl:space-x-6 text-white absolute left-1/2 transform -translate-x-1/2">
                         <NavLink href="/">{isSpanish ? 'Inicio' : 'Home'}</NavLink>
 
-                        {/* Programs Dropdown */}
-                        <div className="relative group">
-                            <NavLink href="/program" className="flex items-center">
-                                {isSpanish ? 'Programas' : 'Programs'}
-                                <KeyboardArrowDownIcon className="ml-1" fontSize="small" />
-                            </NavLink>
-                            {programs.length > 0 && (
-                                <div className="absolute left-0 mt-2 bg-[#006770] rounded shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 min-w-[200px] z-10">
-                                    {programs.map((program) => (
-                                        <NavLink
-                                            key={program.id}
-                                            href={`/program/${program.slug}`}
-                                            className="block px-4 py-2 hover:bg-[#099a9c] w-full text-left"
-                                        >
-                                            {program.title}
-                                        </NavLink>
-                                    ))}
-                                </div>
-                            )}
-                        </div>
+                        {/* Programs link */}
+                        <NavLink href="/program">
+                            {isSpanish ? 'Programas' : 'Programs'}
+                        </NavLink>
 
                         <NavLink href="/course">{isSpanish ? 'Cursos' : 'Courses'}</NavLink>
                         <NavLink href="/chatbot">{isSpanish ? 'Creador de CV' : 'Resume Builder'}</NavLink>
                         <NavLink href="/team">{isSpanish ? 'Equipo' : 'Team'}</NavLink>
+                        <NavLink href="/contact">{isSpanish ? 'Contacto' : 'Contact'}</NavLink>
                     </div>
                 </div>
 
-                {/* Mobile Navigation */}
+                {/* Mobile Navigation - simplified with no dropdown */}
                 {menuOpen && (
-                    <div className="lg:hidden bg-[#006770] text-white py-4 px-6 flex flex-col">
+                    <div className="lg:hidden bg-[#034b52] text-white py-4 px-6 flex flex-col">
                         <NavLink href="/" onClick={() => setMenuOpen(false)}>
                             {isSpanish ? 'Inicio' : 'Home'}
                         </NavLink>
 
-                        {/* Programs with accordion dropdown */}
-                        <div className="border-b border-[#099a9c]/30">
-                            <button
-                                onClick={() => setProgramsOpen(!programsOpen)}
-                                className="flex items-center justify-between w-full py-3 hover:text-orange-400 transition-colors duration-200"
-                            >
-                                <span>{isSpanish ? 'Programas' : 'Programs'}</span>
-                                {programsOpen ?
-                                    <KeyboardArrowUpIcon fontSize="small" /> :
-                                    <KeyboardArrowDownIcon fontSize="small" />
-                                }
-                            </button>
+                        {/* Simple link to programs page */}
+                        <NavLink href="/program" onClick={() => setMenuOpen(false)}>
+                            {isSpanish ? 'Programas' : 'Programs'}
+                        </NavLink>
 
-                            {programsOpen && programs.length > 0 && (
-                                <div className="pl-4 bg-[#099a9c]/20 rounded-md">
-                                    {programs.map((program) => (
-                                        <NavLink
-                                            key={program.id}
-                                            href={`/program/${program.slug}`}
-                                            onClick={() => setMenuOpen(false)}
-                                            className="py-2"
-                                        >
-                                            {program.title}
-                                        </NavLink>
-                                    ))}
-                                </div>
-                            )}
-                        </div>
+                        {/* Individual program links */}
+                        {programs.map((program) => (
+                            <NavLink
+                                key={program.id}
+                                href={`/program/${program.slug}`}
+                                onClick={() => setMenuOpen(false)}
+                                className="py-2 pl-4 text-sm text-gray-100"
+                            >
+                                {program.title}
+                            </NavLink>
+                        ))}
 
                         <NavLink href="/course" onClick={() => setMenuOpen(false)}>
                             {isSpanish ? 'Cursos' : 'Courses'}
@@ -151,6 +122,9 @@ export default function Nav() {
                         </NavLink>
                         <NavLink href="/team" onClick={() => setMenuOpen(false)}>
                             {isSpanish ? 'Equipo' : 'Team'}
+                        </NavLink>
+                        <NavLink href="/contact" onClick={() => setMenuOpen(false)}>
+                            {isSpanish ? 'Contacto' : 'Contact'}
                         </NavLink>
                     </div>
                 )}
