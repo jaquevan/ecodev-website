@@ -59,6 +59,7 @@ export default function DialogflowBot({
       containerRef.current.appendChild(dfMessenger);
 
       const interval = setInterval(() => {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const dfMessengerEl = containerRef.current?.querySelector('df-messenger') as any;
         if (!dfMessengerEl) return;
 
