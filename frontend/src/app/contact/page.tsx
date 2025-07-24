@@ -1,5 +1,6 @@
 'use client'
 
+import Image from 'next/image'
 import Nav from '@/components/Nav'
 import Footer from '@/components/Footer'
 import { useLanguage } from '@/context/LanguageContext'
@@ -125,7 +126,7 @@ const ContactCard = ({ title, description, contact, subject, icon, className }: 
             className={`rounded-xl border border-gray-200 shadow-md p-8 flex flex-col items-center text-center hover:shadow-lg hover:-translate-y-1 transition-all duration-300 ${className || ''}`}
         >
             <div className="w-24 h-24 mb-6 flex items-center justify-center">
-                <img src={icon} alt="" width={90} height={90} />
+                <Image src={icon} alt="" width={90} height={90} />
             </div>
             <h3 className="text-lg font-semibold text-[#00464D] mb-2">{title}</h3>
             <p className="text-sm text-gray-700 mb-4">{description}</p>
