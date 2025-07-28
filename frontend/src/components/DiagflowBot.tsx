@@ -3,6 +3,11 @@
 import { useEffect, useRef } from 'react';
 import { useLanguage } from '@/context/LanguageContext';
 
+interface DfMessengerElement extends HTMLElement {
+  setQueryParameters?: (params: { parameters: Record<string, unknown> }) => void;
+  sendQuery?: (query: string) => void;
+}
+
 export default function DialogflowBot({
   userId,
   onSessionEnd,
@@ -15,28 +20,40 @@ export default function DialogflowBot({
   const isSpanish = locale === 'es';
 
   useEffect(() => {
-    const script = document.createElement('script');
-    script.src =
-      'https://www.gstatic.com/dialogflow-console/fast/df-messenger/prod/v1/df-messenger.js';
-    script.async = true;
-    document.head.appendChild(script);
+    const scriptId = 'df-messenger-script';
 
-    script.onload = () => {
+    // Only inject the script if it hasn't been added
+    if (!document.getElementById(scriptId)) {
+      const script = document.createElement('script');
+      script.id = scriptId;
+      script.src = 'https://www.gstatic.com/dialogflow-console/fast/df-messenger/prod/v1/df-messenger.js';
+      script.async = true;
+      document.head.appendChild(script);
+
+      script.onload = () => {
+        initMessenger();
+      };
+    } else {
+    }
+
+    function initMessenger() {
       if (!containerRef.current) return;
 
-      // Clear existing content
+      // Clear previous bot instance
       containerRef.current.innerHTML = '';
 
-      // Create <df-messenger>
+      // Create the df-messenger element
       const dfMessenger = document.createElement('df-messenger');
       dfMessenger.setAttribute('location', 'us');
       dfMessenger.setAttribute('project-id', 'la-colaborativa');
       dfMessenger.setAttribute('agent-id', '058c3c3a-ba98-4fb5-a4f8-cac0a97dbcb8');
-      dfMessenger.setAttribute('language-code', isSpanish ? 'es' : 'en');
+      dfMessenger.setAttribute('language-code', 'en');
       dfMessenger.setAttribute('storage-option', 'none');
       dfMessenger.setAttribute('chat-title', isSpanish ? 'Asistente de Currículum' : 'Resume Assistant');
+      dfMessenger.setAttribute('auto-open', 'false');
+      dfMessenger.setAttribute('trigger-event-on-init', 'false');
 
-      // Style vars
+      // Custom styles
       dfMessenger.style.setProperty('--df-messenger-primary-color', '#01666F');
       dfMessenger.style.setProperty('--df-messenger-focus-color', '#F37920');
       dfMessenger.style.setProperty('--df-messenger-font-color', '#333333');
@@ -51,36 +68,42 @@ export default function DialogflowBot({
       dfMessenger.style.setProperty('--df-messenger-send-icon-offset-x', '15px');
       dfMessenger.style.setProperty('--df-messenger-message-stack-spacing', '20px');
 
-      // Create <df-messenger-chat>
+      // Inner chat panel
       const chat = document.createElement('df-messenger-chat');
       chat.setAttribute('chat-title', isSpanish ? 'Asistente de Currículum' : 'Resume Assistant');
-
       dfMessenger.appendChild(chat);
+
       containerRef.current.appendChild(dfMessenger);
 
+      const maxAttempts = 20;
+      let attempts = 0;
       const interval = setInterval(() => {
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        const dfMessengerEl = containerRef.current?.querySelector('df-messenger') as any;
-        if (!dfMessengerEl) return;
+        const el = containerRef.current?.querySelector('df-messenger') as DfMessengerElement | null;
+        if (!el) return;
 
-        if (typeof dfMessengerEl.setQueryParameters === 'function') {
-          dfMessengerEl.setQueryParameters({ parameters: { userID: userId } });
+        try {
+          if (typeof el.setQueryParameters === 'function') {
+            el.setQueryParameters({ parameters: { userID: userId } });
+          }
+
+          if (typeof el.sendQuery === 'function') {
+            el.sendQuery('Hi');
+          }
+
+          el.addEventListener('df-session-ended', () => {
+            onSessionEnd?.();
+            // DO NOT remove panel — just optionally log or show something
+          });
+
+          clearInterval(interval);
+        } catch {
+          if (++attempts > maxAttempts) clearInterval(interval);
         }
-
-        if (typeof dfMessengerEl.sendQuery === 'function') {
-          dfMessengerEl.sendQuery('Hi');
-        }
-
-        dfMessengerEl.addEventListener('df-session-ended', () => {
-          onSessionEnd?.();
-        });
-
-        clearInterval(interval);
-      }, 200);
-    };
+      }, 300);
+    }
 
     return () => {
-      script.remove();
+      // Don't remove script tag anymore to avoid redefinition errors
     };
   }, [userId, onSessionEnd, isSpanish]);
 
