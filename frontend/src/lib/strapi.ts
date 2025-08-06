@@ -16,8 +16,15 @@ export const mediaUrl = (path = '') => {
         console.warn('Invalid media path provided:', path);
         return '';
     }
+
+
     const url = path.startsWith('http') ? path : `${API}${path}`;
     console.log('Generated media URL:', url);
+
+    if (url.startsWith('/')) {
+        return url;
+    }
+
     return url;
 };
 

@@ -5,6 +5,11 @@ import Link from 'next/link';
 import { useState, useEffect, useRef } from 'react';
 import { mediaUrl } from '@/lib/strapi';
 
+import gladys from '../../public/Gladys-new-headshot-1200x1200.webp'
+import dini from '../../public/Dini-new-headshot-1200x1200.webp'
+import carlos from '../../public/carlos.png'
+import alex from '../../public/AlexTrain-1-1200x1200.webp'
+
 export interface TeamMember {
     id: number;
     attributes: {
@@ -22,10 +27,11 @@ export interface TeamMember {
             email: string;
             linkedin?: string;
         };
+        isLocal?: boolean;
     };
 }
 
-function MemberAvatar({ name, imgUrl, size = 'md' }: { name: string; imgUrl?: string; size?: 'sm' | 'md' | 'lg' }) {
+function MemberAvatar({ name, imgUrl, size = 'md', isLocal = false }: { name: string; imgUrl?: string; size?: 'sm' | 'md' | 'lg'; isLocal?: boolean }) {
     const sizes = {
         sm: 'w-20 h-20',
         md: 'w-28 h-28',
@@ -37,7 +43,7 @@ function MemberAvatar({ name, imgUrl, size = 'md' }: { name: string; imgUrl?: st
         <div className={`${sizeClass} rounded-full ring-4 ring-emerald-500 overflow-hidden relative shadow-md`}>
             {imgUrl ? (
                 <Image
-                    src={mediaUrl(imgUrl)}
+                    src={isLocal ? imgUrl : mediaUrl(imgUrl)}
                     alt={`Photo of ${name}`}
                     fill
                     sizes={size === 'sm' ? '80px' : size === 'md' ? '112px' : '128px'}
@@ -102,7 +108,7 @@ function LinkedInButton({ url }: { url: string }) {
 }
 
 export default function TeamMemberCard({ member }: { member: TeamMember }) {
-    const { name, role, description, photo, social } = member.attributes;
+    const { name, role, description, photo, social, isLocal } = member.attributes;
     const [showModal, setShowModal] = useState(false);
     const modalRef = useRef<HTMLDivElement>(null);
     const imgUrl = photo?.data?.attributes?.url;
@@ -140,7 +146,7 @@ export default function TeamMemberCard({ member }: { member: TeamMember }) {
                     }
                 }}
             >
-                <MemberAvatar name={name} imgUrl={imgUrl} />
+                <MemberAvatar name={name} imgUrl={imgUrl} isLocal={isLocal} />
                 <h2 className="mt-5 text-xl font-bold text-emerald-800">{name}</h2>
                 <p className="mt-1 text-sm font-medium text-gray-700">{role}</p>
                 <div className="mt-4 flex flex-col items-center gap-2 w-full">
@@ -180,7 +186,7 @@ export default function TeamMemberCard({ member }: { member: TeamMember }) {
                     >
                         <div className="flex items-start justify-between mb-6">
                             <div className="flex items-center gap-6">
-                                <MemberAvatar name={name} imgUrl={imgUrl} size="sm" />
+                                <MemberAvatar name={name} imgUrl={imgUrl} size="sm" isLocal={isLocal} />
                                 <div>
                                     <h3 id={`modal-title-${member.id}`} className="text-2xl font-bold text-emerald-800">{name}</h3>
                                     <p className="text-lg font-medium text-gray-700">{role}</p>

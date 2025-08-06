@@ -9,9 +9,13 @@ import TeamMemberCard from '@/components/TeamMemberCard';
 import BubbleBackground from '@/components/Bubble';
 
 import groupPhoto from '../../../public/team-photo.png';
-
 import {fetchCachedTeamMembers} from '@/lib/team';
 import { TeamMember as OriginalTeamMember } from '@/types/member';
+
+import gladys from '../../../public/Gladys-new-headshot-1200x1200.webp'
+import dini from '../../../public/Dini-new-headshot-1200x1200.webp'
+import carlos from '../../../public/carlos.png'
+import alex from '../../../public/AlexTrain-1-1200x1200.webp'
 
 const bubbles = [
     { color: '#9EDED5', size: 200, top: '18%',  left: '10%', delay: '0s' },
@@ -112,23 +116,120 @@ export default function TeamPage() {
                     </div>
                 </header>
 
-
                 <main className="container mx-auto pb-24 px-4">
                     <h2 className="text-2xl md:text-3xl font-bold text-emerald-800 text-center mb-10">
                         Our Program Team
                     </h2>
-                    {loading ? (
-                        <div className="flex justify-center">
-                            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-emerald-700"></div>
-                        </div>
-                    ) : team.length ? (
-                        <div className="grid grid-cols-1 gap-10 sm:grid-cols-2 lg:grid-cols-3 xl:gap-14">
-                            {team.map((member) => (
+
+                    <div className="grid grid-cols-1 gap-10 sm:grid-cols-2 lg:grid-cols-3 xl:gap-14">
+                        <TeamMemberCard
+                            member={{
+                                id: -1,
+                                attributes: {
+                                    name: 'Gladys Vega',
+                                    role: 'President & CEO',
+                                    description: 'Gladys Vega has dedicated more than three decades of service to the City of Chelsea and La Colaborativa, which she joined in 1990—just two years after its founding. Born in Puerto Rico and raised in Chelsea from the age of nine, Gladys has made a lifelong commitment to the community. As a mother of two, she is deeply committed to building a better future for families throughout the region. During her tenure, she advanced from receptionist to community organizer, then to Executive Director, and ultimately President & CEO, a role she has held since 2006. Gladys is a groundbreaking community organizer and advocate, working tirelessly to ensure the Latinx immigrant community has a voice and the power to achieve its goals. She has designed nearly all of La Colaborativa\'s programs and campaigns, expanding rights for immigrants, low-income families, tenants, workers, youths, and people of color across Massachusetts. Her leadership during the COVID-19 crisis brought national recognition from outlets such as The Atlantic Monthly and The Boston Globe.',
+                                    photo: {
+                                        data: {
+                                            attributes: {
+                                                url: gladys.src
+                                            }
+                                        }
+                                    },
+                                    social: {
+                                        email: 'gladys@la-colaborativa.org',
+                                        linkedin: 'https://www.linkedin.com/in/gladys-vega-53a55827/',
+                                    },
+                                    isLocal: true
+                                },
+                            }}
+                        />
+
+                        <TeamMemberCard
+                            member={{
+                                id: -2,
+                                attributes: {
+                                    name: 'Dinanyili Del Carmen Paulino',
+                                    role: 'Executive Vice President',
+                                    description: 'Dinanyili Paulino is the Executive Vice President at La Colaborativa. Dinanyili joined the La Colaborativa team in 2016. She oversees the development team, finance team, program directors, and is responsible for the organization\'s day-to-day functions and evaluations.\n\nDinanyili is passionate about working for youth and families starting from an early age and has been involved in youth advocacy. After migrating to the United States from Dominican Republic at the age of 14, Dinanyili became homeless. She credits organizations similar to La Colaborativa for helping her and instilling a sense of advocacy for the Latinx community. Soon enough, she got involved as a youth leader which sparked her passion for youth workforce development. Dinanyili has been passionate about the empowerment of youth and Latinx communities and has been involved in social justice for over 26 years. It is because of her background that she is passionate about helping the immigrant Latinx community.',
+                                    photo: {
+                                        data: {
+                                            attributes: {
+                                                url: dini.src
+                                            }
+                                        }
+                                    },
+                                    social: {
+                                        email: 'dinanyili@la-colaborativa.org',
+                                        linkedin: 'https://www.linkedin.com/in/dinanyili-paulino-505538131/',
+                                    },
+                                    isLocal: true
+                                },
+                            }}
+                        />
+
+                        <TeamMemberCard
+                            member={{
+                                id: -4,
+                                attributes: {
+                                    name: 'Alex Train',
+                                    role: 'Chief Strategy Officer',
+                                    description: 'Alex Train is the Chief Strategy Officer at La Colaborativa. With a focus on strategic planning, program development, and policy analysis, Alex works to advance the organization\'s goals and create sustainable impact in the community.',
+                                    photo: {
+                                        data: {
+                                            attributes: {
+                                                url: alex.src
+                                            }
+                                        }
+                                    },
+                                    social: {
+                                        email: 'alex@la-colaborativa.org',
+                                        linkedin: 'https://www.linkedin.com/in/alex-train/',
+                                    },
+                                    isLocal: true
+                                },
+                            }}
+                        />
+
+                        <TeamMemberCard
+                            member={{
+                                id: -3,
+                                attributes: {
+                                    name: 'Carlos R. Gálvez',
+                                    role: 'Director of Economic Sustainability & Mobility',
+                                    description: 'I\'m an Economist with over sixteen years of experience leading community, social, and economic development projects focused on social mobility for vulnerable individuals and families in Mexico and the United States. These development projects are brought to fruition through strategic alliances and partnerships involving governmental and political institutions, nonprofit organizations, academia, and private companies. Skills gained in these endeavors include a deep knowledge of community-oriented intervention project planning and design, budgeting and management, and experience working with individuals for career development, socio-political analysis, and data management. Academic background in Social Sciences, Economics, and regional development.\n\nI\'m Bilingual in Spanish and English, currently learning two additional languages: Portuguese to serve also community members from the big Brazilian population in Massachusetts and French.',
+                                    photo: {
+                                        data: {
+                                            attributes: {
+                                                url: carlos.src
+                                            }
+                                        }
+                                    },
+                                    social: {
+                                        email: 'carlos@la-colaborativa.org',
+                                        linkedin: 'https://www.linkedin.com/in/carlosricardogalvez/',
+                                    },
+                                    isLocal: true
+                                },
+                            }}
+                        />
+
+
+
+                        {/* Dynamic team members from Strapi */}
+                        {loading ? (
+                            <div className="flex justify-center col-span-full">
+                                <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-emerald-700"></div>
+                            </div>
+                        ) : team.length ? (
+                            team.map((member) => (
                                 <TeamMemberCard key={member.id} member={member} />
-                            ))}
-                        </div>
-                    ) : (
-                        <p className="text-center text-gray-700">No team members found.</p>
+                            ))
+                        ) : null}
+                    </div>
+
+                    {!loading && !team.length && (
+                        <p className="text-center text-gray-700">No additional team members found.</p>
                     )}
                 </main>
             </div>

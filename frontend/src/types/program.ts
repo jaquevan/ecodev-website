@@ -64,25 +64,28 @@ export interface Program {
     documentId: string;
     title: string;
     slug: string;
-    url: string;
     heroDescription: string;
     createdAt: string;
     updatedAt: string;
     publishedAt: string;
     locale: string;
-    heroImage: {
-        original: string;
-        thumbnail: string;
-        medium: string;
-        small: string;
-    }[];
-
+    heroImage?: {
+        id?: number;
+        url: string;
+        formats?: {
+            small?: {
+                url: string;
+            },
+            thumbnail?: {
+                url: string;
+            }
+        }
+    };
     steps: {
         id: number;
         title: string;
         description: string;
         icon?: React.ReactNode;
-
     }[];
     review: {
         id: number;
