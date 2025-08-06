@@ -5,10 +5,6 @@ import Link from 'next/link';
 import { useState, useEffect, useRef } from 'react';
 import { mediaUrl } from '@/lib/strapi';
 
-import gladys from '../../public/Gladys-new-headshot-1200x1200.webp'
-import dini from '../../public/Dini-new-headshot-1200x1200.webp'
-import carlos from '../../public/carlos.png'
-import alex from '../../public/AlexTrain-1-1200x1200.webp'
 
 export interface TeamMember {
     id: number;

@@ -1,6 +1,6 @@
 'use client'
 
-import React, { use, useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useLanguage } from '@/context/LanguageContext'
 import { fetchProgramBySlug, mediaUrl } from '@/lib/programs'
 import Nav from '@/components/Nav'
