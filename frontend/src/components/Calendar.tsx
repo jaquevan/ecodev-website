@@ -327,109 +327,109 @@ export default function Calendar({showWalkInOnly = false}: CalendarProps) {
     };
 
     return (
-        <div
-            className="relative bg-gradient-to-r from-orange-300 via-orange-200 to-orange-50 p-3 sm:p-4 md:p-6 lg:p-8 rounded-3xl w-full max-w-full mx-auto overflow-visible">
+        <div className="relative w-full max-w-full mx-auto">
+            {/* Bubble SVG - positioned outside the main container to bleed over */}
             <Image
                 src={bubblesImage}
                 alt={isSpanish ? "Burbujas decorativas" : "Decorative bubbles"}
-                className="absolute -top-20 -right-8 w-28 sm:w-36 md:w-48 h-auto opacity-70 pointer-events-none"
-                style={{zIndex: 999}}
+                className="absolute -top-16 sm:-top-20 -right-4 sm:-right-8 w-24 sm:w-28 md:w-36 lg:w-48 h-auto opacity-70 pointer-events-none z-50"
                 priority
             />
 
-            <div className="relative bg-white rounded-2xl shadow-lg mx-auto p-3 sm:p-4 md:p-6 z-10">
-                <h3 className="text-xl sm:text-2xl font-bold text-gray-900 mb-3 md:mb-4">
-                    {isSpanish ? 'Ver Actividades de EcoDev' : 'View EcoDev Activities'}
-                </h3>
+            <div className="relative bg-gradient-to-r from-orange-300 via-orange-200 to-orange-50 p-3 sm:p-4 md:p-6 lg:p-8 rounded-3xl w-full max-w-full mx-auto">
+                <div className="relative bg-white rounded-2xl shadow-lg mx-auto p-3 sm:p-4 md:p-6 z-10">
+                    <h3 className="text-xl sm:text-2xl font-bold text-gray-900 mb-3 md:mb-4">
+                        {isSpanish ? 'Ver Cursos' : 'View Courses'}
+                    </h3>
 
-                <div className="flex flex-col xl:flex-row xl:space-x-6 space-y-6 xl:space-y-0">
-                    <div className="flex justify-center w-full xl:w-3/5">
-                        <div className="w-full max-w-xs sm:max-w-sm md:max-w-md lg:max-w-lg xl:max-w-full mx-auto overflow-hidden">
-                            <ThemeProvider theme={calendarTheme}>
-                                <LocalizationProvider dateAdapter={AdapterDateFns}
-                                                      adapterLocale={isSpanish ? es : undefined}>
-                                    <StaticDatePicker
-                                        displayStaticWrapperAs="desktop"
-                                        value={selectedDate}
-                                        onChange={d => setSelectedDate(d)}
-                                        slotProps={{
-                                            actionBar: {hidden: true},
-                                            layout: {
-                                                sx: {
-                                                    '& .MuiDayCalendar-root': {
-                                                        width: '100%',
-                                                        maxHeight: '290px'
+                    <div className="flex flex-col xl:flex-row xl:space-x-6 space-y-6 xl:space-y-0">
+                        <div className="flex justify-center w-full xl:w-3/5">
+                            <div className="w-full max-w-xs sm:max-w-sm md:max-w-md lg:max-w-lg xl:max-w-full mx-auto overflow-hidden">
+                                <ThemeProvider theme={calendarTheme}>
+                                    <LocalizationProvider dateAdapter={AdapterDateFns}
+                                                          adapterLocale={isSpanish ? es : undefined}>
+                                        <StaticDatePicker
+                                            displayStaticWrapperAs="desktop"
+                                            value={selectedDate}
+                                            onChange={d => setSelectedDate(d)}
+                                            slotProps={{
+                                                actionBar: {hidden: true},
+                                                layout: {
+                                                    sx: {
+                                                        '& .MuiDayCalendar-root': {
+                                                            width: '100%',
+                                                            maxHeight: '290px'
+                                                        }
                                                     }
                                                 }
-                                            }
-                                        }}
-                                        sx={{
-                                            width: '100%',
-                                            '& .MuiPickersCalendar-root': {
-                                                maxWidth: '100%'
-                                            }
-                                        }}
-                                    />
-                                </LocalizationProvider>
-                            </ThemeProvider>
-                        </div>
-                    </div>
-
-                    <div className="hidden xl:block xl:w-px xl:h-auto bg-gray-200"></div>
-                    <div className="block xl:hidden w-full h-px bg-gray-200"></div>
-
-                    <div className="w-full xl:w-2/5 z-20 relative flex flex-col h-full">
-                        <h3 className="text-lg sm:text-xl font-bold text-gray-900 mb-2">
-                            {formatDateWithLocale(selectedDate)}
-                        </h3>
-                        <p className="text-small text-gray-600 mb-3 sm:mb-4">
-                            {isSpanish ? 'Programas para esta fecha:' : 'Programs happening on this date:'}
-                        </p>
-
-                        {fetchError && (
-                            <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg mb-4">
-                                <p>{fetchError}</p>
-                                <button
-                                    onClick={() => {
-                                        setLastFetchedMonth(null);
-                                        setLastFetchedLocale(null);
-                                    }}
-                                    className="text-sm font-medium text-red-600 underline mt-1"
-                                >
-                                    {isSpanish ? 'Intentar nuevamente' : 'Try again'}
-                                </button>
+                                            }}
+                                            sx={{
+                                                width: '100%',
+                                                '& .MuiPickersCalendar-root': {
+                                                    maxWidth: '100%'
+                                                }
+                                            }}
+                                        />
+                                    </LocalizationProvider>
+                                </ThemeProvider>
                             </div>
-                        )}
+                        </div>
 
-                        <div className="flex-grow min-h-[290px] flex flex-col">
-                            {loading ? (
-                                <div className="flex flex-1 justify-center items-center py-5">
-                                    <svg
-                                        className="animate-spin h-6 w-6 text-teal-600"
-                                        xmlns="http://www.w3.org/2000/svg"
-                                        fill="none"
-                                        viewBox="0 0 24 24"
+                        <div className="hidden xl:block xl:w-px xl:h-auto bg-gray-200"></div>
+                        <div className="block xl:hidden w-full h-px bg-gray-200"></div>
+
+                        <div className="w-full xl:w-2/5 z-20 relative flex flex-col h-full">
+                            <h3 className="text-lg sm:text-xl font-bold text-gray-900 mb-2">
+                                {formatDateWithLocale(selectedDate)}
+                            </h3>
+                            <p className="text-small text-gray-600 mb-3 sm:mb-4">
+                                {isSpanish ? 'Programas para esta fecha:' : 'Programs happening on this date:'}
+                            </p>
+
+                            {fetchError && (
+                                <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg mb-4">
+                                    <p>{fetchError}</p>
+                                    <button
+                                        onClick={() => {
+                                            setLastFetchedMonth(null);
+                                            setLastFetchedLocale(null);
+                                        }}
+                                        className="text-sm font-medium text-red-600 underline mt-1"
                                     >
-                                        <circle
-                                            className="opacity-25"
-                                            cx="12"
-                                            cy="12"
-                                            r="10"
-                                            stroke="currentColor"
-                                            strokeWidth="4"
-                                        />
-                                        <path
-                                            className="opacity-75"
-                                            fill="currentColor"
-                                            d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                                        />
-                                    </svg>
+                                        {isSpanish ? 'Intentar nuevamente' : 'Try again'}
+                                    </button>
                                 </div>
-                            ) : todayCourses.length === 0 ? (
-                                <div className="flex flex-1 items-center justify-center text-gray-400 py-6">
-                                    {isSpanish ? 'No hay cursos programados para esta fecha' : 'No courses scheduled for this date'}
-                                </div>
-                            ) : (
+                            )}
+
+                            <div className="flex-grow min-h-[290px] flex flex-col">
+                                {loading ? (
+                                    <div className="flex flex-1 justify-center items-center py-5">
+                                        <svg
+                                            className="animate-spin h-6 w-6 text-teal-600"
+                                            xmlns="http://www.w3.org/2000/svg"
+                                            fill="none"
+                                            viewBox="0 0 24 24"
+                                        >
+                                            <circle
+                                                className="opacity-25"
+                                                cx="12"
+                                                cy="12"
+                                                r="10"
+                                                stroke="currentColor"
+                                                strokeWidth="4"
+                                            />
+                                            <path
+                                                className="opacity-75"
+                                                fill="currentColor"
+                                                d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                                            />
+                                        </svg>
+                                    </div>
+                                ) : todayCourses.length === 0 ? (
+                                    <div className="flex flex-1 items-center justify-center text-gray-400 py-6">
+                                        {isSpanish ? 'No hay cursos programados para esta fecha' : 'No courses scheduled for this date'}
+                                    </div>
+                                ) : (
                                     <ul className="space-y-1.5 overflow-y-auto max-h-[290px] pr-1 pb-1 flex-grow">
                                         {todayCourses.map((course, idx) => {
                                             const { startTime, endTime } = course.WeekdaySelection ?
@@ -468,17 +468,17 @@ export default function Calendar({showWalkInOnly = false}: CalendarProps) {
                                                                             />
                                                                         </svg>
                                                                         <span className="text-[10px] text-gray-500">
-                                        {startTime && formatTime(startTime)}
+                                            {startTime && formatTime(startTime)}
                                                                             {startTime && endTime && ' – '}
                                                                             {endTime && formatTime(endTime)}
-                                    </span>
+                                        </span>
                                                                     </div>
                                                                 )}
                                                             </Link>
                                                         </div>
 
                                                         <GoogleForm
-                                                            formUrl="https://docs.google.com/forms/d/e/YOUR_FORM_ID/viewform"
+                                                            formUrl="https://docs.google.com/forms/d/e/1FAIpQLSfuRPVdXxNS1yqNMoJ-BNMEY7mPkWQx1Q4QyDRzKNaMawRVcA/viewform?usp=dialog"
                                                             course={course}
                                                             variant="small"
                                                             className="flex-shrink-0 ml-1"
@@ -488,16 +488,17 @@ export default function Calendar({showWalkInOnly = false}: CalendarProps) {
                                             );
                                         })}
                                     </ul>
-                            )}
-                        </div>
+                                )}
+                            </div>
 
-                        <div className="mt-4">
-                            <Link
-                                href="/course"
-                                className="inline-block bg-teal-700 hover:bg-teal-800 text-white text-sm font-medium py-2 px-4 rounded-md transition"
-                            >
-                                {isSpanish ? 'Ver Todos Los Cursos' : 'Browse All Courses'}
-                            </Link>
+                            <div className="mt-4">
+                                <Link
+                                    href="/course"
+                                    className="inline-block bg-teal-700 hover:bg-teal-800 text-white text-sm font-medium py-2 px-4 rounded-md transition"
+                                >
+                                    {isSpanish ? 'Ver Todos Los Cursos' : 'Browse All Courses'}
+                                </Link>
+                            </div>
                         </div>
                     </div>
                 </div>

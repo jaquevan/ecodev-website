@@ -139,64 +139,74 @@ export default function Home() {
             <div className="relative min-h-screen overflow-hidden">
                 <BubbleBackground bubbles={bubbles}/>
 
-                <main
-                    className="relative px-2 sm:px-6 md:px-10 lg:px-16 py-12 sm:py-16 md:py-20 space-y-16 sm:space-y-24 md:space-y-32 max-w-screen-2xl mx-auto">
-                    <section ref={heroRef} className="px-2 sm:px-0">
-                        <div className="grid lg:grid-cols-2 gap-8 md:gap-12 lg:gap-16 items-start max-w-8xl mx-auto">
+                <main className="relative px-6 sm:px-8 md:px-10 lg:px-16 py-12 sm:py-16 md:py-20 space-y-16 sm:space-y-24 md:space-y-32 max-w-screen-2xl mx-auto">
+                    <section ref={heroRef} className="overflow-hidden">
+                        <div className="flex flex-col lg:grid lg:grid-cols-2 gap-8 md:gap-12 lg:gap-16 items-start max-w-7xl mx-auto">
+                            {/* Text Content */}
                             <motion.div
                                 initial={{opacity: 0, y: 20}}
                                 animate={heroInView ? {opacity: 1, y: 0} : {}}
                                 transition={{duration: 0.5, ease: 'easeOut'}}
-                                className="max-w-xl mx-auto w-full px-0 -mt-6 sm:-mt-8 md:-mt-12"
+                                className="w-full"
                             >
-                                <div className="mb-6 sm:mb-8 relative">
-                                    <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold mb-4 sm:mb-6 text-center relative z-10">
-                                      <span
-                                          className="bg-gradient-to-r from-teal-700 to-teal-500 bg-clip-text text-transparent">
+                                <div className="mb-6 sm:mb-8">
+                                    <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold mb-4 sm:mb-6 text-center lg:text-left leading-tight">
+                                      <span className="bg-gradient-to-r from-teal-700 to-teal-500 bg-clip-text text-transparent">
                                         {isSpanish ? 'Desarrollo Económico' : 'Economic Development'}
                                       </span>
                                     </h1>
-                                    <div className="h-1.5 w-24 bg-orange-300 mx-auto rounded-full mb-4"></div>
+                                    <div className="h-1.5 w-24 bg-orange-300 mx-auto lg:mx-0 rounded-full mb-6"></div>
 
-                                    <p className="text-gray-700 text-lg sm:text-xl leading-relaxed text-center font-light">
+                                    <p className="text-gray-700 text-base sm:text-lg md:text-xl leading-relaxed text-center lg:text-left font-light max-w-2xl mx-auto lg:mx-0">
                                         {isSpanish
-                                            ? `El Departamento de Movilidad y Sostenibilidad Económica de La Colaborativa es\n
-                                                un equipo comprometido con promover el crecimiento económico y la movilidad social\n
-                                                dentro de nuestra comunidad. A través de la gestión y ejecución de programas\n
-                                                educativos, de preparación para el empleo y desarrollo laboral, trabajamos para ofrecer\n
-                                                herramientas, conocimientos y apoyo personalizado que permitan a los miembros\n
-                                                mejorar sus habilidades, acceder a mejores oportunidades laborales y construir un\n
+                                            ? `El Departamento de Movilidad y Sostenibilidad Económica de La Colaborativa es
+                                                un equipo comprometido con promover el crecimiento económico y la movilidad social
+                                                dentro de nuestra comunidad. A través de la gestión y ejecución de programas
+                                                educativos, de preparación para el empleo y desarrollo laboral, trabajamos para ofrecer
+                                                herramientas, conocimientos y apoyo personalizado que permitan a los miembros
+                                                mejorar sus habilidades, acceder a mejores oportunidades laborales y construir un
                                                 futuro sostenible y próspero.`
-                                            : `The Mobility and Economic Sustainability Department at La Colaborativa is a team\n
-                                                dedicated to promoting economic growth and social mobility within our community. By\n
-                                                managing and delivering educational, job readiness, and workforce development\n
-                                                programs, we provide tools, knowledge, and personalized support to help community\n
-                                                members improve their skills, access better job opportunities, and build a sustainable\n
+                                            : `The Mobility and Economic Sustainability Department at La Colaborativa is a team
+                                                dedicated to promoting economic growth and social mobility within our community. By
+                                                managing and delivering educational, job readiness, and workforce development
+                                                programs, we provide tools, knowledge, and personalized support to help community
+                                                members improve their skills, access better job opportunities, and build a sustainable
                                                 and prosperous future.`}
                                     </p>
                                 </div>
-                                <div className="mx-auto p-0">
-                                    <FeatureCard/>
-                                </div>
                             </motion.div>
 
-                            <div className="w-full max-w-xxl mx-auto mt-4 sm:mt-6 md:mt-8 px-2">
-                                <Calendar showWalkInOnly={true}/>
+                            {/* Two Column Layout for FeatureCard and Calendar */}
+                            <div className="w-full grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6 lg:grid-cols-1 lg:gap-8">
+                                {/* Feature Card - Constrained */}
+                                <div className="w-full flex justify-center lg:justify-start">
+                                    <div className="w-full max-w-[280px] sm:max-w-[240px] md:max-w-[300px] lg:max-w-[350px]">
+                                        <FeatureCard/>
+                                    </div>
+                                </div>
+
+                                {/* Calendar - Constrained */}
+                                <div className="w-full flex justify-center lg:justify-start">
+                                    <div
+                                        className="w-full max-w-[320px] sm:max-w-[300px] md:max-w-[360px] lg:max-w-[420px] bg-white/95 backdrop-blur-sm rounded-lg shadow-lg overflow-hidden">
+                                        <Calendar showWalkInOnly={true}/>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </section>
 
-                    <section>
-                        <h1 className="text-3xl sm:text-4xl md:text-5xl font-semibold text-center mb-4 sm:mb-6">
+                    <section className="px-2">
+                        <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-semibold text-center mb-4 sm:mb-6">
                             {isSpanish ? 'Explora Nuestros Programas' : 'Explore Our Programs'}
                         </h1>
-                        <h4 className="text-base sm:text-lg font-semibold text-center mb-8 sm:mb-12 text-slate-800 px-2">
+                        <h4 className="text-sm sm:text-base md:text-lg font-semibold text-center mb-8 sm:mb-12 text-slate-800 max-w-4xl mx-auto">
                             {isSpanish
                                 ? 'Impulsamos cambios duraderos a través del desarrollo e implementación de nuestros programas integrales.'
                                 : 'We drive lasting change through the development and implementation of our comprehensive programs.'}
                         </h4>
 
-                        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 sm:gap-8 px-2 sm:px-0 max-w-7xl mx-auto">
+                        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6 sm:gap-8 max-w-7xl mx-auto">
                             <ProgramCards
                                 title={isSpanish ? 'Educación para Adultos' : 'Adult Education'}
                                 program="Adult Education"
@@ -213,7 +223,8 @@ export default function Home() {
                                 items={workforceDevelopmentPrograms.map(program => ({
                                     ...program,
                                     subItems: program.subItems?.map(subItem => subItem.label),
-                                }))}                                colorScheme="teal"
+                                }))}
+                                colorScheme="teal"
                             />
 
                             <ProgramCards
@@ -230,14 +241,14 @@ export default function Home() {
 
                     <section
                         ref={connectRef}
-                        className="bg-gradient-to-r from-teal-700 to-orange-300 p-6 sm:p-8 md:p-10 rounded-xl shadow-lg text-white text-center border-teal-600 border-2 mx-auto max-w-5xl"
+                        className="bg-gradient-to-r from-teal-700 to-orange-300 p-4 sm:p-6 md:p-8 lg:p-10 rounded-xl shadow-lg text-white text-center border-teal-600 border-2 max-w-5xl mx-auto"
                     >
                         <motion.div
                             initial={{opacity: 0, y: 20}}
                             animate={connectInView ? {opacity: 1, y: 0} : {}}
                             transition={{duration: 0.5, ease: 'easeOut'}}
                         >
-                            <h3 className="text-2xl sm:text-3xl font-bold mb-3 sm:mb-4">
+                            <h3 className="text-xl sm:text-2xl md:text-3xl font-bold mb-3 sm:mb-4">
                                 {isSpanish ? 'Conecta con un Asesor' : 'Connect with an Advisor'}
                             </h3>
                         </motion.div>
@@ -246,15 +257,14 @@ export default function Home() {
                             animate={connectInView ? {opacity: 1, y: 0} : {}}
                             transition={{duration: 0.7, ease: 'easeOut'}}
                         >
-                            <p className="mb-4 sm:mb-6 text-base sm:text-lg">
+                            <p className="mb-4 sm:mb-6 text-sm sm:text-base md:text-lg max-w-3xl mx-auto">
                                 {isSpanish
                                     ? 'Contáctanos para obtener más información sobre nuestros programas de búsqueda y colocación laboral.'
                                     : 'Get in touch to learn more about our Job Search & Placement programs.'}
                             </p>
                         </motion.div>
                         <div>
-                            <button
-                                className="bg-teal-800 text-white font-semibold px-4 sm:px-6 py-2 sm:py-3 rounded-lg shadow-md hover:bg-teal-700 hover:shadow-lg transition">
+                            <button className="bg-teal-800 text-white font-semibold px-4 sm:px-6 py-2 sm:py-3 rounded-lg shadow-md hover:bg-teal-700 hover:shadow-lg transition text-sm sm:text-base">
                                 {isSpanish ? 'Conectar Ahora' : 'Connect Now'}
                             </button>
                         </div>

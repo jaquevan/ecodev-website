@@ -175,7 +175,7 @@ export default function CoursePage() {
                             /> */}
 
                             <GoogleForm
-                                formUrl="https://docs.google.com/forms/d/e/YOUR_FORM_ID/viewform"
+                                formUrl="https://docs.google.com/forms/d/e/1FAIpQLSfuRPVdXxNS1yqNMoJ-BNMEY7mPkWQx1Q4QyDRzKNaMawRVcA/viewform?usp=dialog"
                                 course={course}
                                 buttonText="Register Now"
                                 variant="primary"
