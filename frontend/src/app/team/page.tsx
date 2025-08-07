@@ -174,7 +174,15 @@ export default function TeamPage() {
                                 attributes: {
                                     name: 'Alex Train',
                                     role: 'Chief Strategy Officer',
-                                    description: 'Alex Train is the Chief Strategy Officer at La Colaborativa. With a focus on strategic planning, program development, and policy analysis, Alex works to advance the organization\'s goals and create sustainable impact in the community.',
+                                    description: 'Serving as the Chief Operating Officer of La Colaborativa, under the leadership of the President and Executive Vice President, Alex Train is a thoughtful, strategic leader with a background in urban planning, community development, and senior management. Grounded in a commitment to serving the Latinx and immigrant community, he leads diverse teams, manages complex systems, and marshals resources to advance equitable community development that empowers residents to lead efforts that shape the future of their community.\n' +
+                                        '\n' +
+                                        'Working at the intersection of housing and economic stability, health equity, and community resilience, Alex has forged coalitions, cultivated emerging leaders, and fostered partnerships to achieve lasting results, with a focus on serving marginalized communities. Notably, this has included the creation and expansion of dignified social, economic, housing, and human services, which prioritize upward mobility, while sustainably scaling organizations to proactively meet the needs of residents.\n' +
+                                        '\n' +
+                                        'Born in Boston, Alex holds a Masters of Regional Planning from the Department of\n' +
+                                        'Landscape Architecture and Regional Planning at UMass Amherst, as well as a\n' +
+                                        'bachelor’s in history from Suffolk University. Moreover, he earned the American Institute\n' +
+                                        'of Certified Planners certification from the American Planning Association. Prior to joining La Colaborativa, Alex served the City of Chelsea for nine years as the Director of Housing & Community Development and various roles. Residing in Chelsea, Alex is an ardent supporter of environmental justice and animal rights causes, while enjoying cooking, art, poetry, and\n' +
+                                        'music.\n',
                                     photo: {
                                         data: {
                                             attributes: {

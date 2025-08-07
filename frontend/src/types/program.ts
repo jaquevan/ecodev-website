@@ -65,6 +65,7 @@ export interface Program {
     title: string;
     slug: string;
     heroDescription: string;
+    email:string;
     createdAt: string;
     updatedAt: string;
     publishedAt: string;

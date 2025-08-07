@@ -123,24 +123,27 @@ export default function ProgramPage({ params }: { params: Promise<{ slug: string
                                     {isSpanish ? 'Información sobre el proceso de registro próximamente.' : 'Registration process information coming soon.'}
                                 </div>
                             )}
-                            <a
-                                href="https://la-colaborativa.org/program-contact/?advisor-email=carlosg@la-colaborativa.org&program-service=Economic-Development"
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                className="inline-flex items-center text-white bg-[#FF7001] px-4 py-2 rounded-lg hover:bg-[#FF8C33] transition-all shadow-sm hover:shadow-md font-medium text-sm"
+                            <button
+                                onClick={() => {
+                                    window.open(`mailto:${program.email}`, '_blank')
+                                }}
+                                className="inline-flex items-center justify-center text-white bg-[#FF7001] px-4 py-2 rounded-lg cursor-pointer hover:bg-[#FF8C33] transition-all shadow-sm hover:shadow-md font-medium text-sm"
                             >
                                 <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2"
+                                          d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
                                 </svg>
                                 {isSpanish ? 'Contacte para más información' : 'Contact for more information'}
-                            </a>
+                            </button>
+
+
                         </div>
                     </motion.div>
 
                     <motion.div
-                        initial={{ opacity: 0, y: 20 }}
-                        animate={heroInView ? { opacity: 1, y: 0 } : {}}
-                        transition={{ duration: 0.5, ease: 'easeOut', delay: 0.3 }}
+                        initial={{opacity: 0, y: 20}}
+                        animate={heroInView ? {opacity: 1, y: 0} : {}}
+                        transition={{duration: 0.5, ease: 'easeOut', delay: 0.3}}
                         className="mt-10 px-4"
                     >
                         <div className="border border-gray-200 rounded-xl p-6 shadow-sm bg-white">

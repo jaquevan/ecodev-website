@@ -155,12 +155,25 @@ const Footer = memo(function Footer() {
                 </div>
             </div>
 
-            <div className="relative z-10 max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center border-t border-gray-500/30 pt-6 text-sm">
+            <div
+                className="relative z-10 max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center border-t border-gray-500/30 pt-6 text-sm">
                 <p className="text-gray-300 text-center md:text-left">
                     &copy; {new Date().getFullYear()} La Colaborativa.
                     {isSpanish ? ' Todos los derechos reservados.' : ' All rights reserved.'}
+                    <br/>
+                    Web Development & Design by{' '}
+                    <a
+                        href="https://www.linkedin.com/in/evan-jaquez-118b5b294/"
+                        className="text-blue-300 hover:underline"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                    >
+                        Evan Jaquez
+                    </a>
                 </p>
+
             </div>
+
 
             <button
                 onClick={scrollToTop}

@@ -108,10 +108,12 @@ type ContactCardProps = {
     contact: string
     subject: string
     icon: string
+    locale: string
     className?: string
 }
 
-const ContactCard = ({ title, description, contact, subject, icon, className }: ContactCardProps) => {
+
+const ContactCard = ({ title, description, contact, subject, icon, className, locale }: ContactCardProps) => {
     const handleEmailClick = () => {
         const mailto = `mailto:${contact}?subject=${encodeURIComponent(subject)}`
         window.open(mailto, '_blank')
@@ -119,27 +121,29 @@ const ContactCard = ({ title, description, contact, subject, icon, className }: 
 
     return (
         <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
+            initial={{ opacity: 0, scale: 0.95 }}
+            whileInView={{ opacity: 1, scale: 1 }}
             viewport={{ once: true }}
-            transition={{ duration: 0.5, ease: 'easeOut' }}
-            className={`rounded-xl border border-gray-200 shadow-md p-8 flex flex-col items-center text-center hover:shadow-lg hover:-translate-y-1 transition-all duration-300 ${className || ''}`}
+            transition={{ duration: 0.4, ease: 'easeOut' }}
+            className={`group bg-white rounded-2xl border border-gray-200 shadow-sm p-6 flex flex-col items-center text-center hover:shadow-xl hover:ring-2 hover:ring-amber-400 transition-all duration-300 ${className || ''}`}
         >
-            <div className="w-24 h-24 mb-6 flex items-center justify-center">
-                <Image src={icon} alt="" width={90} height={90} />
+            <div className="w-20 h-20 mb-4 flex items-center justify-center rounded-full group-hover:scale-105 transition-transform duration-300">
+                <Image src={icon} alt={`${title} icon`} width={80} height={80} />
             </div>
             <h3 className="text-lg font-semibold text-[#00464D] mb-2">{title}</h3>
-            <p className="text-sm text-gray-700 mb-4">{description}</p>
-            <p className="text-xs text-gray-400 mb-6">{contact}</p>
+            <p className="text-sm text-gray-700 mb-3">{description}</p>
+            <p className="text-xs text-gray-400 mb-4">{contact}</p>
             <button
                 onClick={handleEmailClick}
-                className="mt-auto inline-block bg-[#00464D] text-white text-sm font-medium py-2 px-6 rounded-md hover:bg-[#006d75] transition-all cursor-pointer"
+                className="mt-auto w-full bg-[#00464D] text-white text-sm font-medium py-2 px-4 rounded-md hover:bg-[#006d75] transition-all"
             >
-                Contact
+                {locale === 'es' ? 'Contactar' : 'Contact'}
             </button>
         </motion.div>
     )
 }
+
+
 
 export default function ContactPage() {
     const { locale } = useLanguage()
@@ -148,20 +152,20 @@ export default function ContactPage() {
 
     return (
         <>
-            <Nav />
+            <Nav/>
 
-            <section ref={heroRef} className="px-4 sm:px-6 pt-16 pb-10 bg-white">
+            <section ref={heroRef} className="px-4 sm:px-6 pt-16 pb-10 bg-gradient-to-b from-white to-gray-50">
                 <motion.div
-                    initial={{ opacity: 0, y: 40 }}
-                    animate={inView ? { opacity: 1, y: 0 } : {}}
-                    transition={{ duration: 0.6, ease: 'easeOut' }}
+                    initial={{opacity: 0, y: 40}}
+                    animate={inView ? {opacity: 1, y: 0} : {}}
+                    transition={{duration: 0.6, ease: 'easeOut'}}
                     className="max-w-4xl mx-auto text-center"
                 >
-                    <h1 className="text-5xl sm:text-6xl font-extrabold mb-4 text-[#00464D]">
+                    <h1 className="text-4xl sm:text-5xl font-extrabold mb-4 text-[#00464D]">
                         {isSpanish ? 'Contáctanos' : 'Get in Touch'}
                     </h1>
-                    <div className="h-1 w-24 bg-amber-500 mx-auto rounded-full mb-8"></div>
-                    <p className="text-gray-600 text-xl leading-relaxed max-w-2xl mx-auto font-light">
+                    <div className="h-1 w-24 bg-amber-500 mx-auto rounded-full mb-6"></div>
+                    <p className="text-gray-600 text-lg sm:text-xl leading-relaxed max-w-2xl mx-auto font-light">
                         {isSpanish
                             ? 'Selecciona un programa o servicio para enviarnos un correo electrónico con tu consulta.'
                             : 'Select a program or service to email us your inquiry.'}
@@ -169,8 +173,9 @@ export default function ContactPage() {
                 </motion.div>
             </section>
 
-            <section className="py-14">
-                <div className="max-w-6xl mx-auto px-4 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+
+            <section className="py-14 px-4 sm:px-6 bg-gray-50">
+                <div className="max-w-7xl mx-auto grid gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
                     {cards.map((card) => (
                         <ContactCard
                             key={card.key}
@@ -179,35 +184,37 @@ export default function ContactPage() {
                             contact={card.contact}
                             subject={card.subject}
                             icon={card.icon}
+                            locale={locale}
                         />
                     ))}
                 </div>
             </section>
 
-            <section className="bg-white pb-24">
-                <div className="max-w-6xl mx-auto px-4">
+
+            <section className="pb-24 px-4 sm:px-6">
+                <div className="max-w-4xl mx-auto">
                     <motion.h2
-                        initial={{ opacity: 0, y: 20 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ duration: 0.5 }}
-                        className="text-3xl sm:text-4xl font-extrabold text-center mb-12 text-[#00464D]"
+                        initial={{opacity: 0, y: 20}}
+                        animate={{opacity: 1, y: 0}}
+                        transition={{duration: 0.5}}
+                        className="text-3xl sm:text-4xl font-extrabold text-center mb-10 text-[#00464D]"
                     >
                         {isSpanish ? 'Triaje' : 'Triage'}
                     </motion.h2>
-                    <div className="grid grid-cols-1">
-                        <ContactCard
-                            title={triageCard.title}
-                            description={isSpanish ? triageCard.descriptionES : triageCard.descriptionEN}
-                            contact={triageCard.contact}
-                            subject={triageCard.subject}
-                            icon={triageCard.icon}
-                            className="w-full"
-                        />
-                    </div>
+                    <ContactCard
+                        title={triageCard.title}
+                        description={isSpanish ? triageCard.descriptionES : triageCard.descriptionEN}
+                        contact={triageCard.contact}
+                        subject={triageCard.subject}
+                        icon={triageCard.icon}
+                        className="w-full"
+                        locale={locale}
+                    />
                 </div>
             </section>
 
-            <Footer />
+
+            <Footer/>
         </>
     )
 }

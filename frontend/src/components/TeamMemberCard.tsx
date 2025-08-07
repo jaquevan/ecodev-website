@@ -60,9 +60,9 @@ function MemberAvatar({ name, imgUrl, size = 'md', isLocal = false }: { name: st
 function getButtonStyles(variant: 'primary' | 'secondary' | 'outline') {
     const base = "inline-flex items-center justify-center gap-2 rounded-md text-sm font-medium transition px-4 py-1.5 min-w-[110px]";
     const variants = {
-        primary: "bg-emerald-600 text-white hover:bg-emerald-700 focus:ring-2 focus:ring-emerald-300",
-        secondary: "bg-blue-600 text-white hover:bg-blue-700 focus:ring-2 focus:ring-blue-300",
-        outline: "border border-emerald-600 text-emerald-700 bg-white hover:bg-emerald-50 hover:text-emerald-900 focus:ring-2 focus:ring-emerald-200"
+        primary: "bg-blue-500 text-white hover:bg-blue-600 focus:ring-2 focus:ring-emerald-300 cursor-pointer",
+        secondary: "bg-amber-500 text-white hover:bg-amber-600 focus:ring-2 focus:ring-blue-300 cursor-pointer",
+        outline: "border border-emerald-600 text-emerald-700 bg-white hover:bg-emerald-50 hover:text-emerald-900 focus:ring-2 focus:ring-emerald-200 cursor-pointer"
     };
     return `${base} ${variants[variant]}`;
 }
@@ -145,7 +145,7 @@ export default function TeamMemberCard({ member }: { member: TeamMember }) {
                 <MemberAvatar name={name} imgUrl={imgUrl} isLocal={isLocal} />
                 <h2 className="mt-5 text-xl font-bold text-emerald-800">{name}</h2>
                 <p className="mt-1 text-sm font-medium text-gray-700">{role}</p>
-                <div className="mt-4 flex flex-col items-center gap-2 w-full">
+                <div className="mt-4 flex flex-col items-center gap-2 w-full cursor-pointer">
                     {description && (
                         <button
                             onClick={e => {

@@ -76,7 +76,6 @@ export default function Nav() {
                         <NavLink href="/">{isSpanish ? 'Inicio' : 'Home'}</NavLink>
                         <NavLink href="/program">{isSpanish ? 'Programas' : 'Programs'}</NavLink>
                         <NavLink href="/course">{isSpanish ? 'Cursos' : 'Courses'}</NavLink>
-                        <NavLink href="/chatbot">{isSpanish ? 'Creador de CV' : 'Resume Builder'}</NavLink>
                         <NavLink href="/team">{isSpanish ? 'Equipo' : 'Team'}</NavLink>
                         <NavLink href="/contact">{isSpanish ? 'Contacto' : 'Contact'}</NavLink>
                     </div>
@@ -95,9 +94,6 @@ export default function Nav() {
                         </NavLink>
                         <NavLink href="/course" onClick={() => setMenuOpen(false)}>
                             {isSpanish ? 'Cursos' : 'Courses'}
-                        </NavLink>
-                        <NavLink href="/chatbot" onClick={() => setMenuOpen(false)}>
-                            {isSpanish ? 'Creador de CV' : 'Resume Builder'}
                         </NavLink>
                         <NavLink href="/team" onClick={() => setMenuOpen(false)}>
                             {isSpanish ? 'Equipo' : 'Team'}
