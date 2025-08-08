@@ -10,6 +10,7 @@ import Image from 'next/image';
 import Loading from '@/components/Loading';
 import { motion } from 'framer-motion';
 import { useInView } from 'react-intersection-observer';
+import { formatTime } from '@/utils/format';
 
 interface ProgramAttributes {
     id: number;
@@ -27,22 +28,18 @@ type ExtendedCourse = {
     Image?: { formats?: { medium?: { url: string } }; url: string }[];
     registration?: boolean;
     program?: ProgramAttributes | null;
+    language?: string;
 };
 
 function CourseCard({ course }: { course: ExtendedCourse }) {
     const { locale } = useLanguage();
-
     const imageUrl = course.Image?.[0]?.formats?.medium?.url || course.Image?.[0]?.url;
-
     const badge = course.registration
-        ? {
-            text: locale === 'en' ? 'Registration Required' : 'Requiere Registro',
-            color: 'bg-[#ff9b4a]',
-        }
-        : {
-            text: locale === 'en' ? 'Walk-in Available' : 'Sin Registro',
-            color: 'bg-[#3eb08c]',
-        };
+        ? { text: locale === 'en' ? 'Registration Required' : 'Requiere Registro', color: 'bg-[#ff9b4a]' }
+        : { text: locale === 'en' ? 'Walk-in Available' : 'Sin Registro', color: 'bg-[#3eb08c]' };
+
+    // Default language if not specified
+    const courseLanguage = course.language || (locale === 'en' ? 'English' : 'Español');
 
     return (
         <Link href={`/course/${course.slug}`} className="block h-full group">
@@ -58,7 +55,7 @@ function CourseCard({ course }: { course: ExtendedCourse }) {
                     ) : (
                         <div className="w-full h-full flex items-center justify-center bg-gradient-to-r from-[#00464d] to-[#ff7001]">
                             <span className="text-white font-semibold">
-                                {locale === 'en' ? 'No Image' : 'Sin Imagen'}
+                                La Colaborativa
                             </span>
                         </div>
                     )}
@@ -69,6 +66,7 @@ function CourseCard({ course }: { course: ExtendedCourse }) {
                         {course.title}
                     </h3>
                     <div className="w-16 h-0.5 bg-orange-300 mb-4 group-hover:w-24 transition-all duration-300"></div>
+
                     <ul className="text-sm text-gray-700 space-y-1 mb-4">
                         <li className="flex items-center">
                             <svg
@@ -81,10 +79,10 @@ function CourseCard({ course }: { course: ExtendedCourse }) {
                                 <path
                                     strokeLinecap="round"
                                     strokeLinejoin="round"
-                                    d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
+                                    d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
                                 />
                             </svg>
-                            {course.date}
+                            {courseLanguage}
                         </li>
                     </ul>
                     <p className="text-sm text-gray-600 line-clamp-3 flex-grow">{course.desc}</p>
@@ -110,19 +108,15 @@ function CourseCard({ course }: { course: ExtendedCourse }) {
 }
 
 export default function CoursesPageContent({ programQuery }: { programQuery: string }) {
+    // Rest of the component remains unchanged
     const { locale } = useLanguage();
     const isSpanish = locale === 'es';
-
     const [courses, setCourses] = useState<ExtendedCourse[]>([]);
     const [loading, setLoading] = useState(true);
     const [search, setSearch] = useState('');
     const [dateFilter, setDateFilter] = useState('');
     const [programValue, setProgramValue] = useState(decodeURIComponent(programQuery));
-
-    const [heroRef, heroInView] = useInView({
-        triggerOnce: true,
-        threshold: 0.1,
-    });
+    const [heroRef, heroInView] = useInView({ triggerOnce: true, threshold: 0.1 });
 
     useEffect(() => {
         let mounted = true;
@@ -132,20 +126,21 @@ export default function CoursesPageContent({ programQuery }: { programQuery: str
                 const data = await fetchCachedCourses(locale);
 
                 if (mounted) {
-                    //eslint-disable-next-line @typescript-eslint/no-explicit-any
-                    const normalized = (data as any[]).map((course) => ({
+                    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                    const normalized = (data as any[]).map(course => ({
                         ...course,
                         id: Number(course.id),
                         registration: course.registration ?? false,
                         program: course.program ?? null,
+                        language: course.language || (locale === 'en' ? 'English' : 'Español')
                     })) as ExtendedCourse[];
 
                     setCourses(normalized);
-                    setLoading(false); // Set loading to false after data is fetched
+                    setLoading(false);
                 }
             } catch (err) {
                 console.error('Error fetching courses:', err);
-                setLoading(false); // Ensure loading is set to false even on error
+                setLoading(false);
             }
         })();
 

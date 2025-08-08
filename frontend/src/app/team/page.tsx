@@ -8,7 +8,7 @@ import Footer from '@/components/Footer';
 import TeamMemberCard from '@/components/TeamMemberCard';
 import BubbleBackground from '@/components/Bubble';
 
-import groupPhoto from '../../../public/team-photo.png';
+import groupPhoto from '../../../public/team-dressed.png';
 import {fetchCachedTeamMembers} from '@/lib/team';
 import { TeamMember as OriginalTeamMember } from '@/types/member';
 

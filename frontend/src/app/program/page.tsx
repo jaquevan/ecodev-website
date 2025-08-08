@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react';  // Removed useRef
 import Link from 'next/link';
+import Image from 'next/image';
 import Nav from '@/components/Nav';
 import Footer from '@/components/Footer';
 import { useLanguage } from '@/context/LanguageContext';
@@ -11,6 +12,7 @@ import { motion } from 'framer-motion';
 import { useInView } from 'react-intersection-observer';
 import Loading from '@/components/Loading';
 
+import programsHeroImage from '../../../public/programImage.png';
 export default function Programs() {
     const { locale } = useLanguage();
     const isSpanish = locale === 'es';
@@ -74,6 +76,20 @@ export default function Programs() {
                             'dreams in mind. Discover how, together, we can move forward toward your personal\n' +
                             'and professional success!'}
                     </p>
+
+                    <div className="max-w-xl mx-auto mt-8 mb-12">
+                        <div className="rounded-2xl overflow-hidden shadow-lg border-4 border-amber-300">
+                            <div className="relative h-72 w-full">
+                                <Image
+                                    src={programsHeroImage}
+                                    alt="Economic Sustainability and Mobility Programs"
+                                    fill
+                                    className="object-cover object-center"
+                                    priority
+                                />
+                            </div>
+                        </div>
+                    </div>
                 </motion.div>
             </section>
 

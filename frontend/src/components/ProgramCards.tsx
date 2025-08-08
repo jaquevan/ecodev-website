@@ -29,6 +29,11 @@ export default function ProgramCards({ title, program, items, colorScheme }: Pro
     const { ref, inView } = useInView({ triggerOnce: true });
     const { locale } = useLanguage(); // Get the current locale
 
+    // Function to create a url-friendly slug from program name (all lowercase with hyphens)
+    const createSlug = (name: string) => {
+        return encodeURIComponent(name.toLowerCase().replace(/\s+/g, '-'));
+    };
+
     const colors = {
         indigo: {
             ring: 'ring-indigo-500',
@@ -112,7 +117,8 @@ export default function ProgramCards({ title, program, items, colorScheme }: Pro
             </div>
 
             <div className="w-full flex flex-col gap-3 mt-auto">
-                <Link href={`/course?program=${encodeURIComponent(program)}`}>
+                {/* Changed to direct to program/[slug] instead of course page */}
+                <Link href={`/program/${createSlug(program)}`}>
                     <motion.button
                         whileHover={{ scale: 1.05 }}
                         className={`${color.button} text-white font-semibold py-3 px-6 rounded-lg shadow-sm hover:shadow-md transition cursor-pointer`}
