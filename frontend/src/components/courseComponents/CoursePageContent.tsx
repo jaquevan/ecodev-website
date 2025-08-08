@@ -10,7 +10,6 @@ import Image from 'next/image';
 import Loading from '@/components/Loading';
 import { motion } from 'framer-motion';
 import { useInView } from 'react-intersection-observer';
-import { formatTime } from '@/utils/format';
 
 interface ProgramAttributes {
     id: number;
