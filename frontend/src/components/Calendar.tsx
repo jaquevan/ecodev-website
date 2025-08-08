@@ -105,6 +105,8 @@ export default function Calendar({showWalkInOnly = false}: CalendarProps) {
                         borderRadius: '50%',
                         '&.Mui-selected': {backgroundColor: '#0F766E', color: '#fff'},
                         '&:hover': {backgroundColor: 'rgba(15,118,110,0.1)'},
+                        padding: '0px 0px',
+                        margin: '0 2px',
                     },
                     today: {
                         border: '2px solid #0F766E',
@@ -144,6 +146,9 @@ export default function Calendar({showWalkInOnly = false}: CalendarProps) {
                     },
                     weekContainer: {
                         margin: '0.1rem 0'
+                    },
+                    weekDayLabel: {
+                        width: '40px'
                     }
                 }
             }
@@ -343,8 +348,8 @@ export default function Calendar({showWalkInOnly = false}: CalendarProps) {
                     </h3>
 
                     <div className="flex flex-col xl:flex-row xl:space-x-6 space-y-6 xl:space-y-0">
-                        <div className="flex justify-center w-full xl:w-3/5">
-                            <div className="w-full max-w-xs sm:max-w-sm md:max-w-md lg:max-w-lg xl:max-w-full mx-auto overflow-hidden">
+                        <div className="flex justify-center w-full xl:w-2/3">
+                            <div className="w-full max-w-xs sm:max-w-sm md:max-w-md lg:max-w-2xl xl:max-w-full mx-auto overflow-visible">
                                 <ThemeProvider theme={calendarTheme}>
                                     <LocalizationProvider dateAdapter={AdapterDateFns}
                                                           adapterLocale={isSpanish ? es : undefined}>
@@ -359,6 +364,13 @@ export default function Calendar({showWalkInOnly = false}: CalendarProps) {
                                                         '& .MuiDayCalendar-root': {
                                                             width: '100%',
                                                             maxHeight: '290px'
+                                                        },
+                                                        '& .MuiDayCalendar-weekContainer': {
+                                                            justifyContent: 'space-around'
+                                                        },
+                                                        '& .MuiPickersDay-root': {
+                                                            width: '36px',
+                                                            height: '36px'
                                                         }
                                                     }
                                                 }
@@ -378,7 +390,7 @@ export default function Calendar({showWalkInOnly = false}: CalendarProps) {
                         <div className="hidden xl:block xl:w-px xl:h-auto bg-gray-200"></div>
                         <div className="block xl:hidden w-full h-px bg-gray-200"></div>
 
-                        <div className="w-full xl:w-2/5 z-20 relative flex flex-col h-full">
+                        <div className="w-full xl:w-1/3 z-20 relative flex flex-col h-full">
                             <h3 className="text-lg sm:text-xl font-bold text-gray-900 mb-2">
                                 {formatDateWithLocale(selectedDate)}
                             </h3>
